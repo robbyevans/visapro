@@ -26,5 +26,15 @@ RSpec.describe "Users API", type: :request do
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
+
+     it "sends welcome email to user and notification to admin" do
+      admin = User.create!(name: "Admin", email: "admin@test.com", password: "password", role: :admin)
+
+      expect {
+        post "/users", params: { user: { name: "John", email: "john@test.com", password: "password", password_confirmation: "password" } }
+      }.to change { enqueued_jobs.size }.by(2) # 1 welcome + 1 admin
+
+      expect(ActionMailer::Base.deliveries.last.to).to include(admin.email)
+    end
   end
 end
