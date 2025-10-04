@@ -7,6 +7,15 @@ class ApplicationsController < ApplicationController
     application = Application.new(application_params)
     if application.save
       render json: application, status: :created
+
+      #Notify user 
+      UserMailer.application_submitted(application.user, application).deliver_now
+
+      # Notify all admins
+      User.admin.find_each do |admin|
+        UserMailer.admin_new_application(admin, application).deliver_now
+      end
+
     else
       render json: { errors: application.errors.full_messages }, status: :unprocessable_entity
     end

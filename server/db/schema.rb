@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_04_131211) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_04_144342) do
   create_table "applications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "athlete_id", null: false
@@ -50,6 +50,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_04_131211) do
     t.integer "role", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

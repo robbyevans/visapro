@@ -1,6 +1,22 @@
 class User < ApplicationRecord
   has_secure_password
   
+  def generate_password_reset_token!
+    update!(
+      reset_password_token: SecureRandom.hex(10),
+      reset_password_sent_at: Time.current
+    )
+    reset_password_token
+  end
+
+  def password_token_valid?
+    reset_password_sent_at > 2.hours.ago
+  end
+
+  def reset_password!(password)
+    update!(password: password, reset_password_token: nil)
+  end
+  
   enum :role, { individual: 0, corporate: 1, admin: 2 }
   
   has_many :athletes, dependent: :destroy
