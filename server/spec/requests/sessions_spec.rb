@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Sessions API", type: :request do
   describe "POST /sessions" do
-    let!(:user) { create(:user, email: "jane@example.com", password: "password") }
+    let!(:user) { create(:user, email: "jane@example.com", password: "password", password_confirmation: "password") }
 
     it "logs in with correct credentials" do
       post "/sessions", params: { email: "jane@example.com", password: "password" }

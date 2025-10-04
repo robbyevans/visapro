@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Users API", type: :request do
   describe "POST /users" do
     let(:valid_attributes) do
-      { user: { name: "John Doe", email: "john@example.com", password: "password" } }
+      { user: { name: "John Doe", email: "john@example.com", password: "password", password_confirmation: "password" } }
     end
 
     let(:invalid_attributes) do

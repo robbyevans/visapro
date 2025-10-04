@@ -5,8 +5,12 @@ RSpec.describe "Routes", type: :routing do
     expect(post: "/users").to route_to(controller: "users", action: "create")
   end
 
-  it "routes login" do
+    it "routes /login to sessions#create" do
     expect(post: "/login").to route_to("sessions#create")
+  end
+
+  it "routes /signup to users#create" do
+    expect(post: "/signup").to route_to("users#create")
   end
 
   it "routes athletes" do
