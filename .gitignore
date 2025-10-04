@@ -1,0 +1,96 @@
+### Global ###
+# OS / Editor junk
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.iml
+
+# Common env
+.env
+.env.*
+*.log
+
+
+############################
+### Rails (server/) ignores
+############################
+
+# Bundler
+/server/.bundle
+
+# Logs, temp, cache, pid, sockets
+/server/log/*
+/server/tmp/*
+!/server/log/.keep
+!/server/tmp/.keep
+/server/tmp/pids/*
+/server/tmp/cache/*
+/server/tmp/sockets/*
+
+# ActiveStorage files
+/server/storage/*
+!/server/storage/.keep
+
+# Master key & credentials
+/server/config/master.key
+/server/config/credentials/*.key
+
+# Coverage & test artifacts
+/server/coverage/
+/server/spec/examples.txt
+
+# Database (SQLite dev/test)
+/server/db/*.sqlite3
+/server/db/*.sqlite3-journal
+
+# Redis dump
+/server/dump.rdb
+
+# Byebug history
+/server/.byebug_history
+
+# Public assets (Webpacker/Sprockets)
+/server/public/packs
+/server/public/packs-test
+/server/public/assets
+
+
+############################
+### React (frontend/) ignores
+############################
+
+/frontend/node_modules/
+/frontend/.pnp
+/frontend/.pnp.js
+/frontend/.yarn-integrity
+/frontend/yarn-error.log
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+
+# Build output
+/frontend/build
+/frontend/dist
+
+# Coverage
+/frontend/coverage
+
+# Local env
+/frontend/.env
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# TypeScript build cache
+/frontend/*.tsbuildinfo
+
+# ESLint/Prettier cache
+/frontend/.eslintcache
+
+# Logs
+/frontend/*.log
+/frontend/debug.log
+/frontend/logs
