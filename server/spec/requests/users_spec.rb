@@ -13,11 +13,13 @@ RSpec.describe "Users API", type: :request do
     it "creates a new user with valid attributes" do
       expect {
         post "/users", params: valid_attributes
-      }.to change(User, :count).by(1)
+        }.to change(User, :count).by(1)
 
       expect(response).to have_http_status(:created)
-      expect(JSON.parse(response.body)["email"]).to eq("john@example.com")
+      body = JSON.parse(response.body)
+      expect(body["user"]["email"]).to eq("john@example.com")
     end
+
 
     it "does not create user with invalid attributes" do
       post "/users", params: invalid_attributes
