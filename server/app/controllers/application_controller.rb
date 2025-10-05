@@ -1,13 +1,28 @@
 class ApplicationController < ActionController::API
+  before_action :authenticate_user!
 
-  def update
-    application = Application.find(params[:id])
-    if application.update(application_params)
-      # Notify user of the update
-      UserMailer.application_updated(application.user, application).deliver_now
-      render json: application, status: :ok
-    else
-      render json: { errors: application.errors.full_messages }, status: :unprocessable_entity
+  private
+
+  def authenticate_user!
+    header = request.headers['Authorization']
+    token = header&.split(' ')&.last
+
+    if token
+      decoded = JwtService.decode(token)
+      if decoded && (@current_user = User.find_by(id: decoded[:user_id]))
+        return # Authentication successful
+      end
     end
+
+    render json: { error: 'Unauthorized' }, status: :unauthorized
+  end
+
+  def current_user
+    @current_user
+  end
+
+  # Skip authentication for specific actions
+  def skip_authentication?
+    false
   end
 end

@@ -1,4 +1,5 @@
 class DocumentsController < ApplicationController
+  # No need to skip authentication - documents should be created by authenticated users
   def create
     document = Document.new(document_params)
     if document.save

@@ -8,6 +8,7 @@ class UserMailer < ApplicationMailer
 
   def reset_password_email(user, token)
     @user = user
+    # Use the correct route helper after fixing routes
     @reset_link = edit_password_reset_url(token: token)
     mail(to: @user.email, subject: "Reset your password")
   end

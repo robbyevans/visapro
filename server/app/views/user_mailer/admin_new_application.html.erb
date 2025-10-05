@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>New Application Submitted</h1>
+    <p>
+      User <%= @application.user.email %> has submitted a new visa application.
+    </p>
+    <p>
+      Country: <%= @application.country %><br>
+      Athlete: <%= @application.athlete.first_name %> <%= @application.athlete.last_name %>
+    </p>
+  </body>
+</html>

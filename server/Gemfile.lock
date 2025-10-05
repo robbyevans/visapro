@@ -97,9 +97,6 @@ GEM
       reline (>= 0.3.8)
     diff-lcs (1.6.2)
     dotenv (3.1.8)
-    dotenv-rails (3.1.8)
-      dotenv (= 3.1.8)
-      railties (>= 6.1)
     drb (2.2.3)
     erb (4.0.4)
       cgi (>= 0.3.3)
@@ -126,6 +123,8 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.15.0)
+    jwt (3.1.2)
+      base64
     language_server-protocol (3.17.0.5)
     launchy (3.1.1)
       addressable (~> 2.8)
@@ -357,9 +356,10 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
-  dotenv-rails
+  dotenv
   factory_bot_rails
   faker
+  jwt
   letter_opener
   mailcatcher
   puma (>= 5.0)

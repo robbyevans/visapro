@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Application Status Updated</h1>
+    <p>
+      Hello <%= @user.name %>,
+    </p>
+    <p>
+      Your visa application for <%= @application.country %> has been updated to: <strong><%= @application.status %></strong>
+    </p>
+    <% if @application.remarks.present? %>
+    <p>
+      Remarks: <%= @application.remarks %>
+    </p>
+    <% end %>
+  </body>
+</html>

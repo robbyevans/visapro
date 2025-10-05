@@ -1,10 +1,15 @@
 class AthletesController < ApplicationController
   def index
-    render json: Athlete.all
+    if current_user.admin?
+      athletes = Athlete.all
+    else
+      athletes = current_user.athletes
+    end
+    render json: athletes
   end
 
   def create
-    athlete = Athlete.new(athlete_params)
+    athlete = current_user.athletes.new(athlete_params)
     if athlete.save
       render json: athlete, status: :created
     else
@@ -15,6 +20,6 @@ class AthletesController < ApplicationController
   private
 
   def athlete_params
-    params.require(:athlete).permit(:first_name, :last_name, :date_of_birth, :passport_number, :user_id)
+    params.require(:athlete).permit(:first_name, :last_name, :date_of_birth, :passport_number)
   end
 end
