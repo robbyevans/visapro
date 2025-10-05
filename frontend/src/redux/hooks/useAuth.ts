@@ -18,15 +18,7 @@ import {
 import type { AppDispatch } from "../store";
 import type { ILoginResponse, IUser } from "../types";
 
-function getErrorMessage(err: unknown): string {
-  if (axios.isAxiosError(err)) {
-    const data = err.response?.data as { error?: string } | undefined;
-    if (data?.error) return data.error;
-    return err.message || "Request error";
-  }
-  if (err instanceof Error) return err.message;
-  return String(err);
-}
+import { getErrorMessage } from "../../utils/error"; // << shared helper
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
