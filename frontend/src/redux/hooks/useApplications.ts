@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -36,7 +35,11 @@ import type {
   IDocument,
 } from "../types";
 
-import { getErrorMessage } from "../../utils/error"; // << shared helper
+import { getErrorMessage } from "../../utils/error";
+import { axiosInstance } from "../api";
+import type { AxiosProgressEvent } from "axios";
+// import the slice Document type so dispatch payload matches reducer expectation
+import type { Document as SliceDocument } from "../slices/applicationsSlice";
 
 export const useApplications = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -55,9 +58,8 @@ export const useApplications = () => {
     if (!token) return;
     dispatch(setLoading(true));
     try {
-      const res = await axios.get<IApplication[]>("/applications", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const api = axiosInstance(token);
+      const res = await api.get<IApplication[]>("/applications");
       dispatch(setApplications(res.data));
     } catch (err: unknown) {
       dispatch(setError(getErrorMessage(err)));
@@ -69,9 +71,8 @@ export const useApplications = () => {
       if (!token) return;
       dispatch(setLoading(true));
       try {
-        const res = await axios.get<IApplication>(`/applications/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const api = axiosInstance(token);
+        const res = await api.get<IApplication>(`/applications/${id}`);
         dispatch(setCurrentApplication(res.data));
       } catch (err: unknown) {
         dispatch(setError(getErrorMessage(err)));
@@ -85,9 +86,8 @@ export const useApplications = () => {
       if (!token) throw new Error("Not authenticated");
       dispatch(setLoading(true));
       try {
-        const res = await axios.post<IApplication>("/applications", payload, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const api = axiosInstance(token);
+        const res = await api.post<IApplication>("/applications", payload);
         dispatch(addApplication(res.data));
         dispatch(setCurrentApplication(res.data));
       } catch (err: unknown) {
@@ -102,12 +102,10 @@ export const useApplications = () => {
       if (!token) throw new Error("Not authenticated");
       dispatch(setLoading(true));
       try {
-        const res = await axios.patch<IApplication>(
+        const api = axiosInstance(token);
+        const res = await api.patch<IApplication>(
           `/applications/${id}`,
-          updates,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          updates
         );
         dispatch(updateAppAction(res.data));
       } catch (err: unknown) {
@@ -126,23 +124,25 @@ export const useApplications = () => {
       if (!token) throw new Error("Not authenticated");
       dispatch(setUploadProgress(0));
       try {
-        const res = await axios.post<IDocument>("/documents", formData, {
+        const api = axiosInstance(token);
+        const res = await api.post<IDocument>("/documents", formData, {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const percent = Math.round(
-                (progressEvent.loaded * 100) / progressEvent.total
-              );
+          // use AxiosProgressEvent (may be undefined)
+          onUploadProgress: (progressEvent: AxiosProgressEvent | undefined) => {
+            const loaded = progressEvent?.loaded ?? 0;
+            const total = progressEvent?.total ?? 0;
+            if (total > 0) {
+              const percent = Math.round((loaded * 100) / total);
               dispatch(setUploadProgress(percent));
               if (onUploadProgress) onUploadProgress(percent);
             }
           },
         });
 
-        const document = res.data;
+        // cast response to the slice Document type so TS is happy
+        const document = res.data as unknown as SliceDocument;
         dispatch(addDocumentToApplication({ applicationId, document }));
         dispatch(setUploadProgress(100));
         setTimeout(() => dispatch(clearUploadProgress()), 500);

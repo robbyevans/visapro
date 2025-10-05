@@ -1,5 +1,3 @@
-// /frontend/src/redux/types.ts
-
 /* --- Documents --- */
 export interface IDocument {
   id: number;

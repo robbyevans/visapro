@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,6 +19,7 @@ import type { AppDispatch } from "../store";
 import type { IUser, IAthlete } from "../types";
 
 import { getErrorMessage } from "../../utils/error"; // << shared helper
+import { axiosInstance } from "../api";
 
 export const useUser = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,9 +34,8 @@ export const useUser = () => {
     if (!token) return;
     dispatch(setLoading(true));
     try {
-      const res = await axios.get<{ user: IUser }>("/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const api = axiosInstance(token);
+      const res = await api.get<{ user: IUser }>("/me");
       dispatch(setUser(res.data.user));
     } catch (err: unknown) {
       dispatch(setError(getErrorMessage(err)));
@@ -47,9 +46,8 @@ export const useUser = () => {
     if (!token) return;
     dispatch(setLoading(true));
     try {
-      const res = await axios.get<IAthlete[]>("/athletes", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const api = axiosInstance(token);
+      const res = await api.get<IAthlete[]>("/athletes");
       dispatch(setAthletes(res.data));
     } catch (err: unknown) {
       dispatch(setError(getErrorMessage(err)));
@@ -66,9 +64,8 @@ export const useUser = () => {
       if (!token) throw new Error("Not authenticated");
       dispatch(setLoading(true));
       try {
-        const res = await axios.post<IAthlete>("/athletes", payload, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const api = axiosInstance(token);
+        const res = await api.post<IAthlete>("/athletes", payload);
         dispatch(addAthlete(res.data));
       } catch (err: unknown) {
         dispatch(setError(getErrorMessage(err)));

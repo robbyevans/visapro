@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,6 +18,7 @@ import type { AppDispatch } from "../store";
 import type { ILoginResponse, IUser } from "../types";
 
 import { getErrorMessage } from "../../utils/error"; // << shared helper
+import { axiosInstance } from "../api";
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,7 +32,8 @@ export const useAuth = () => {
     async (email: string, password: string) => {
       dispatch(setLoading(true));
       try {
-        const res = await axios.post<ILoginResponse>("/login", {
+        const api = axiosInstance(); // no token yet
+        const res = await api.post<ILoginResponse>("/login", {
           email,
           password,
         });
