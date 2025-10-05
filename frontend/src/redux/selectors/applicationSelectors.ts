@@ -8,8 +8,6 @@ export const selectApplicationsLoading = (state: RootState) =>
   state.applications.isLoading;
 export const selectApplicationsError = (state: RootState) =>
   state.applications.error;
-export const selectHasActiveApplication = (state: RootState) =>
-  state.applications.hasActiveApplication;
 export const selectUploadProgress = (state: RootState) =>
   state.applications.uploadProgress;
 
@@ -25,7 +23,9 @@ export const selectApplicationById =
 
 export const selectCanCreateApplication = (state: RootState) => {
   const user = state.user.currentUser;
-  const hasActive = state.applications.hasActiveApplication;
+  const hasActive = state.applications.applications.some((app) =>
+    ["pending", "approved", "invoiced"].includes(app.status)
+  );
 
   if (user?.role === "individual") {
     return !hasActive;

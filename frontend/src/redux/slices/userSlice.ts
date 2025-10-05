@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-// Export interfaces so they can be used in other files
 export interface User {
   id: number;
   name: string;
@@ -13,7 +11,7 @@ export interface Athlete {
   id: number;
   first_name: string;
   last_name: string;
-  date_of_birth: string;
+  date_of_birth?: string;
   passport_number: string;
   user_id: number;
 }
@@ -36,65 +34,43 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    fetchUserStart: (state) => {
-      state.isLoading = true;
-      state.error = null;
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload;
+      if (action.payload) state.error = null;
     },
-    fetchUserSuccess: (state, action: PayloadAction<User>) => {
-      state.isLoading = false;
+    setUser(state, action: PayloadAction<User | null>) {
       state.currentUser = action.payload;
-    },
-    fetchUserFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
-      state.error = action.payload;
     },
-
-    fetchAthletesStart: (state) => {
-      state.isLoading = true;
-    },
-    fetchAthletesSuccess: (state, action: PayloadAction<Athlete[]>) => {
-      state.isLoading = false;
+    setAthletes(state, action: PayloadAction<Athlete[]>) {
       state.athletes = action.payload;
-    },
-    fetchAthletesFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
-      state.error = action.payload;
     },
-
-    createAthleteStart: (state) => {
-      state.isLoading = true;
-    },
-    createAthleteSuccess: (state, action: PayloadAction<Athlete>) => {
-      state.isLoading = false;
+    addAthlete(state, action: PayloadAction<Athlete>) {
       state.athletes.push(action.payload);
     },
-    createAthleteFailure: (state, action: PayloadAction<string>) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-
-    updateUser: (state, action: PayloadAction<Partial<User>>) => {
-      if (state.currentUser) {
+    updateUser(state, action: PayloadAction<Partial<User>>) {
+      if (state.currentUser)
         state.currentUser = { ...state.currentUser, ...action.payload };
-      }
     },
-    clearError: (state) => {
+    setError(state, action: PayloadAction<string | null>) {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
+    clearError(state) {
       state.error = null;
     },
   },
 });
 
 export const {
-  fetchUserStart,
-  fetchUserSuccess,
-  fetchUserFailure,
-  fetchAthletesStart,
-  fetchAthletesSuccess,
-  fetchAthletesFailure,
-  createAthleteStart,
-  createAthleteSuccess,
-  createAthleteFailure,
+  setLoading,
+  setUser,
+  setAthletes,
+  addAthlete,
   updateUser,
+  setError,
   clearError,
 } = userSlice.actions;
+
 export default userSlice.reducer;

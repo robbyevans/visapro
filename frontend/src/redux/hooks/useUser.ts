@@ -1,13 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchUserStart,
-  fetchUserFailure,
-  fetchAthletesStart,
-  fetchAthletesFailure,
-  createAthleteStart,
-  createAthleteFailure,
-  updateUser,
+  setLoading,
+  setUser,
+  setAthletes,
+  addAthlete,
+  setError,
   clearError,
 } from "../slices/userSlice";
 import {
@@ -15,79 +14,81 @@ import {
   selectAthletes,
   selectUserLoading,
   selectUserError,
-  selectUserRole,
-  selectIsAdmin,
-  selectIsIndividual,
-  selectIsCorporate,
-  selectAthleteById,
 } from "../selectors/userSelectors";
-import type { RootState } from "../store";
-import type { User } from "../slices/userSlice";
+import { selectToken } from "../selectors/authSelectors";
+import type { AppDispatch } from "../store";
+import type { IUser, IAthlete } from "../types";
+
+function getErrorMessage(err: unknown): string {
+  if (axios.isAxiosError(err)) {
+    const data = err.response?.data as
+      | { error?: string; errors?: string[] }
+      | undefined;
+    if (data?.errors)
+      return Array.isArray(data.errors)
+        ? data.errors.join(", ")
+        : String(data.errors);
+    if (data?.error) return data.error;
+    return err.message || "Request error";
+  }
+  if (err instanceof Error) return err.message;
+  return String(err);
+}
 
 export const useUser = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const currentUser = useSelector(selectCurrentUser);
   const athletes = useSelector(selectAthletes);
   const isLoading = useSelector(selectUserLoading);
   const error = useSelector(selectUserError);
-  const role = useSelector(selectUserRole);
-  const isAdmin = useSelector(selectIsAdmin);
-  const isIndividual = useSelector(selectIsIndividual);
-  const isCorporate = useSelector(selectIsCorporate);
-
-  // Fixed: Remove useSelector from callback - components should use selectAthleteById directly
-  const getAthleteById = useCallback(
-    (id: number) => {
-      return athletes.find((athlete) => athlete.id === id);
-    },
-    [athletes]
-  );
+  const token = useSelector(selectToken);
 
   const fetchUser = useCallback(async () => {
-    dispatch(fetchUserStart());
+    if (!token) return;
+    dispatch(setLoading(true));
     try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        fetchUserFailure(
-          err instanceof Error ? err.message : "Failed to fetch user"
-        )
-      );
+      const res = await axios.get<{ user: IUser }>("/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      dispatch(setUser(res.data.user));
+    } catch (err: unknown) {
+      dispatch(setError(getErrorMessage(err)));
     }
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   const fetchAthletes = useCallback(async () => {
-    dispatch(fetchAthletesStart());
+    if (!token) return;
+    dispatch(setLoading(true));
     try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        fetchAthletesFailure(
-          err instanceof Error ? err.message : "Failed to fetch athletes"
-        )
-      );
+      const res = await axios.get<IAthlete[]>("/athletes", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      dispatch(setAthletes(res.data));
+    } catch (err: unknown) {
+      dispatch(setError(getErrorMessage(err)));
     }
-  }, [dispatch]);
+  }, [dispatch, token]);
 
-  const createAthlete = useCallback(async () => {
-    dispatch(createAthleteStart());
-    try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        createAthleteFailure(
-          err instanceof Error ? err.message : "Failed to create athlete"
-        )
-      );
-    }
-  }, [dispatch]);
-
-  const updateUserProfile = useCallback(
-    (userData: Partial<User>) => {
-      dispatch(updateUser(userData));
+  const createAthlete = useCallback(
+    async (payload: {
+      first_name: string;
+      last_name: string;
+      passport_number: string;
+      date_of_birth?: string;
+    }) => {
+      if (!token) throw new Error("Not authenticated");
+      dispatch(setLoading(true));
+      try {
+        const res = await axios.post<IAthlete>("/athletes", payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        dispatch(addAthlete(res.data));
+      } catch (err: unknown) {
+        dispatch(setError(getErrorMessage(err)));
+      }
     },
-    [dispatch]
+    [dispatch, token]
   );
 
   const clearUserError = useCallback(() => {
@@ -95,24 +96,13 @@ export const useUser = () => {
   }, [dispatch]);
 
   return {
-    // State
     currentUser,
     athletes,
     isLoading,
     error,
-    role,
-    isAdmin,
-    isIndividual,
-    isCorporate,
-
-    // Helper functions
-    getAthleteById,
-
-    // Actions
     fetchUser,
     fetchAthletes,
     createAthlete,
-    updateUserProfile,
     clearUserError,
   };
 };

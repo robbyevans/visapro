@@ -1,145 +1,192 @@
-import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import {
-  fetchApplicationsStart,
-  fetchApplicationsFailure,
-  fetchApplicationStart,
-  fetchApplicationFailure,
-  createApplicationStart,
-  createApplicationFailure,
-  updateApplicationStart,
-  updateApplicationFailure,
-  uploadDocumentStart,
-  uploadDocumentFailure,
-  clearCurrentApplication,
+  setLoading,
+  setError,
+  setApplications,
+  addApplication,
+  updateApplication as updateAppAction,
+  setCurrentApplication,
+  addDocumentToApplication,
+  setUploadProgress,
+  clearUploadProgress,
   clearError,
 } from "../slices/applicationsSlice";
+
 import {
   selectApplications,
   selectCurrentApplication,
   selectApplicationsLoading,
   selectApplicationsError,
-  selectHasActiveApplication,
   selectPendingApplications,
   selectApprovedApplications,
-  selectApplicationById,
   selectCanCreateApplication,
   selectUploadProgress,
 } from "../selectors/applicationSelectors";
-import type { RootState } from "../store";
-import type { Application } from "../slices/applicationsSlice";
-import type { Athlete } from "../slices/userSlice";
+
+import { selectToken } from "../selectors/authSelectors";
+
+import type { AppDispatch } from "../store";
+import type {
+  IApplication,
+  ICreateApplicationPayload,
+  TUpdateApplicationPayload,
+  IDocument,
+} from "../types";
+
+/** Safe error extractor */
+function getErrorMessage(err: unknown): string {
+  if (axios.isAxiosError(err)) {
+    const data = err.response?.data as
+      | { error?: string; errors?: string[] }
+      | undefined;
+    if (data?.errors)
+      return Array.isArray(data.errors)
+        ? data.errors.join(", ")
+        : String(data.errors);
+    if (data?.error) return data.error;
+    return err.message || "Request error";
+  }
+  if (err instanceof Error) return err.message;
+  return String(err);
+}
 
 export const useApplications = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const applications = useSelector(selectApplications);
   const currentApplication = useSelector(selectCurrentApplication);
   const isLoading = useSelector(selectApplicationsLoading);
   const error = useSelector(selectApplicationsError);
-  const hasActiveApplication = useSelector(selectHasActiveApplication);
   const pendingApplications = useSelector(selectPendingApplications);
   const approvedApplications = useSelector(selectApprovedApplications);
   const canCreateApplication = useSelector(selectCanCreateApplication);
   const uploadProgress = useSelector(selectUploadProgress);
-
-  // Fixed: Remove useSelector from callback
-  const getApplicationById = useCallback(
-    (id: number) => {
-      return applications.find((app) => app.id === id);
-    },
-    [applications]
-  );
+  const token = useSelector(selectToken);
 
   const fetchApplications = useCallback(async () => {
-    dispatch(fetchApplicationsStart());
+    if (!token) return;
+    dispatch(setLoading(true));
     try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        fetchApplicationsFailure(
-          err instanceof Error ? err.message : "Failed to fetch applications"
-        )
-      );
+      const res = await axios.get<IApplication[]>("/applications", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      dispatch(setApplications(res.data));
+    } catch (err: unknown) {
+      dispatch(setError(getErrorMessage(err)));
     }
-  }, [dispatch]);
+  }, [dispatch, token]);
 
-  const fetchApplication = useCallback(async () => {
-    dispatch(fetchApplicationStart());
-    try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        fetchApplicationFailure(
-          err instanceof Error ? err.message : "Failed to fetch application"
-        )
-      );
-    }
-  }, [dispatch]);
+  const fetchApplication = useCallback(
+    async (id: number) => {
+      if (!token) return;
+      dispatch(setLoading(true));
+      try {
+        const res = await axios.get<IApplication>(`/applications/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        dispatch(setCurrentApplication(res.data));
+      } catch (err: unknown) {
+        dispatch(setError(getErrorMessage(err)));
+      }
+    },
+    [dispatch, token]
+  );
 
-  const createApplication = useCallback(async () => {
-    dispatch(createApplicationStart());
-    try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        createApplicationFailure(
-          err instanceof Error ? err.message : "Failed to create application"
-        )
-      );
-    }
-  }, [dispatch]);
+  const createApplication = useCallback(
+    async (payload: ICreateApplicationPayload) => {
+      if (!token) throw new Error("Not authenticated");
+      dispatch(setLoading(true));
+      try {
+        const res = await axios.post<IApplication>("/applications", payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        dispatch(addApplication(res.data));
+        dispatch(setCurrentApplication(res.data));
+      } catch (err: unknown) {
+        dispatch(setError(getErrorMessage(err)));
+      }
+    },
+    [dispatch, token]
+  );
 
-  const updateApplication = useCallback(async () => {
-    dispatch(updateApplicationStart());
-    try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        updateApplicationFailure(
-          err instanceof Error ? err.message : "Failed to update application"
-        )
-      );
-    }
-  }, [dispatch]);
+  const updateApplication = useCallback(
+    async (id: number, updates: TUpdateApplicationPayload) => {
+      if (!token) throw new Error("Not authenticated");
+      dispatch(setLoading(true));
+      try {
+        const res = await axios.patch<IApplication>(
+          `/applications/${id}`,
+          updates,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        dispatch(updateAppAction(res.data));
+      } catch (err: unknown) {
+        dispatch(setError(getErrorMessage(err)));
+      }
+    },
+    [dispatch, token]
+  );
 
-  const uploadDocument = useCallback(async () => {
-    dispatch(uploadDocumentStart());
-    try {
-      // API call would go here
-    } catch (err) {
-      dispatch(
-        uploadDocumentFailure(
-          err instanceof Error ? err.message : "Failed to upload document"
-        )
-      );
-    }
-  }, [dispatch]);
+  const uploadDocument = useCallback(
+    async (
+      applicationId: number,
+      formData: FormData,
+      onUploadProgress?: (p: number) => void
+    ) => {
+      if (!token) throw new Error("Not authenticated");
+      dispatch(setUploadProgress(0));
+      try {
+        const res = await axios.post<IDocument>("/documents", formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percent = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              dispatch(setUploadProgress(percent));
+              if (onUploadProgress) onUploadProgress(percent);
+            }
+          },
+        });
+
+        const document = res.data;
+        dispatch(addDocumentToApplication({ applicationId, document }));
+        dispatch(setUploadProgress(100));
+        setTimeout(() => dispatch(clearUploadProgress()), 500);
+      } catch (err: unknown) {
+        dispatch(setError(getErrorMessage(err)));
+        dispatch(clearUploadProgress());
+      }
+    },
+    [dispatch, token]
+  );
 
   const clearApplicationError = useCallback(() => {
     dispatch(clearError());
   }, [dispatch]);
 
   const clearCurrent = useCallback(() => {
-    dispatch(clearCurrentApplication());
+    dispatch(setCurrentApplication(null));
   }, [dispatch]);
 
   return {
-    // State
     applications,
     currentApplication,
     isLoading,
     error,
-    hasActiveApplication,
     pendingApplications,
     approvedApplications,
     canCreateApplication,
     uploadProgress,
 
-    // Helper functions
-    getApplicationById,
-
-    // Actions
     fetchApplications,
     fetchApplication,
     createApplication,
