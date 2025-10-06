@@ -1,14 +1,23 @@
+# File 2: /server/app/controllers/applications_controller.rb
 class ApplicationsController < ApplicationController
   before_action :set_application, only: [:update]
 
   def index
     if current_user.admin?
+      # Admin sees all applications with all associations
       applications = Application.includes(:user, :athlete, :documents).all
     else
+      # Regular users see only their own applications with all associations
       applications = current_user.applications.includes(:athlete, :documents)
     end
     
-    render json: applications
+    # Render with all necessary associations
+    render json: applications.as_json(
+      include: {
+        athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+        documents: { only: [:id, :doc_type, :file_url, :created_at] }
+      }
+    )
   end
 
   def create
@@ -41,7 +50,13 @@ class ApplicationsController < ApplicationController
       UserMailer.admin_new_application(admin, application).deliver_now
     end
 
-    render json: application, status: :created
+    # Return the created application with associations
+    render json: application.as_json(
+      include: {
+        athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+        documents: { only: [:id, :doc_type, :file_url, :created_at] }
+      }
+    ), status: :created
     
   rescue ActiveRecord::RecordInvalid => e
     errors = []
@@ -54,7 +69,12 @@ class ApplicationsController < ApplicationController
 
   def update
     if @application.update(application_params)
-      render json: @application
+      render json: @application.as_json(
+        include: {
+          athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+          documents: { only: [:id, :doc_type, :file_url, :created_at] }
+        }
+      )
     else
       render json: { errors: @application.errors.full_messages }, status: :unprocessable_entity
     end

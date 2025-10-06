@@ -156,7 +156,10 @@ const applicationsSlice = createSlice({
       })
       .addCase(fetchApplications.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.applications = action.payload;
+        state.applications = action.payload.map((app) => ({
+          ...app,
+          documents: app.documents || [],
+        }));
       })
       .addCase(fetchApplications.rejected, (state, action) => {
         state.isLoading = false;
@@ -169,7 +172,10 @@ const applicationsSlice = createSlice({
       })
       .addCase(fetchApplication.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentApplication = action.payload;
+        state.currentApplication = {
+          ...action.payload,
+          documents: action.payload.documents || [],
+        };
       })
       .addCase(fetchApplication.rejected, (state, action) => {
         state.isLoading = false;
@@ -182,8 +188,12 @@ const applicationsSlice = createSlice({
       })
       .addCase(createApplication.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.applications.push(action.payload);
-        state.currentApplication = action.payload;
+        const applicationWithDocs = {
+          ...action.payload,
+          documents: action.payload.documents || [],
+        };
+        state.applications.push(applicationWithDocs);
+        state.currentApplication = applicationWithDocs;
       })
       .addCase(createApplication.rejected, (state, action) => {
         state.isLoading = false;

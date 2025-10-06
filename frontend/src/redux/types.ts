@@ -48,7 +48,7 @@ export interface IApplication {
   country: string;
   status: TApplicationStatus;
   remarks?: string;
-  documents: IDocument[]; // corrected to use IDocument
+  documents?: IDocument[];
   created_at: string;
   updated_at: string;
 }
