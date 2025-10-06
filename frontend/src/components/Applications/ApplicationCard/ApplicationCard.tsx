@@ -13,11 +13,18 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onClick,
   showActions = false,
 }) => {
+  const athleteFirstName = application.athlete?.first_name || "N/A";
+  const athleteLastName = application.athlete?.last_name || "N/A";
+  const documentsCount = application.documents?.length || 0;
+  const formattedDate = application.created_at
+    ? new Date(application.created_at).toLocaleDateString()
+    : "N/A";
+
   return (
     <S.ApplicationCardContainer onClick={onClick}>
       <S.CardHeader>
         <S.CardTitle>
-          {application.athlete?.first_name} {application.athlete?.last_name}
+          {athleteFirstName} {athleteLastName}
         </S.CardTitle>
         <S.StatusBadge status={application.status}>
           {application.status}
@@ -27,19 +34,17 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       <S.CardContent>
         <S.CardDetail>
           <S.DetailLabel>Country:</S.DetailLabel>
-          <S.DetailValue>{application.country}</S.DetailValue>
+          <S.DetailValue>{application.country || "N/A"}</S.DetailValue>
         </S.CardDetail>
 
         <S.CardDetail>
           <S.DetailLabel>Submitted:</S.DetailLabel>
-          <S.DetailValue>
-            {new Date(application.created_at).toLocaleDateString()}
-          </S.DetailValue>
+          <S.DetailValue>{formattedDate}</S.DetailValue>
         </S.CardDetail>
 
         <S.CardDetail>
           <S.DetailLabel>Documents:</S.DetailLabel>
-          <S.DetailValue>{application.documents.length}</S.DetailValue>
+          <S.DetailValue>{documentsCount}</S.DetailValue>
         </S.CardDetail>
       </S.CardContent>
 

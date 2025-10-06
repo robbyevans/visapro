@@ -3,10 +3,8 @@ class ApplicationsController < ApplicationController
 
   def index
     if current_user.admin?
-      # Admin sees all applications
       applications = Application.includes(:user, :athlete, :documents).all
     else
-      # Regular users see only their own applications
       applications = current_user.applications.includes(:athlete, :documents)
     end
     
@@ -18,12 +16,13 @@ class ApplicationsController < ApplicationController
     athlete = nil
     
     Application.transaction do
-      # Create or find athlete
+      # Create or find athlete and associate with current user
       if application_params[:athlete_attributes]
         athlete = Athlete.find_or_initialize_by(
           passport_number: application_params[:athlete_attributes][:passport_number]
         )
         athlete.assign_attributes(application_params[:athlete_attributes])
+        athlete.user = current_user  # Associate athlete with current user
         athlete.save!
       end
       
@@ -44,7 +43,7 @@ class ApplicationsController < ApplicationController
 
     render json: application, status: :created
     
-    rescue ActiveRecord::RecordInvalid => e
+  rescue ActiveRecord::RecordInvalid => e
     errors = []
     errors += athlete.errors.full_messages if athlete&.errors&.any?
     errors += application.errors.full_messages if application&.errors&.any?
@@ -66,7 +65,6 @@ class ApplicationsController < ApplicationController
   def set_application
     @application = Application.find(params[:id])
     
-    # Ensure users can only update their own applications unless admin
     unless current_user.admin? || @application.user_id == current_user.id
       render json: { error: 'Not authorized' }, status: :forbidden
     end
