@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import * as S from "./styles";
 
 interface FileDropzoneProps {
@@ -20,12 +20,29 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateFile = (file: File): boolean => {
     if (file.size > maxSize) {
       setError(`File size must be less than ${maxSize / 1024 / 1024}MB`);
       return false;
     }
+
+    // Validate file type if accept is specified
+    if (accept !== "*") {
+      const acceptedTypes = accept.split(",").map((type) => type.trim());
+      const fileExtension = "." + file.name.split(".").pop()?.toLowerCase();
+      const isValidType = acceptedTypes.some(
+        (type) =>
+          type.toLowerCase().includes(fileExtension) || type.includes(file.type)
+      );
+
+      if (!isValidType) {
+        setError(`File type not allowed. Accepted types: ${accept}`);
+        return false;
+      }
+    }
+
     setError("");
     return true;
   };
@@ -36,7 +53,7 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
         onFileSelect(file);
       }
     },
-    [onFileSelect, maxSize]
+    [onFileSelect, maxSize, accept]
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -71,10 +88,17 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
       const files = e.target.files;
       if (files && files.length > 0) {
         handleFile(files[0]);
+        // Reset the input to allow selecting the same file again
+        e.target.value = "";
       }
     },
     [handleFile, disabled]
   );
+
+  const handleClick = useCallback(() => {
+    if (disabled) return;
+    fileInputRef.current?.click();
+  }, [disabled]);
 
   return (
     <S.FileDropzoneContainer className={className}>
@@ -84,23 +108,30 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        onClick={handleClick}
       >
         <S.FileInput
+          ref={fileInputRef}
           type="file"
           accept={accept}
           onChange={handleFileInput}
           disabled={disabled}
         />
         <S.DropzoneContent>
-          <S.DropzoneIcon fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
+          <S.DropzoneIcon>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
           </S.DropzoneIcon>
           <S.DropzoneText>{label}</S.DropzoneText>
+          <S.DropzoneHint>
+            Supports: PDF, JPG, JPEG, PNG (Max 5MB)
+          </S.DropzoneHint>
         </S.DropzoneContent>
       </S.DropzoneArea>
       {error && <S.DropzoneError>{error}</S.DropzoneError>}

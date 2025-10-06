@@ -6,6 +6,7 @@ import Select from "../../components/Forms/Select";
 import FileDropzone from "../../components/Forms/FileDropzone";
 import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner";
+import type { ICreateApplicationPayload } from "../../redux/types";
 import * as S from "./styles";
 
 const ApplicationFormPage: React.FC = () => {
@@ -21,6 +22,7 @@ const ApplicationFormPage: React.FC = () => {
     remarks: "",
   });
   const [documents, setDocuments] = useState<File[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -34,29 +36,41 @@ const ApplicationFormPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      // Prepare application data
-      const applicationData = {
-        athlete: {
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          passport_number: formData.passport_number,
-          date_of_birth: formData.date_of_birth || undefined,
+      setUploading(true);
+
+      // Create the payload with the correct type
+      const applicationData: ICreateApplicationPayload = {
+        application: {
+          athlete_attributes: {
+            first_name: formData.first_name,
+            last_name: formData.last_name,
+            passport_number: formData.passport_number,
+            date_of_birth: formData.date_of_birth || undefined,
+          },
+          country: formData.country,
+          remarks: formData.remarks,
         },
-        country: formData.country,
-        remarks: formData.remarks,
       };
 
-      // Create application
-      const application = await createApplication(applicationData);
+      console.log("Submitting application:", applicationData);
 
-      // Upload documents
+      // Create application - unwrap() gives us the actual payload or throws an error
+      const application = await createApplication(applicationData).unwrap();
+      console.log("Application created:", application);
+
+      // Upload documents if any
       if (documents.length > 0 && application?.id) {
+        console.log("Uploading documents...");
+
         for (const file of documents) {
-          const formData = new FormData();
-          formData.append("document", file);
-          formData.append("application_id", application.id.toString());
-          formData.append("doc_type", "passport");
-          await uploadDocument(application.id, formData);
+          const uploadFormData = new FormData();
+          uploadFormData.append("document", file);
+          uploadFormData.append("application_id", application.id.toString());
+          uploadFormData.append("doc_type", "passport");
+
+          console.log("Uploading file:", file.name);
+          // Call uploadDocument with proper arguments
+          await uploadDocument(application.id, uploadFormData);
         }
       }
 
@@ -66,18 +80,22 @@ const ApplicationFormPage: React.FC = () => {
       });
     } catch (error) {
       console.error("Error submitting application:", error);
+      alert("Failed to submit application. Please try again.");
+    } finally {
+      setUploading(false);
     }
   };
 
   const countryOptions = [
     { value: "usa", label: "United States" },
-    { value: "uk", label: "United Kingdom" },
+    { value: "uk", label: " United Kingdom" },
     { value: "canada", label: "Canada" },
     { value: "australia", label: "Australia" },
     { value: "germany", label: "Germany" },
     { value: "france", label: "France" },
   ];
 
+  const isSubmitting = isLoading || uploading;
   if (isLoading) {
     return (
       <S.ApplicationFormContainer>
@@ -102,6 +120,7 @@ const ApplicationFormPage: React.FC = () => {
 
           <S.FormRow>
             <Input
+              type="text"
               label="First Name"
               value={formData.first_name}
               onChange={(value) => handleInputChange("first_name", value)}
@@ -109,6 +128,7 @@ const ApplicationFormPage: React.FC = () => {
               required
             />
             <Input
+              type="text"
               label="Last Name"
               value={formData.last_name}
               onChange={(value) => handleInputChange("last_name", value)}
@@ -118,6 +138,7 @@ const ApplicationFormPage: React.FC = () => {
           </S.FormRow>
           <S.FormRow>
             <Input
+              type="text"
               label="Passport Number"
               value={formData.passport_number}
               onChange={(value) => handleInputChange("passport_number", value)}
@@ -125,8 +146,8 @@ const ApplicationFormPage: React.FC = () => {
               required
             />
             <Input
-              label="Date of Birth"
               type="date"
+              label="Date of Birth"
               value={formData.date_of_birth}
               onChange={(value) => handleInputChange("date_of_birth", value)}
               placeholder="Select date of birth"
@@ -148,6 +169,7 @@ const ApplicationFormPage: React.FC = () => {
           />
 
           <Input
+            type="text"
             label="Remarks (Optional)"
             value={formData.remarks}
             onChange={(value) => handleInputChange("remarks", value)}
@@ -186,16 +208,17 @@ const ApplicationFormPage: React.FC = () => {
             type="button"
             variant="secondary"
             onClick={() => navigate("/dashboard")}
+            disabled={isSubmitting}
           >
             Cancel
           </Button>
           <Button
             type="submit"
             variant="primary"
-            loading={isLoading}
-            disabled={isLoading}
+            loading={isSubmitting}
+            disabled={isSubmitting}
           >
-            Submit Application
+            {isSubmitting ? "Submitting..." : "Submit Application"}
           </Button>
         </S.FormActions>
       </S.FormContainer>

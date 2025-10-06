@@ -268,3 +268,9 @@ export const DropzoneError = styled.div`
   margin-top: 8px;
   text-align: center;
 `;
+
+export const DropzoneHint = styled.p`
+  color: #9ca3af;
+  font-size: 12px;
+  margin: 4px 0 0 0;
+`;

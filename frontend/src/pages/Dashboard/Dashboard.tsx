@@ -23,7 +23,6 @@ const Dashboard: React.FC = () => {
     return null;
   }
 
-  // Filter applications based on user role
   const userApplications =
     currentUser?.role === "admin"
       ? applications
@@ -40,6 +39,8 @@ const Dashboard: React.FC = () => {
 
   const isRegularUser =
     currentUser?.role === "individual" || currentUser?.role === "corporate";
+  console.log("currentUser", currentUser);
+  console.log("isRegularUse", isRegularUser);
   const isAdmin = currentUser?.role === "admin";
 
   const handleApplicationClick = (id: number) => {

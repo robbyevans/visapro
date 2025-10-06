@@ -78,15 +78,16 @@ export interface IApplicationsState {
 
 /* --- API payload types (use these in hooks) --- */
 export interface ICreateApplicationPayload {
-  athlete_id?: number;
-  athlete?: {
-    first_name: string;
-    last_name: string;
-    passport_number: string;
-    date_of_birth?: string;
+  application: {
+    athlete_attributes: {
+      first_name: string;
+      last_name: string;
+      passport_number: string;
+      date_of_birth?: string;
+    };
+    country: string;
+    remarks?: string;
   };
-  country: string;
-  remarks?: string;
 }
 
 export interface ISignUpRequest {

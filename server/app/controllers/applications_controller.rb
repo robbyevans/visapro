@@ -1,3 +1,4 @@
+# File 9: /server/app/controllers/applications_controller.rb
 class ApplicationsController < ApplicationController
   before_action :set_application, only: [:update]
 
@@ -14,8 +15,18 @@ class ApplicationsController < ApplicationController
   end
 
   def create
-    # Ensure the application belongs to the current user
-    application = current_user.applications.new(application_params)
+    # Build application with nested athlete attributes
+    application = current_user.applications.build(application_params)
+    
+    # Create or find athlete
+    if application_params[:athlete_attributes]
+      athlete = Athlete.find_or_initialize_by(
+        passport_number: application_params[:athlete_attributes][:passport_number]
+      )
+      athlete.assign_attributes(application_params[:athlete_attributes])
+      athlete.save!
+      application.athlete = athlete
+    end
     
     if application.save
       # Notify user 
@@ -52,6 +63,16 @@ class ApplicationsController < ApplicationController
   end
 
   def application_params
-    params.require(:application).permit(:athlete_id, :country, :remarks, :status)
+    params.require(:application).permit(
+      :country, 
+      :remarks, 
+      :status,
+      athlete_attributes: [
+        :first_name, 
+        :last_name, 
+        :passport_number, 
+        :date_of_birth
+      ]
+    )
   end
 end

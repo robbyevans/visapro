@@ -50,7 +50,7 @@ export const useApplications = () => {
 
   const handleCreateApplication = useCallback(
     (payload: ICreateApplicationPayload) => {
-      return dispatch(createApplication(payload));
+      return dispatch(createApplication(payload)).unwrap();
     },
     [dispatch]
   );
@@ -70,7 +70,7 @@ export const useApplications = () => {
     ) => {
       return dispatch(
         uploadDocument({ applicationId, formData, onUploadProgress })
-      );
+      ).unwrap();
     },
     [dispatch]
   );

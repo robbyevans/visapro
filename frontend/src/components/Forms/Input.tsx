@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import * as S from "./styles";
 
 interface InputProps {
+  type?: "text" | "email" | "password" | "date" | "number";
   label: string;
-  type: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
