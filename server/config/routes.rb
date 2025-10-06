@@ -1,3 +1,4 @@
+# File: /server/config/routes.rb
 Rails.application.routes.draw do
   # Handle CORS preflight requests
   match '*path', to: 'application#handle_options_request', via: :options
@@ -5,7 +6,7 @@ Rails.application.routes.draw do
   resources :users, only: [:create]
   resources :sessions, only: [:create]
   resources :athletes, only: [:index, :create]
-  resources :applications, only: [:index, :create, :update]
+  resources :applications, only: [:index, :show, :create, :update]  # Add :show here
   resources :documents, only: [:create]
 
   # Fix password reset routes - use token as param instead of id

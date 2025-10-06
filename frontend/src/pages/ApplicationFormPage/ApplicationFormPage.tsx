@@ -9,6 +9,12 @@ import Spinner from "../../components/Spinner/Spinner";
 import type { ICreateApplicationPayload } from "../../redux/types";
 import * as S from "./styles";
 
+interface DocumentUpload {
+  file: File | null;
+  type: "passport" | "invitation_letter";
+  error?: string;
+}
+
 const ApplicationFormPage: React.FC = () => {
   const navigate = useNavigate();
   const { createApplication, uploadDocument, isLoading } = useApplications();
@@ -21,19 +27,65 @@ const ApplicationFormPage: React.FC = () => {
     country: "",
     remarks: "",
   });
-  const [documents, setDocuments] = useState<File[]>([]);
+
+  const [documents, setDocuments] = useState<DocumentUpload[]>([
+    { file: null, type: "passport" },
+    { file: null, type: "invitation_letter" },
+  ]);
+
   const [uploading, setUploading] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (formErrors[field]) {
+      setFormErrors((prev) => ({ ...prev, [field]: "" }));
+    }
   };
 
-  const handleFileSelect = (file: File) => {
-    setDocuments((prev) => [...prev, file]);
+  const handleFileSelect = (
+    file: File,
+    type: "passport" | "invitation_letter"
+  ) => {
+    setDocuments((prev) =>
+      prev.map((doc) => (doc.type === type ? { ...doc, file, error: "" } : doc))
+    );
+  };
+
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    // Validate required fields
+    if (!formData.first_name.trim()) {
+      errors.first_name = "First name is required";
+    }
+    if (!formData.last_name.trim()) {
+      errors.last_name = "Last name is required";
+    }
+    if (!formData.passport_number.trim()) {
+      errors.passport_number = "Passport number is required";
+    }
+    if (!formData.country) {
+      errors.country = "Destination country is required";
+    }
+
+    // Validate passport document (required)
+    const passportDoc = documents.find((doc) => doc.type === "passport");
+    if (!passportDoc?.file) {
+      errors.passport = "Passport copy is required";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       setUploading(true);
@@ -54,23 +106,31 @@ const ApplicationFormPage: React.FC = () => {
 
       console.log("Submitting application:", applicationData);
 
-      // Create application - unwrap() gives us the actual payload or throws an error
-      const application = await createApplication(applicationData).unwrap();
+      // Create application - the action returns a promise that resolves with the action object
+      const result = await createApplication(applicationData);
+
+      if (result.type === "applications/create/rejected") {
+        throw new Error(result.payload as string);
+      }
+
+      // The fulfilled action contains the application in the payload
+      const application = result.payload;
       console.log("Application created:", application);
 
-      // Upload documents if any
-      if (documents.length > 0 && application?.id) {
+      // Upload documents
+      if (application?.id) {
         console.log("Uploading documents...");
 
-        for (const file of documents) {
-          const uploadFormData = new FormData();
-          uploadFormData.append("document", file);
-          uploadFormData.append("application_id", application.id.toString());
-          uploadFormData.append("doc_type", "passport");
+        for (const doc of documents) {
+          if (doc.file) {
+            const uploadFormData = new FormData();
+            uploadFormData.append("document", doc.file);
+            uploadFormData.append("application_id", application.id.toString());
+            uploadFormData.append("doc_type", doc.type);
 
-          console.log("Uploading file:", file.name);
-          // Call uploadDocument with proper arguments
-          await uploadDocument(application.id, uploadFormData);
+            console.log(`Uploading ${doc.type}:`, doc.file.name);
+            await uploadDocument(application.id, uploadFormData);
+          }
         }
       }
 
@@ -88,7 +148,7 @@ const ApplicationFormPage: React.FC = () => {
 
   const countryOptions = [
     { value: "usa", label: "United States" },
-    { value: "uk", label: " United Kingdom" },
+    { value: "uk", label: "United Kingdom" },
     { value: "canada", label: "Canada" },
     { value: "australia", label: "Australia" },
     { value: "germany", label: "Germany" },
@@ -126,6 +186,7 @@ const ApplicationFormPage: React.FC = () => {
               onChange={(value) => handleInputChange("first_name", value)}
               placeholder="Enter first name"
               required
+              error={formErrors.first_name}
             />
             <Input
               type="text"
@@ -134,6 +195,7 @@ const ApplicationFormPage: React.FC = () => {
               onChange={(value) => handleInputChange("last_name", value)}
               placeholder="Enter last name"
               required
+              error={formErrors.last_name}
             />
           </S.FormRow>
           <S.FormRow>
@@ -144,6 +206,7 @@ const ApplicationFormPage: React.FC = () => {
               onChange={(value) => handleInputChange("passport_number", value)}
               placeholder="Enter passport number"
               required
+              error={formErrors.passport_number}
             />
             <Input
               type="date"
@@ -166,6 +229,7 @@ const ApplicationFormPage: React.FC = () => {
             options={countryOptions}
             placeholder="Select destination country"
             required
+            error={formErrors.country}
           />
 
           <Input
@@ -181,26 +245,68 @@ const ApplicationFormPage: React.FC = () => {
         <S.FormSection>
           <S.SectionTitle>Required Documents</S.SectionTitle>
           <S.DocumentsInfo>
-            Please upload passport copy and any supporting documents
+            <p>
+              <strong>Required:</strong> Passport copy
+            </p>
+            <p>
+              <strong>Optional:</strong> Invitation letter
+            </p>
+            <p>Supported formats: PDF, JPG, JPEG, PNG (Max 5MB each)</p>
           </S.DocumentsInfo>
 
-          <FileDropzone
-            onFileSelect={handleFileSelect}
-            accept=".pdf,.jpg,.jpeg,.png"
-            maxSize={5 * 1024 * 1024} // 5MB
-            label="Drop documents here or click to browse"
-          />
+          {/* Passport Upload (Required) */}
+          <S.DocumentUploadSection>
+            <S.DocumentUploadHeader>
+              <S.DocumentTitle>Passport Copy *</S.DocumentTitle>
+              <S.DocumentRequired>Required</S.DocumentRequired>
+            </S.DocumentUploadHeader>
+            <S.DocumentDescription>
+              Upload a clear copy of the passport information page
+            </S.DocumentDescription>
+            <FileDropzone
+              onFileSelect={(file) => handleFileSelect(file, "passport")}
+              accept=".pdf,.jpg,.jpeg,.png"
+              maxSize={5 * 1024 * 1024} // 5MB
+              label="Drop passport copy here or click to browse"
+            />
+            {formErrors.passport && (
+              <S.DocumentError>{formErrors.passport}</S.DocumentError>
+            )}
+            {documents.find((doc) => doc.type === "passport")?.file && (
+              <S.UploadedFile>
+                ✓ {documents.find((doc) => doc.type === "passport")?.file?.name}
+              </S.UploadedFile>
+            )}
+          </S.DocumentUploadSection>
 
-          {documents.length > 0 && (
-            <S.UploadedFiles>
-              <h4>Uploaded Files:</h4>
-              {documents.map((file, index) => (
-                <S.FileItem key={index}>
-                  {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                </S.FileItem>
-              ))}
-            </S.UploadedFiles>
-          )}
+          {/* Invitation Letter Upload (Optional) */}
+          <S.DocumentUploadSection>
+            <S.DocumentUploadHeader>
+              <S.DocumentTitle>Invitation Letter</S.DocumentTitle>
+              <S.DocumentOptional>Optional</S.DocumentOptional>
+            </S.DocumentUploadHeader>
+            <S.DocumentDescription>
+              Upload invitation letter from the host organization (if available)
+            </S.DocumentDescription>
+            <FileDropzone
+              onFileSelect={(file) =>
+                handleFileSelect(file, "invitation_letter")
+              }
+              accept=".pdf,.jpg,.jpeg,.png"
+              maxSize={5 * 1024 * 1024} // 5MB
+              label="Drop invitation letter here or click to browse"
+            />
+            {documents.find((doc) => doc.type === "invitation_letter")
+              ?.file && (
+              <S.UploadedFile>
+                ✓{" "}
+                {
+                  documents.find((doc) => doc.type === "invitation_letter")
+                    ?.file?.name
+                }
+              </S.UploadedFile>
+            )}
+          </S.DocumentUploadSection>
         </S.FormSection>
 
         <S.FormActions>

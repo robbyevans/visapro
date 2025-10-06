@@ -1,21 +1,28 @@
-# File 2: /server/app/controllers/applications_controller.rb
 class ApplicationsController < ApplicationController
-  before_action :set_application, only: [:update]
+  before_action :set_application, only: [:show, :update]
 
   def index
     if current_user.admin?
-      # Admin sees all applications with all associations
       applications = Application.includes(:user, :athlete, :documents).all
     else
-      # Regular users see only their own applications with all associations
       applications = current_user.applications.includes(:athlete, :documents)
     end
     
-    # Render with all necessary associations
     render json: applications.as_json(
       include: {
         athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
         documents: { only: [:id, :doc_type, :file_url, :created_at] }
+      }
+    )
+  end
+
+  def show
+    # The @application is already set by before_action :set_application
+    render json: @application.as_json(
+      include: {
+        athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+        documents: { only: [:id, :doc_type, :file_url, :created_at] },
+        user: { only: [:id, :name, :email] }  # Include user info for admin view
       }
     )
   end
@@ -85,9 +92,12 @@ class ApplicationsController < ApplicationController
   def set_application
     @application = Application.find(params[:id])
     
+    # Ensure users can only access their own applications unless admin
     unless current_user.admin? || @application.user_id == current_user.id
       render json: { error: 'Not authorized' }, status: :forbidden
     end
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Application not found' }, status: :not_found
   end
 
   def application_params

@@ -101,13 +101,85 @@ export const DocumentsInfo = styled.div`
   background: #f8fafc;
   padding: 16px;
   border-radius: 6px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   font-size: 14px;
   color: #4b5563;
 
-  ul {
-    margin: 8px 0 0 20px;
+  p {
+    margin: 4px 0;
   }
+
+  strong {
+    color: #374151;
+  }
+`;
+
+export const DocumentUploadSection = styled.div`
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fafafa;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const DocumentUploadHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+export const DocumentTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+`;
+
+export const DocumentRequired = styled.span`
+  background: #ef4444;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+`;
+
+export const DocumentOptional = styled.span`
+  background: #6b7280;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+`;
+
+export const DocumentDescription = styled.p`
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 12px;
+`;
+
+export const DocumentError = styled.div`
+  color: #ef4444;
+  font-size: 14px;
+  margin-top: 8px;
+  font-weight: 500;
+`;
+
+export const UploadedFile = styled.div`
+  background: #d1fae5;
+  border: 1px solid #a7f3d0;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #065f46;
+  font-weight: 500;
 `;
 
 export const UploadedFiles = styled.div`
