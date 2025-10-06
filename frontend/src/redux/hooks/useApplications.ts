@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   setLoading,
   setError,
@@ -38,8 +37,6 @@ import type {
 import { getErrorMessage } from "../../utils/error";
 import { axiosInstance } from "../api";
 import type { AxiosProgressEvent } from "axios";
-// import the slice Document type so dispatch payload matches reducer expectation
-import type { Document as SliceDocument } from "../slices/applicationsSlice";
 
 export const useApplications = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -142,7 +139,7 @@ export const useApplications = () => {
         });
 
         // cast response to the slice Document type so TS is happy
-        const document = res.data as unknown as SliceDocument;
+        const document = res.data as unknown as IDocument;
         dispatch(addDocumentToApplication({ applicationId, document }));
         dispatch(setUploadProgress(100));
         setTimeout(() => dispatch(clearUploadProgress()), 500);

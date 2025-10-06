@@ -7,11 +7,11 @@ module Admin
       render json: applications
     end
 
-      def create
-    # Ensure the application belongs to the current user
-    application = current_user.applications.new(application_params)
+    def create
+      # Ensure the application belongs to the current user
+      application = current_user.applications.new(application_params)
     
-    if application.save
+      if application.save
       # Notify user 
       UserMailer.application_submitted(current_user, application).deliver_now
 

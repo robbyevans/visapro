@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Handle CORS preflight requests
+  match '*path', to: 'application#handle_options_request', via: :options
+
   resources :users, only: [:create]
   resources :sessions, only: [:create]
   resources :athletes, only: [:index, :create]

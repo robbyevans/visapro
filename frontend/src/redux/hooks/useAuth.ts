@@ -1,12 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setLoading,
-  setToken,
-  setError,
-  logout,
-  clearError,
-} from "../slices/authSlice";
+import { logout, clearError, loginUser, signUpUser } from "../slices/authSlice";
 import { setUser } from "../slices/userSlice";
 import {
   selectToken,
@@ -15,10 +9,7 @@ import {
   selectAuthError,
 } from "../selectors/authSelectors";
 import type { AppDispatch } from "../store";
-import type { ILoginResponse, IUser } from "../types";
-
-import { getErrorMessage } from "../../utils/error"; // << shared helper
-import { axiosInstance } from "../api";
+import type { IUser, ISignUpRequest } from "../types";
 
 export const useAuth = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,27 +19,35 @@ export const useAuth = () => {
   const isLoading = useSelector(selectAuthLoading);
   const error = useSelector(selectAuthError);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      dispatch(setLoading(true));
+  const handleSignUp = useCallback(
+    async (userData: ISignUpRequest) => {
       try {
-        const api = axiosInstance(); // no token yet
-        const res = await api.post<ILoginResponse>("/login", {
-          email,
-          password,
-        });
-        const { token: tkn, user } = res.data;
-        dispatch(setToken(tkn));
-        dispatch(setUser(user as IUser));
-        dispatch(setLoading(false));
-      } catch (err: unknown) {
-        dispatch(setError(getErrorMessage(err)));
+        const result = await dispatch(signUpUser(userData)).unwrap();
+        // Set user data in user slice
+        dispatch(setUser(result.user as IUser));
+        return { success: true };
+      } catch (error) {
+        return { success: false, error: error as string };
       }
     },
     [dispatch]
   );
 
-  const signOut = useCallback(() => {
+  const handleLogIn = useCallback(
+    async (email: string, password: string) => {
+      try {
+        const result = await dispatch(loginUser({ email, password })).unwrap();
+        // Set user data in user slice
+        dispatch(setUser(result.user as IUser));
+        return { success: true };
+      } catch (error) {
+        return { success: false, error: error as string };
+      }
+    },
+    [dispatch]
+  );
+
+  const handleLogOut = useCallback(() => {
     dispatch(logout());
     dispatch(setUser(null));
   }, [dispatch]);
@@ -62,8 +61,9 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     error,
-    login,
-    signOut,
+    handleSignUp,
+    handleLogIn,
+    handleLogOut,
     clearAuthError,
   };
 };

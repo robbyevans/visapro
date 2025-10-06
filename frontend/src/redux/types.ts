@@ -2,7 +2,7 @@
 export interface IDocument {
   id: number;
   application_id: number;
-  doc_type: "passport" | "invitation_letter";
+  doc_type: "passport" | "invitation_letter" | "visa";
   file_url: string;
   created_at: string;
 }
@@ -32,7 +32,8 @@ export type TApplicationStatus =
   | "pending"
   | "approved"
   | "rejected"
-  | "invoiced";
+  | "invoiced"
+  | "completed";
 
 export interface IApplication {
   id: number;
@@ -86,6 +87,13 @@ export interface ICreateApplicationPayload {
   };
   country: string;
   remarks?: string;
+}
+
+export interface ISignUpRequest {
+  name: string;
+  email: string;
+  password: string;
+  role?: TUserRole; // optional since it might have a default on backend
 }
 
 export type TUpdateApplicationPayload = Partial<

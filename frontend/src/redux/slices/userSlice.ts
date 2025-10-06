@@ -1,29 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: "individual" | "corporate" | "admin";
-}
+import type { IUser, IUserState, IAthlete } from "../types";
 
-export interface Athlete {
-  id: number;
-  first_name: string;
-  last_name: string;
-  date_of_birth?: string;
-  passport_number: string;
-  user_id: number;
-}
-
-interface UserState {
-  currentUser: User | null;
-  athletes: Athlete[];
-  isLoading: boolean;
-  error: string | null;
-}
-
-const initialState: UserState = {
+const initialState: IUserState = {
   currentUser: null,
   athletes: [],
   isLoading: false,
@@ -38,18 +17,18 @@ const userSlice = createSlice({
       state.isLoading = action.payload;
       if (action.payload) state.error = null;
     },
-    setUser(state, action: PayloadAction<User | null>) {
+    setUser(state, action: PayloadAction<IUser | null>) {
       state.currentUser = action.payload;
       state.isLoading = false;
     },
-    setAthletes(state, action: PayloadAction<Athlete[]>) {
+    setAthletes(state, action: PayloadAction<IAthlete[]>) {
       state.athletes = action.payload;
       state.isLoading = false;
     },
-    addAthlete(state, action: PayloadAction<Athlete>) {
+    addAthlete(state, action: PayloadAction<IAthlete>) {
       state.athletes.push(action.payload);
     },
-    updateUser(state, action: PayloadAction<Partial<User>>) {
+    updateUser(state, action: PayloadAction<Partial<IUser>>) {
       if (state.currentUser)
         state.currentUser = { ...state.currentUser, ...action.payload };
     },

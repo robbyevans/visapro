@@ -1,41 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-/* Domain types */
-export interface Document {
-  id: number;
-  application_id: number;
-  doc_type: "passport" | "invitation_letter";
-  file_url: string;
-  created_at: string;
-}
+import type { IDocument, IApplication, IApplicationsState } from "../types";
 
-export interface Application {
-  id: number;
-  user_id: number;
-  athlete_id: number;
-  athlete?: {
-    first_name: string;
-    last_name: string;
-    date_of_birth?: string;
-    passport_number?: string;
-  };
-  country: string;
-  status: "pending" | "approved" | "rejected" | "invoiced";
-  remarks?: string;
-  documents: Document[];
-  created_at: string;
-  updated_at: string;
-}
-
-interface ApplicationsState {
-  applications: Application[];
-  currentApplication: Application | null;
-  isLoading: boolean;
-  error: string | null;
-  uploadProgress: number;
-}
-
-const initialState: ApplicationsState = {
+const initialState: IApplicationsState = {
   applications: [],
   currentApplication: null,
   isLoading: false,
@@ -55,13 +22,13 @@ const applicationsSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    setApplications(state, action: PayloadAction<Application[]>) {
+    setApplications(state, action: PayloadAction<IApplication[]>) {
       state.applications = action.payload;
     },
-    addApplication(state, action: PayloadAction<Application>) {
+    addApplication(state, action: PayloadAction<IApplication>) {
       state.applications.push(action.payload);
     },
-    updateApplication(state, action: PayloadAction<Application>) {
+    updateApplication(state, action: PayloadAction<IApplication>) {
       const idx = state.applications.findIndex(
         (a) => a.id === action.payload.id
       );
@@ -70,12 +37,12 @@ const applicationsSlice = createSlice({
         state.currentApplication = action.payload;
       }
     },
-    setCurrentApplication(state, action: PayloadAction<Application | null>) {
+    setCurrentApplication(state, action: PayloadAction<IApplication | null>) {
       state.currentApplication = action.payload;
     },
     addDocumentToApplication(
       state,
-      action: PayloadAction<{ applicationId: number; document: Document }>
+      action: PayloadAction<{ applicationId: number; document: IDocument }>
     ) {
       const { applicationId, document } = action.payload;
       const app = state.applications.find((a) => a.id === applicationId);
