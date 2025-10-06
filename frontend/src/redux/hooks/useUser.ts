@@ -1,11 +1,10 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setLoading,
-  setUser,
-  setAthletes,
-  addAthlete,
-  setError,
+  fetchUser,
+  fetchAthletes,
+  createAthlete,
+  updateUserProfile,
   clearError,
 } from "../slices/userSlice";
 import {
@@ -14,12 +13,7 @@ import {
   selectUserLoading,
   selectUserError,
 } from "../selectors/userSelectors";
-import { selectToken } from "../selectors/authSelectors";
 import type { AppDispatch } from "../store";
-import type { IUser, IAthlete } from "../types";
-
-import { getErrorMessage } from "../../utils/error"; // << shared helper
-import { axiosInstance } from "../api";
 
 export const useUser = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,53 +22,35 @@ export const useUser = () => {
   const athletes = useSelector(selectAthletes);
   const isLoading = useSelector(selectUserLoading);
   const error = useSelector(selectUserError);
-  const token = useSelector(selectToken);
 
-  const fetchUser = useCallback(async () => {
-    if (!token) return;
-    dispatch(setLoading(true));
-    try {
-      const api = axiosInstance(token);
-      const res = await api.get<{ user: IUser }>("/me");
-      dispatch(setUser(res.data.user));
-    } catch (err: unknown) {
-      dispatch(setError(getErrorMessage(err)));
-    }
-  }, [dispatch, token]);
+  const handleFetchUser = useCallback(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
 
-  const fetchAthletes = useCallback(async () => {
-    if (!token) return;
-    dispatch(setLoading(true));
-    try {
-      const api = axiosInstance(token);
-      const res = await api.get<IAthlete[]>("/athletes");
-      dispatch(setAthletes(res.data));
-    } catch (err: unknown) {
-      dispatch(setError(getErrorMessage(err)));
-    }
-  }, [dispatch, token]);
+  const handleFetchAthletes = useCallback(() => {
+    dispatch(fetchAthletes());
+  }, [dispatch]);
 
-  const createAthlete = useCallback(
-    async (payload: {
+  const handleCreateAthlete = useCallback(
+    (payload: {
       first_name: string;
       last_name: string;
       passport_number: string;
       date_of_birth?: string;
     }) => {
-      if (!token) throw new Error("Not authenticated");
-      dispatch(setLoading(true));
-      try {
-        const api = axiosInstance(token);
-        const res = await api.post<IAthlete>("/athletes", payload);
-        dispatch(addAthlete(res.data));
-      } catch (err: unknown) {
-        dispatch(setError(getErrorMessage(err)));
-      }
+      return dispatch(createAthlete(payload));
     },
-    [dispatch, token]
+    [dispatch]
   );
 
-  const clearUserError = useCallback(() => {
+  const handleUpdateUser = useCallback(
+    (updates: Partial<any>) => {
+      return dispatch(updateUserProfile(updates));
+    },
+    [dispatch]
+  );
+
+  const handleClearError = useCallback(() => {
     dispatch(clearError());
   }, [dispatch]);
 
@@ -83,9 +59,10 @@ export const useUser = () => {
     athletes,
     isLoading,
     error,
-    fetchUser,
-    fetchAthletes,
-    createAthlete,
-    clearUserError,
+    fetchUser: handleFetchUser,
+    fetchAthletes: handleFetchAthletes,
+    createAthlete: handleCreateAthlete,
+    updateUser: handleUpdateUser,
+    clearUserError: handleClearError,
   };
 };

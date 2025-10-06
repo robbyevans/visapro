@@ -1,17 +1,23 @@
-module Admin
-  class ApplicationsController < ApplicationController
-    before_action :ensure_admin
+class ApplicationsController < ApplicationController
+  before_action :set_application, only: [:update]
 
-     def index
-      applications = Application.all.includes(:user, :athlete, :documents)
-      render json: applications
+  def index
+    if current_user.admin?
+      # Admin sees all applications
+      applications = Application.includes(:user, :athlete, :documents).all
+    else
+      # Regular users see only their own applications
+      applications = current_user.applications.includes(:athlete, :documents)
     end
-
-    def create
-      # Ensure the application belongs to the current user
-      application = current_user.applications.new(application_params)
     
-      if application.save
+    render json: applications
+  end
+
+  def create
+    # Ensure the application belongs to the current user
+    application = current_user.applications.new(application_params)
+    
+    if application.save
       # Notify user 
       UserMailer.application_submitted(current_user, application).deliver_now
 
@@ -26,24 +32,26 @@ module Admin
     end
   end
 
-     def update
-      application = Application.find(params[:id])
-      if application.update(admin_application_params)
-        # UserMailer.application_updated(application.user, application).deliver_now
-        render json: application
-      else
-        render json: { errors: application.errors.full_messages }, status: :unprocessable_entity
-      end
+  def update
+    if @application.update(application_params)
+      render json: @application
+    else
+      render json: { errors: @application.errors.full_messages }, status: :unprocessable_entity
     end
+  end
 
-    private
+  private
 
-    def ensure_admin
-      render json: { error: 'Admin access required' }, status: :forbidden unless current_user&.admin?
+  def set_application
+    @application = Application.find(params[:id])
+    
+    # Ensure users can only update their own applications unless admin
+    unless current_user.admin? || @application.user_id == current_user.id
+      render json: { error: 'Not authorized' }, status: :forbidden
     end
+  end
 
-    def admin_application_params
-      params.permit(:status, :remarks)
-    end
+  def application_params
+    params.require(:application).permit(:athlete_id, :country, :remarks, :status)
   end
 end

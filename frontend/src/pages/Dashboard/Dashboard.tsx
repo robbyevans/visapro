@@ -15,22 +15,12 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchApplications();
-    }
-  }, [isAuthenticated, fetchApplications]);
+    fetchApplications();
+  }, []);
 
   if (!isAuthenticated) {
     navigate("/login");
     return null;
-  }
-
-  if (isLoading) {
-    return (
-      <S.DashboardContainer>
-        <Spinner size="lg" />
-      </S.DashboardContainer>
-    );
   }
 
   // Filter applications based on user role
@@ -59,6 +49,10 @@ const Dashboard: React.FC = () => {
       navigate(`/applications/${id}`);
     }
   };
+
+  if (isLoading) {
+    return <Spinner size="lg" />;
+  }
 
   return (
     <S.DashboardContainer>
