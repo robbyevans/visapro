@@ -2,9 +2,13 @@ Rails.application.routes.draw do
   # Handle CORS preflight requests
   match '*path', to: 'application#handle_options_request', via: :options
 
+  # Active Storage routes
+  resolve("ActiveStorage::Blob") { |blob, options| route_for(:rails_blob, blob, options) }
+  resolve("ActiveStorage::Attachment") { |attachment, options| route_for(:rails_blob, attachment.blob, options) }
+
   resources :users, only: [:create] do
     collection do
-      patch :update_theme  # This should be correct
+      patch :update_theme
     end
   end
 

@@ -274,3 +274,41 @@ export const TimelineRemarks = styled.p`
   margin: 0;
   font-style: italic;
 `;
+
+export const DocumentActions = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  align-items: center;
+`;
+
+export const PreviewButton = styled.button`
+  background: none;
+  border: 1px solid ${({ theme }) => theme.primaryColors["500"]};
+  color: ${({ theme }) => theme.primaryColors["500"]};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  cursor: pointer;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.primaryColors["50"]};
+  }
+`;
+
+export const DownloadButton = styled.button`
+  background: none;
+  border: 1px solid ${({ theme }) => theme.successColors["500"]};
+  color: ${({ theme }) => theme.successColors["500"]};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  cursor: pointer;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.successColors["50"]};
+  }
+`;

@@ -4,6 +4,7 @@ import { useAuth } from "../../redux/hooks/useAuth";
 import Button from "../../components/Button/Button";
 import Footer from "../../components/Footer/Footer";
 import * as S from "./styles";
+import { STATIC_COLORS } from "../../styles";
 
 const HomePage: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -100,7 +101,12 @@ const HomePage: React.FC = () => {
             <S.HeroButtons>
               {isAuthenticated ? (
                 <Link to="/dashboard">
-                  <Button variant="primary" size="lg" pulsating>
+                  <Button
+                    textColor={STATIC_COLORS.base.white}
+                    variant="primary"
+                    size="lg"
+                    pulsating
+                  >
                     Go to Dashboard
                   </Button>
                 </Link>

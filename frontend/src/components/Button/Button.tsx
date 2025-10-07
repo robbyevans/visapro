@@ -11,6 +11,7 @@ interface ButtonProps {
   loading?: boolean;
   className?: string;
   pulsating?: boolean;
+  textColor?: string; // <-- new optional prop
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -23,6 +24,7 @@ const Button: React.FC<ButtonProps> = ({
   loading = false,
   className = "",
   pulsating = false,
+  textColor,
 }) => {
   return (
     <S.Button
@@ -34,6 +36,7 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
       className={className}
       pulsating={pulsating}
+      textColor={textColor} // <-- pass it down
     >
       {children}
     </S.Button>

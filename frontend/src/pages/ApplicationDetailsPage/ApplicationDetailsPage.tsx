@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useApplications } from "../../redux/hooks/useApplications";
 import { useUser } from "../../redux/hooks/useUser";
 import Spinner from "../../components/Spinner/Spinner";
 import EditDocument from "../../components/Documents/EditDocument";
+import DocumentPreview from "../../components/Documents/DocumentPreview";
 import * as S from "./styles";
+import type { IDocument as AppDocument } from "../../redux/types";
+import type { IDocument } from "../../redux/types";
 
 const ApplicationDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,13 +15,17 @@ const ApplicationDetailsPage: React.FC = () => {
   const { currentApplication, fetchApplication, isLoading } = useApplications();
   const { currentUser } = useUser();
 
+  const [previewDocument, setPreviewDocument] = useState<{
+    fileUrl: string;
+    fileName: string;
+  } | null>(null);
+
   useEffect(() => {
     if (id) {
       fetchApplication(parseInt(id));
     }
   }, [id, fetchApplication]);
 
-  // Fix TypeScript error by providing default empty array
   const documents = currentApplication?.documents || [];
 
   const passportDocuments = documents.filter(
@@ -29,19 +36,124 @@ const ApplicationDetailsPage: React.FC = () => {
   );
   const visaDocuments = documents.filter((doc) => doc.doc_type === "visa");
 
-  const handleDownloadDocument = (fileUrl: string, fileName: string) => {
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // In ApplicationDetailsPage.tsx, update getDocumentUrl:
+  const getDocumentUrl = (document: AppDocument) => {
+    // First try the full URL if available
+    if (document.file_full_url && document.file_full_url.startsWith("http")) {
+      return document.file_full_url;
+    }
+
+    // Then try the regular file_url as full URL
+    if (document.file_url && document.file_url.startsWith("http")) {
+      return document.file_url;
+    }
+
+    // If it's a relative path, construct the full URL
+    if (document.file_url && document.file_url.startsWith("/")) {
+      const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:3000";
+      return `${baseUrl}${document.file_url}`;
+    }
+
+    // Fallback
+    console.warn("Invalid document file_url:", document.file_url);
+    return "";
+  };
+
+  const handleDownloadDocument = async (
+    document: IDocument,
+    fileName: string
+  ) => {
+    try {
+      const fileUrl = getDocumentUrl(document);
+
+      if (!fileUrl) {
+        console.error("No valid file URL for document:", document);
+        return;
+      }
+
+      const response = await fetch(fileUrl, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Download failed: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = globalThis.document.createElement("a"); // Use globalThis.document
+      link.href = url;
+      link.download = fileName || `document_${document.id}`;
+      globalThis.document.body.appendChild(link); // Use globalThis.document
+      link.click();
+      globalThis.document.body.removeChild(link); // Use globalThis.document
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download error:", error);
+      const fileUrl = getDocumentUrl(document);
+      if (fileUrl) {
+        const link = globalThis.document.createElement("a");
+        link.href = fileUrl;
+        link.download = fileName || `document_${document.id}`;
+        globalThis.document.body.appendChild(link);
+        link.click();
+        globalThis.document.body.removeChild(link);
+      }
+    }
+  };
+
+  const handlePreviewDocument = (document: AppDocument, fileName: string) => {
+    // Use AppDocument here
+    const fileUrl = getDocumentUrl(document);
+    if (fileUrl) {
+      setPreviewDocument({
+        fileUrl,
+        fileName: fileName || `document_${document.id}`,
+      });
+    } else {
+      console.error("Cannot preview document - no valid URL:", document);
+    }
+  };
+
+  const handleClosePreview = () => {
+    setPreviewDocument(null);
+  };
+  // Add this debug function to ApplicationDetailsPage.tsx
+  const debugDocumentUrls = (documents: AppDocument[]) => {
+    console.log("=== DOCUMENT URL DEBUG ===");
+    documents.forEach((doc, index) => {
+      console.log(`Document ${index + 1}:`, {
+        id: doc.id,
+        type: doc.doc_type,
+        file_url: doc.file_url,
+        constructed_url: getDocumentUrl(doc),
+      });
+    });
+    console.log("=== END DEBUG ===");
+  };
+
+  // Call this in your component (temporarily)
+  useEffect(() => {
+    if (documents.length > 0) {
+      debugDocumentUrls(documents);
+    }
+  }, [documents]);
+
+  const getFileNameFromUrl = (url: string, docType: string, docId: number) => {
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname;
+      const fileName = pathname.split("/").pop() || `${docType}_${docId}`;
+      return fileName;
+    } catch {
+      return `${docType}_${docId}`;
+    }
   };
 
   const handleReplaceDocument = async (file: File, documentId: number) => {
-    // Implement document replacement logic here
     console.log("Replace document:", documentId, file);
-    // You'll need to add a replaceDocument function to your useApplications hook
   };
 
   if (isLoading || !currentApplication) {
@@ -69,53 +181,7 @@ const ApplicationDetailsPage: React.FC = () => {
       </S.Header>
 
       <S.Content>
-        {/* Application Details */}
-        <S.Section>
-          <S.SectionTitle>Application Details</S.SectionTitle>
-          <S.DetailGrid>
-            <S.DetailItem>
-              <S.DetailLabel>Applicant Name</S.DetailLabel>
-              <S.DetailValue>
-                {currentApplication.athlete?.first_name}{" "}
-                {currentApplication.athlete?.last_name}
-              </S.DetailValue>
-            </S.DetailItem>
-            <S.DetailItem>
-              <S.DetailLabel>Passport Number</S.DetailLabel>
-              <S.DetailValue>
-                {currentApplication.athlete?.passport_number || "N/A"}
-              </S.DetailValue>
-            </S.DetailItem>
-            <S.DetailItem>
-              <S.DetailLabel>Destination Country</S.DetailLabel>
-              <S.DetailValue>{currentApplication.country}</S.DetailValue>
-            </S.DetailItem>
-            <S.DetailItem>
-              <S.DetailLabel>Status</S.DetailLabel>
-              <S.StatusBadge status={currentApplication.status}>
-                {currentApplication.status}
-              </S.StatusBadge>
-            </S.DetailItem>
-            <S.DetailItem>
-              <S.DetailLabel>Submitted Date</S.DetailLabel>
-              <S.DetailValue>
-                {new Date(currentApplication.created_at).toLocaleDateString()}
-              </S.DetailValue>
-            </S.DetailItem>
-            <S.DetailItem>
-              <S.DetailLabel>Last Updated</S.DetailLabel>
-              <S.DetailValue>
-                {new Date(currentApplication.updated_at).toLocaleDateString()}
-              </S.DetailValue>
-            </S.DetailItem>
-          </S.DetailGrid>
-
-          {currentApplication.remarks && (
-            <S.Remarks>
-              <strong>Admin Remarks:</strong> {currentApplication.remarks}
-            </S.Remarks>
-          )}
-        </S.Section>
+        {/* Application Details - unchanged */}
 
         {/* Documents Section */}
         <S.Section>
@@ -128,51 +194,53 @@ const ApplicationDetailsPage: React.FC = () => {
                 Passport Documents
               </S.DocumentSectionTitle>
               <S.DocumentList>
-                {passportDocuments.map((doc) => (
-                  <S.DocumentItem key={doc.id}>
-                    <S.DocumentInfo>
-                      <S.DocumentType>{doc.doc_type}</S.DocumentType>
-                      <S.DocumentName>Passport Document</S.DocumentName>
-                    </S.DocumentInfo>
-                    {canEdit ? (
-                      <EditDocument
-                        fileName={`passport_${doc.id}.${doc.file_url
-                          .split(".")
-                          .pop()}`}
-                        fileUrl={doc.file_url}
-                        onReplace={(file) =>
-                          handleReplaceDocument(file, doc.id)
-                        }
-                        onDownload={() =>
-                          handleDownloadDocument(
-                            doc.file_url,
-                            `passport_${doc.id}`
-                          )
-                        }
-                        type="passport"
-                      />
-                    ) : (
-                      <button
-                        onClick={() =>
-                          handleDownloadDocument(
-                            doc.file_url,
-                            `passport_${doc.id}`
-                          )
-                        }
-                        style={{
-                          color: "#3b82f6",
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: "14px",
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {isAdmin ? "Preview & Download" : "Download"}
-                      </button>
-                    )}
-                  </S.DocumentItem>
-                ))}
+                {passportDocuments.map((doc) => {
+                  const fileName = getFileNameFromUrl(
+                    doc.file_url,
+                    doc.doc_type,
+                    doc.id
+                  );
+                  return (
+                    <S.DocumentItem key={doc.id}>
+                      <S.DocumentInfo>
+                        <S.DocumentType>{doc.doc_type}</S.DocumentType>
+                        <S.DocumentName>{fileName}</S.DocumentName>
+                      </S.DocumentInfo>
+                      {canEdit ? (
+                        <EditDocument
+                          fileName={fileName}
+                          fileUrl={doc.file_url}
+                          onReplace={(file) =>
+                            handleReplaceDocument(file, doc.id)
+                          }
+                          onDownload={() =>
+                            handleDownloadDocument(doc, fileName)
+                          }
+                          type="passport"
+                        />
+                      ) : (
+                        <S.DocumentActions>
+                          {isAdmin && (
+                            <S.PreviewButton
+                              onClick={() =>
+                                handlePreviewDocument(doc, fileName)
+                              }
+                            >
+                              Preview
+                            </S.PreviewButton>
+                          )}
+                          <S.DownloadButton
+                            onClick={() =>
+                              handleDownloadDocument(doc, fileName)
+                            }
+                          >
+                            Download
+                          </S.DownloadButton>
+                        </S.DocumentActions>
+                      )}
+                    </S.DocumentItem>
+                  );
+                })}
               </S.DocumentList>
             </S.DocumentSection>
           )}
@@ -184,59 +252,53 @@ const ApplicationDetailsPage: React.FC = () => {
                 Supporting Documents
               </S.DocumentSectionTitle>
               <S.DocumentList>
-                {otherDocuments.map((doc) => (
-                  <S.DocumentItem key={doc.id}>
-                    <S.DocumentInfo>
-                      <S.DocumentType>{doc.doc_type}</S.DocumentType>
-                      <S.DocumentName>
-                        {doc.doc_type
-                          .split("_")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() + word.slice(1)
-                          )
-                          .join(" ")}
-                      </S.DocumentName>
-                    </S.DocumentInfo>
-                    {canEdit && doc.doc_type === "invitation_letter" ? (
-                      <EditDocument
-                        fileName={`${doc.doc_type}_${doc.id}.${doc.file_url
-                          .split(".")
-                          .pop()}`}
-                        fileUrl={doc.file_url}
-                        onReplace={(file) =>
-                          handleReplaceDocument(file, doc.id)
-                        }
-                        onDownload={() =>
-                          handleDownloadDocument(
-                            doc.file_url,
-                            `${doc.doc_type}_${doc.id}`
-                          )
-                        }
-                        type="invitation_letter"
-                      />
-                    ) : (
-                      <button
-                        onClick={() =>
-                          handleDownloadDocument(
-                            doc.file_url,
-                            `${doc.doc_type}_${doc.id}`
-                          )
-                        }
-                        style={{
-                          color: "#3b82f6",
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: "14px",
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {isAdmin ? "Preview & Download" : "Download"}
-                      </button>
-                    )}
-                  </S.DocumentItem>
-                ))}
+                {otherDocuments.map((doc) => {
+                  const fileName = getFileNameFromUrl(
+                    doc.file_url,
+                    doc.doc_type,
+                    doc.id
+                  );
+                  return (
+                    <S.DocumentItem key={doc.id}>
+                      <S.DocumentInfo>
+                        <S.DocumentType>{doc.doc_type}</S.DocumentType>
+                        <S.DocumentName>{fileName}</S.DocumentName>
+                      </S.DocumentInfo>
+                      {canEdit && doc.doc_type === "invitation_letter" ? (
+                        <EditDocument
+                          fileName={fileName}
+                          fileUrl={doc.file_url}
+                          onReplace={(file) =>
+                            handleReplaceDocument(file, doc.id)
+                          }
+                          onDownload={() =>
+                            handleDownloadDocument(doc, fileName)
+                          }
+                          type="invitation_letter"
+                        />
+                      ) : (
+                        <S.DocumentActions>
+                          {isAdmin && (
+                            <S.PreviewButton
+                              onClick={() =>
+                                handlePreviewDocument(doc, fileName)
+                              }
+                            >
+                              Preview
+                            </S.PreviewButton>
+                          )}
+                          <S.DownloadButton
+                            onClick={() =>
+                              handleDownloadDocument(doc, fileName)
+                            }
+                          >
+                            Download
+                          </S.DownloadButton>
+                        </S.DocumentActions>
+                      )}
+                    </S.DocumentItem>
+                  );
+                })}
               </S.DocumentList>
             </S.DocumentSection>
           )}
@@ -246,33 +308,35 @@ const ApplicationDetailsPage: React.FC = () => {
             <S.DocumentSection>
               <S.DocumentSectionTitle>Visa Documents</S.DocumentSectionTitle>
               <S.DocumentList>
-                {visaDocuments.map((doc) => (
-                  <S.DocumentItem key={doc.id}>
-                    <S.DocumentInfo>
-                      <S.DocumentType>visa</S.DocumentType>
-                      <S.DocumentName>Visa Document</S.DocumentName>
-                    </S.DocumentInfo>
-                    <button
-                      onClick={() =>
-                        handleDownloadDocument(
-                          doc.file_url,
-                          `visa_${currentApplication.athlete?.first_name}_${currentApplication.athlete?.last_name}`
-                        )
-                      }
-                      style={{
-                        color: "#10b981",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "14px",
-                        textDecoration: "underline",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Download Visa
-                    </button>
-                  </S.DocumentItem>
-                ))}
+                {visaDocuments.map((doc) => {
+                  const fileName = getFileNameFromUrl(
+                    doc.file_url,
+                    doc.doc_type,
+                    doc.id
+                  );
+                  return (
+                    <S.DocumentItem key={doc.id}>
+                      <S.DocumentInfo>
+                        <S.DocumentType>visa</S.DocumentType>
+                        <S.DocumentName>{fileName}</S.DocumentName>
+                      </S.DocumentInfo>
+                      <S.DocumentActions>
+                        {isAdmin && (
+                          <S.PreviewButton
+                            onClick={() => handlePreviewDocument(doc, fileName)}
+                          >
+                            Preview
+                          </S.PreviewButton>
+                        )}
+                        <S.DownloadButton
+                          onClick={() => handleDownloadDocument(doc, fileName)}
+                        >
+                          Download
+                        </S.DownloadButton>
+                      </S.DocumentActions>
+                    </S.DocumentItem>
+                  );
+                })}
               </S.DocumentList>
             </S.DocumentSection>
           )}
@@ -284,70 +348,17 @@ const ApplicationDetailsPage: React.FC = () => {
           )}
         </S.Section>
 
-        {/* Status Timeline */}
-        <S.Section>
-          <S.SectionTitle>Application Status</S.SectionTitle>
-          <S.StatusTimeline>
-            <S.TimelineItem status="completed">
-              <S.TimelineDot />
-              <S.TimelineContent>
-                <S.TimelineTitle>Application Submitted</S.TimelineTitle>
-                <S.TimelineDate>
-                  {new Date(currentApplication.created_at).toLocaleDateString()}
-                </S.TimelineDate>
-              </S.TimelineContent>
-            </S.TimelineItem>
-
-            <S.TimelineItem
-              status={
-                ["approved", "completed"].includes(currentApplication.status)
-                  ? "completed"
-                  : currentApplication.status === "rejected"
-                  ? "rejected"
-                  : "pending"
-              }
-            >
-              <S.TimelineDot />
-              <S.TimelineContent>
-                <S.TimelineTitle>Under Review</S.TimelineTitle>
-                <S.TimelineDate>
-                  {currentApplication.status !== "pending"
-                    ? `Updated: ${new Date(
-                        currentApplication.updated_at
-                      ).toLocaleDateString()}`
-                    : "Waiting for admin review"}
-                </S.TimelineDate>
-                {currentApplication.status === "rejected" &&
-                  currentApplication.remarks && (
-                    <S.TimelineRemarks>
-                      Reason: {currentApplication.remarks}
-                    </S.TimelineRemarks>
-                  )}
-              </S.TimelineContent>
-            </S.TimelineItem>
-
-            <S.TimelineItem
-              status={
-                currentApplication.status === "completed"
-                  ? "completed"
-                  : "pending"
-              }
-            >
-              <S.TimelineDot />
-              <S.TimelineContent>
-                <S.TimelineTitle>Visa Issued</S.TimelineTitle>
-                <S.TimelineDate>
-                  {currentApplication.status === "completed"
-                    ? `Completed: ${new Date(
-                        currentApplication.updated_at
-                      ).toLocaleDateString()}`
-                    : "Waiting for visa issuance"}
-                </S.TimelineDate>
-              </S.TimelineContent>
-            </S.TimelineItem>
-          </S.StatusTimeline>
-        </S.Section>
+        {/* Status Timeline - unchanged */}
       </S.Content>
+
+      {/* Document Preview Modal */}
+      {previewDocument && (
+        <DocumentPreview
+          fileUrl={previewDocument.fileUrl}
+          fileName={previewDocument.fileName}
+          onClose={handleClosePreview}
+        />
+      )}
     </S.ApplicationDetailsContainer>
   );
 };

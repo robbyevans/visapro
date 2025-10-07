@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import kenyanAthleteHero from "../../assets/_111858986_kipchogetopbody.png";
+import kenyanAthleteHero from "../../assets/openart-53b2916a2c7642d5a7ec6bfdf7aff19e_00001__raw.jpg";
 import { STATIC_COLORS } from "../../styles";
 
 export const HomePageContainer = styled.div`
@@ -62,7 +62,8 @@ export const HeroContent = styled.div`
   text-align: center;
   padding: 0 24px;
   z-index: 2;
-  top: 150px;
+  top: 140px;
+  left: 30px;
 `;
 
 export const HeroTitle = styled.h1`

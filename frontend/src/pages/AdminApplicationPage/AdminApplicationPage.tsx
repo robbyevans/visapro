@@ -53,6 +53,31 @@ const AdminApplicationPage: React.FC = () => {
     fetchApplication(parseInt(id));
   };
 
+  const handleDownloadDocument = (fileUrl: string, fileName: string) => {
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePreviewDocument = (fileUrl: string) => {
+    // Open in new tab for preview
+    window.open(fileUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const getFileNameFromUrl = (url: string, docType: string, docId: number) => {
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname;
+      const fileName = pathname.split("/").pop() || `${docType}_${docId}`;
+      return fileName;
+    } catch {
+      return `${docType}_${docId}`;
+    }
+  };
+
   if (!currentUser || currentUser.role !== "admin") {
     return <div>Access denied. Admin only.</div>;
   }
@@ -127,20 +152,31 @@ const AdminApplicationPage: React.FC = () => {
                   <S.DocumentItem key={doc.id}>
                     <S.DocumentInfo>
                       <S.DocumentType>{doc.doc_type}</S.DocumentType>
-                      <S.DocumentName>Document</S.DocumentName>
+                      <S.DocumentName>
+                        {getFileNameFromUrl(doc.file_url, doc.doc_type, doc.id)}
+                      </S.DocumentName>
                     </S.DocumentInfo>
-                    <a
-                      href={doc.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#3b82f6",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                      }}
-                    >
-                      View
-                    </a>
+                    <S.DocumentActions>
+                      <S.PreviewButton
+                        onClick={() => handlePreviewDocument(doc.file_url)}
+                      >
+                        Preview
+                      </S.PreviewButton>
+                      <S.DownloadButton
+                        onClick={() =>
+                          handleDownloadDocument(
+                            doc.file_url,
+                            getFileNameFromUrl(
+                              doc.file_url,
+                              doc.doc_type,
+                              doc.id
+                            )
+                          )
+                        }
+                      >
+                        Download
+                      </S.DownloadButton>
+                    </S.DocumentActions>
                   </S.DocumentItem>
                 ))}
               </S.DocumentList>
@@ -175,20 +211,31 @@ const AdminApplicationPage: React.FC = () => {
                   <S.DocumentItem key={doc.id}>
                     <S.DocumentInfo>
                       <S.DocumentType>visa</S.DocumentType>
-                      <S.DocumentName>Visa Document</S.DocumentName>
+                      <S.DocumentName>
+                        {getFileNameFromUrl(doc.file_url, doc.doc_type, doc.id)}
+                      </S.DocumentName>
                     </S.DocumentInfo>
-                    <a
-                      href={doc.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#3b82f6",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                      }}
-                    >
-                      View
-                    </a>
+                    <S.DocumentActions>
+                      <S.PreviewButton
+                        onClick={() => handlePreviewDocument(doc.file_url)}
+                      >
+                        Preview
+                      </S.PreviewButton>
+                      <S.DownloadButton
+                        onClick={() =>
+                          handleDownloadDocument(
+                            doc.file_url,
+                            getFileNameFromUrl(
+                              doc.file_url,
+                              doc.doc_type,
+                              doc.id
+                            )
+                          )
+                        }
+                      >
+                        Download
+                      </S.DownloadButton>
+                    </S.DocumentActions>
                   </S.DocumentItem>
                 ))}
               </S.DocumentList>

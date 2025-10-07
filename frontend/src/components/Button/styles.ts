@@ -25,6 +25,7 @@ export const Button = styled.button<{
   size?: "sm" | "md" | "lg";
   loading?: boolean;
   pulsating?: boolean;
+  textColor?: string; // <-- accept prop
 }>`
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -64,12 +65,14 @@ export const Button = styled.button<{
     cursor: not-allowed;
   }
 
-  ${({ variant, theme }) => {
+  /* Variant styles — color uses textColor prop when provided, otherwise theme.text.inverse */
+  ${({ variant, theme, textColor }) => {
+    const colorValue = textColor ?? theme.text.inverse;
     switch (variant) {
       case "secondary":
         return css`
           background-color: ${theme.secondaryColors["500"]};
-          color: ${theme.text.inverse};
+          color: ${colorValue};
 
           &:hover:not(:disabled) {
             background-color: ${theme.secondaryColors["600"]};
@@ -82,7 +85,7 @@ export const Button = styled.button<{
       case "danger":
         return css`
           background-color: ${theme.errorColors["500"]};
-          color: ${theme.text.inverse};
+          color: ${colorValue};
 
           &:hover:not(:disabled) {
             background-color: ${theme.errorColors["600"]};
@@ -95,7 +98,7 @@ export const Button = styled.button<{
       case "success":
         return css`
           background-color: ${theme.successColors["500"]};
-          color: ${theme.text.inverse};
+          color: ${colorValue};
 
           &:hover:not(:disabled) {
             background-color: ${theme.successColors["600"]};
@@ -108,7 +111,7 @@ export const Button = styled.button<{
       default:
         return css`
           background-color: ${theme.primaryColors["500"]};
-          color: ${theme.text.inverse};
+          color: ${colorValue};
 
           &:hover:not(:disabled) {
             background-color: ${theme.primaryColors["600"]};
@@ -121,9 +124,10 @@ export const Button = styled.button<{
     }
   }}
 
-  ${({ loading }) =>
+  ${({ loading, textColor, theme }) =>
     loading &&
     css`
+      /* hide the label text (keeps layout) */
       color: transparent;
 
       &::after {
@@ -132,7 +136,8 @@ export const Button = styled.button<{
         width: 16px;
         height: 16px;
         border: 2px solid transparent;
-        border-top: 2px solid currentColor;
+        /* spinner color uses textColor fallback to theme */
+        border-top: 2px solid ${textColor ?? theme.text.inverse};
         border-radius: 50%;
         animation: ${spin} 1s linear infinite;
       }

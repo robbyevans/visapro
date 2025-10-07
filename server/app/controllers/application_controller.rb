@@ -2,13 +2,13 @@ class ApplicationController < ActionController::API
   before_action :authenticate_user!
 
     # Add this method to handle CORS preflight requests
-  def handle_options_request
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
-    headers['Access-Control-Request-Method'] = '*'
-    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    head :ok
-  end
+def handle_options_request
+  headers['Access-Control-Allow-Origin'] = '*'
+  headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, PATCH, DELETE, OPTIONS'
+  headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token'
+  headers['Access-Control-Max-Age'] = '1728000'
+  render text: '', content_type: 'text/plain'
+end
 
   private
 

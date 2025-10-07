@@ -17,12 +17,14 @@ class ApplicationsController < ApplicationController
   end
 
   def show
-    # The @application is already set by before_action :set_application
     render json: @application.as_json(
       include: {
         athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
-        documents: { only: [:id, :doc_type, :file_url, :created_at] },
-        user: { only: [:id, :name, :email] }  # Include user info for admin view
+        documents: { 
+          only: [:id, :doc_type, :created_at],
+          methods: [:file_url, :file_full_url] # Include both URL methods
+        },
+        user: { only: [:id, :name, :email] }
       }
     )
   end
