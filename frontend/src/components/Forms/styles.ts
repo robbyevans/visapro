@@ -1,22 +1,22 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${(props) => props.theme.spacing.xs};
-  margin-bottom: ${(props) => props.theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 export const InputLabel = styled.label`
-  font-size: ${(props) => props.theme.typography.fontSize.sm};
-  font-weight: ${(props) => props.theme.typography.fontWeight.medium};
-  color: ${(props) => props.theme.text.primary};
-  margin-bottom: ${(props) => props.theme.spacing.xs};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const Required = styled.span`
-  color: ${(props) => props.theme.error[500]};
-  margin-left: ${(props) => props.theme.spacing.xs};
+  color: ${({ theme }) => theme.errorColors["500"]};
+  margin-left: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const InputWrapper = styled.div`
@@ -30,33 +30,33 @@ export const StyledInput = styled.input<{
   $isPassword?: boolean;
 }>`
   width: 100%;
-  padding: ${(props) => props.theme.spacing.md};
-  padding-right: ${(props) =>
-    props.$isPassword ? "40px" : props.theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  padding-right: ${({ $isPassword, theme }) =>
+    $isPassword ? "40px" : theme.spacing.md};
   border: 1px solid
-    ${(props) =>
-      props.$hasError ? props.theme.error[500] : props.theme.border.default};
-  border-radius: ${(props) => props.theme.borderRadius.md};
-  font-size: ${(props) => props.theme.typography.fontSize.sm};
+    ${({ $hasError, theme }) =>
+      $hasError ? theme.errorColors["500"] : theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
   transition: all 0.2s ease;
-  background-color: ${(props) => props.theme.background.primary};
-  color: ${(props) => props.theme.text.primary};
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
   font-family: inherit;
 
   &:focus {
     outline: none;
-    border-color: ${(props) => props.theme.primary[500]};
-    box-shadow: 0 0 0 3px ${(props) => props.theme.primary[100]};
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryColors["100"]};
   }
 
   &:disabled {
-    background-color: ${(props) => props.theme.background.secondary};
-    color: ${(props) => props.theme.text.tertiary};
+    background-color: ${({ theme }) => theme.background.secondary};
+    color: ${({ theme }) => theme.text.tertiary};
     cursor: not-allowed;
   }
 
   &::placeholder {
-    color: ${(props) => props.theme.text.tertiary};
+    color: ${({ theme }) => theme.text.tertiary};
   }
 `;
 
@@ -68,15 +68,15 @@ export const PasswordToggle = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  padding: ${(props) => props.theme.spacing.xs};
-  border-radius: ${(props) => props.theme.borderRadius.sm};
+  padding: ${({ theme }) => theme.spacing.xs};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.text.secondary};
+  color: ${({ theme }) => theme.text.secondary};
 
   &:hover {
-    background-color: ${(props) => props.theme.background.secondary};
+    background-color: ${({ theme }) => theme.background.secondary};
   }
 
   &:disabled {
@@ -106,15 +106,15 @@ export const EyeSlashIcon = styled.span`
 export const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${(props) => props.theme.spacing.xs};
-  margin-bottom: ${(props) => props.theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${(props) => props.theme.spacing.xs};
-  margin-bottom: ${(props) => props.theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   width: 100%;
 `;
 
@@ -127,16 +127,16 @@ export const SelectWrapper = styled.div`
 
 export const SelectField = styled.select<{ $hasError?: boolean }>`
   width: 100%;
-  padding: ${(props) => props.theme.spacing.md} 40px
-    ${(props) => props.theme.spacing.md} ${(props) => props.theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md} 40px
+    ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.md};
   border: 1px solid
-    ${(props) =>
-      props.$hasError ? props.theme.error[500] : props.theme.border.default};
-  border-radius: ${(props) => props.theme.borderRadius.md};
-  font-size: ${(props) => props.theme.typography.fontSize.sm};
+    ${({ $hasError, theme }) =>
+      $hasError ? theme.errorColors["500"] : theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
   transition: all 0.2s ease;
-  background-color: ${(props) => props.theme.background.primary};
-  color: ${(props) => props.theme.text.primary};
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
   appearance: none;
   cursor: pointer;
   font-family: inherit;
@@ -144,49 +144,49 @@ export const SelectField = styled.select<{ $hasError?: boolean }>`
 
   &:focus {
     outline: none;
-    border-color: ${(props) => props.theme.primary[500]};
-    box-shadow: 0 0 0 3px ${(props) => props.theme.primary[100]};
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryColors["100"]};
   }
 
   &:disabled {
-    background-color: ${(props) => props.theme.background.secondary};
-    color: ${(props) => props.theme.text.tertiary};
+    background-color: ${({ theme }) => theme.background.secondary};
+    color: ${({ theme }) => theme.text.tertiary};
     cursor: not-allowed;
   }
 
   option[value=""] {
-    color: ${(props) => props.theme.text.tertiary};
+    color: ${({ theme }) => theme.text.tertiary};
   }
 
   option {
-    padding: ${(props) => props.theme.spacing.sm};
-    background: ${(props) => props.theme.background.primary};
-    color: ${(props) => props.theme.text.primary};
+    padding: ${({ theme }) => theme.spacing.sm};
+    background: ${({ theme }) => theme.background.primary};
+    color: ${({ theme }) => theme.text.primary};
   }
 `;
 
 export const SelectArrow = styled.span<{ $disabled?: boolean }>`
   position: absolute;
-  right: ${(props) => props.theme.spacing.md};
+  right: ${({ theme }) => theme.spacing.md};
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: ${(props) =>
-    props.$disabled ? props.theme.text.tertiary : props.theme.text.secondary};
+  color: ${({ $disabled, theme }) =>
+    $disabled ? theme.text.tertiary : theme.text.secondary};
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
 
   ${SelectField}:focus + & {
-    color: ${(props) => props.theme.primary[500]};
+    color: ${({ theme }) => theme.primaryColors["500"]};
   }
 `;
 
 export const InputError = styled.span`
-  color: ${(props) => props.theme.error[500]};
-  font-size: ${(props) => props.theme.typography.fontSize.xs};
-  margin-top: ${(props) => props.theme.spacing.xs};
+  color: ${({ theme }) => theme.errorColors["500"]};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const FileDropzoneContainer = styled.div`
@@ -197,37 +197,37 @@ export const DropzoneArea = styled.div<{
   isDragging?: boolean;
   disabled?: boolean;
 }>`
-  border: 2px dashed ${(props) => props.theme.border.default};
-  border-radius: ${(props) => props.theme.borderRadius.md};
-  padding: ${(props) => props.theme.spacing.xl};
+  border: 2px dashed ${({ theme }) => theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.xl};
   text-align: center;
   transition: all 0.2s ease;
   cursor: pointer;
   position: relative;
-  background-color: ${(props) => props.theme.background.primary};
+  background-color: ${({ theme }) => theme.background.primary};
 
-  ${(props) =>
-    !props.disabled &&
-    `
-    &:hover {
-      border-color: ${props.theme.primary[500]};
-      background-color: ${props.theme.background.secondary};
-    }
-  `}
+  ${({ disabled, theme }) =>
+    !disabled &&
+    css`
+      &:hover {
+        border-color: ${theme.primaryColors["500"]};
+        background-color: ${theme.background.secondary};
+      }
+    `}
 
-  ${(props) =>
-    props.isDragging &&
-    `
-    border-color: ${props.theme.primary[500]};
-    background-color: ${props.theme.primary[50]};
-  `}
+  ${({ isDragging, theme }) =>
+    isDragging &&
+    css`
+      border-color: ${theme.primaryColors["500"]};
+      background-color: ${theme.primaryColors["50"]};
+    `}
 
-  ${(props) =>
-    props.disabled &&
-    `
-    opacity: 0.6;
-    cursor: not-allowed;
-  `}
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 0.6;
+      cursor: not-allowed;
+    `}
 `;
 
 export const FileInput = styled.input`
@@ -248,29 +248,29 @@ export const DropzoneContent = styled.div`
 export const DropzoneIcon = styled.svg`
   width: 48px;
   height: 48px;
-  color: ${(props) => props.theme.text.tertiary};
-  margin: 0 auto ${(props) => props.theme.spacing.md};
+  color: ${({ theme }) => theme.text.tertiary};
+  margin: 0 auto ${({ theme }) => theme.spacing.md};
 
   ${DropzoneArea}:hover &, ${DropzoneArea}[data-dragging="true"] & {
-    color: ${(props) => props.theme.primary[500]};
+    color: ${({ theme }) => theme.primaryColors["500"]};
   }
 `;
 
 export const DropzoneText = styled.p`
-  color: ${(props) => props.theme.text.secondary};
-  font-size: ${(props) => props.theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.text.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
   margin: 0;
 `;
 
 export const DropzoneError = styled.div`
-  color: ${(props) => props.theme.error[500]};
-  font-size: ${(props) => props.theme.typography.fontSize.xs};
-  margin-top: ${(props) => props.theme.spacing.sm};
+  color: ${({ theme }) => theme.errorColors["500"]};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  margin-top: ${({ theme }) => theme.spacing.sm};
   text-align: center;
 `;
 
 export const DropzoneHint = styled.p`
-  color: ${(props) => props.theme.text.tertiary};
-  font-size: ${(props) => props.theme.typography.fontSize.xs};
-  margin: ${(props) => props.theme.spacing.xs} 0 0 0;
+  color: ${({ theme }) => theme.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  margin: ${({ theme }) => theme.spacing.xs} 0 0 0;
 `;

@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import { theme } from "./theme";
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -9,15 +8,12 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: ${theme.typography.fontFamily.primary};
+    font-family: ${({ theme }) => theme.typography.fontFamily.primary};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: ${(props) => props.theme.background.primary};
-    color: ${(props) => props.theme.text.primary};
+    background-color: ${({ theme }) => theme.background.primary};
+    color: ${({ theme }) => theme.text.primary};
     line-height: 1.5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
@@ -45,15 +41,15 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-track {
-    background: ${(props) => props.theme.background.secondary};
+    background: ${({ theme }) => theme.background.secondary};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.neutral[400]};
+    background: ${({ theme }) => theme.neutralColors["400"]};
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${(props) => props.theme.neutral[500]};
+    background: ${({ theme }) => theme.neutralColors["500"]};
   }
 `;

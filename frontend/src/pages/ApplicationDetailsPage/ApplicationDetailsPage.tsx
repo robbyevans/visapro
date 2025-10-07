@@ -23,13 +23,13 @@ const ApplicationDetailsPage: React.FC = () => {
     );
   }
 
-  const passportDocuments = currentApplication.documents.filter(
+  const passportDocuments = currentApplication?.documents.filter(
     (doc) => doc.doc_type === "passport"
   );
-  const otherDocuments = currentApplication.documents.filter(
+  const otherDocuments = currentApplication?.documents.filter(
     (doc) => doc.doc_type !== "passport" && doc.doc_type !== "visa"
   );
-  const visaDocuments = currentApplication.documents.filter(
+  const visaDocuments = currentApplication?.documents.filter(
     (doc) => doc.doc_type === "visa"
   );
 

@@ -65,10 +65,10 @@ const AdminApplicationPage: React.FC = () => {
     );
   }
 
-  const userDocuments = currentApplication.documents.filter(
+  const userDocuments = currentApplication?.documents.filter(
     (doc) => doc.doc_type !== "visa"
   );
-  const visaDocuments = currentApplication.documents.filter(
+  const visaDocuments = currentApplication?.documents.filter(
     (doc) => doc.doc_type === "visa"
   );
 

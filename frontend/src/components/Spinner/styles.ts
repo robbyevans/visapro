@@ -12,13 +12,13 @@ export const SpinnerContainer = styled.div<{ size?: "sm" | "md" | "lg" }>`
 
   &::after {
     content: "";
-    border: 2px solid ${(props) => props.theme.neutral[200]};
-    border-top: 2px solid ${(props) => props.theme.primary[500]};
+    border: 2px solid ${({ theme }) => theme.neutralColors["200"]};
+    border-top: 2px solid ${({ theme }) => theme.primaryColors["500"]};
     border-radius: 50%;
     animation: ${spin} 1s linear infinite;
 
-    ${(props) => {
-      switch (props.size) {
+    ${({ size }) => {
+      switch (size) {
         case "sm":
           return `
             width: 16px;

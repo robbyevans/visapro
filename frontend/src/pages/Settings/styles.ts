@@ -3,66 +3,67 @@ import styled from "styled-components";
 export const SettingsContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  padding: 40px 24px;
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
 `;
 
 export const SettingsHeader = styled.header`
-  margin-bottom: 40px;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const SettingsTitle = styled.h1`
-  font-size: 32px;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 8px;
+  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const SettingsSubtitle = styled.p`
-  font-size: 18px;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  color: ${({ theme }) => theme.text.secondary};
 `;
 
 export const SettingsContent = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 40px;
+  gap: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const SettingsSection = styled.section`
-  background: white;
-  padding: 32px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const SectionHeader = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 8px 0;
+  font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin: 0 0 ${({ theme }) => theme.spacing.xs} 0;
 `;
 
 export const SectionDescription = styled.p`
-  color: #6b7280;
+  color: ${({ theme }) => theme.text.secondary};
   margin: 0;
 `;
 
 export const SettingsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const SettingItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid #f3f4f6;
+  padding: ${({ theme }) => theme.spacing.md} 0;
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
 
   &:last-child {
     border-bottom: none;
@@ -72,18 +73,18 @@ export const SettingItem = styled.div`
 export const SettingInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const SettingLabel = styled.span`
-  font-size: 16px;
-  font-weight: 500;
-  color: #111827;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.text.primary};
 `;
 
 export const SettingDescription = styled.span`
-  font-size: 14px;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.text.secondary};
 `;
 
 export const ToggleContainer = styled.label`
@@ -99,7 +100,7 @@ export const ToggleInput = styled.input`
   height: 0;
 
   &:checked + span {
-    background-color: #3b82f6;
+    background-color: ${({ theme }) => theme.primaryColors["500"]};
   }
 
   &:checked + span:before {
@@ -114,7 +115,7 @@ export const ToggleSlider = styled.span`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #d1d5db;
+  background-color: ${({ theme }) => theme.neutralColors["300"]};
   transition: 0.4s;
   border-radius: 34px;
 
@@ -125,36 +126,37 @@ export const ToggleSlider = styled.span`
     width: 20px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: ${({ theme }) => theme.background.primary};
     transition: 0.4s;
     border-radius: 50%;
   }
 `;
 
 export const DangerZone = styled(SettingsSection)`
-  border: 2px solid #fef2f2;
-  background-color: #fef2f2;
+  border: 2px solid ${({ theme }) => theme.errorColors["100"]};
+  background-color: ${({ theme }) => theme.errorColors["50"]};
 `;
 
 export const DangerActions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 export const DangerButton = styled.button`
   background: none;
-  border: 2px solid #ef4444;
-  color: #ef4444;
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-weight: 500;
+  border: 2px solid ${({ theme }) => theme.errorColors["500"]};
+  color: ${({ theme }) => theme.errorColors["500"]};
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  font-family: inherit;
 
   &:hover {
-    background-color: #ef4444;
-    color: white;
+    background-color: ${({ theme }) => theme.errorColors["500"]};
+    color: ${({ theme }) => theme.text.inverse};
   }
 `;

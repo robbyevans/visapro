@@ -11,21 +11,21 @@ export const ModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: ${(props) => props.theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const ModalContainer = styled.div<{ size?: "sm" | "md" | "lg" }>`
-  background: ${(props) => props.theme.background.primary};
-  border-radius: ${(props) => props.theme.borderRadius.lg};
-  box-shadow: ${(props) => props.theme.shadows.xl};
+  background: ${({ theme }) => theme.background.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ theme }) => theme.shadows.xl};
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${(props) => props.theme.border.light};
+  border: 1px solid ${({ theme }) => theme.border.light};
 
-  ${(props) => {
-    switch (props.size) {
+  ${({ size }) => {
+    switch (size) {
       case "sm":
         return "max-width: 400px;";
       case "lg":
@@ -40,16 +40,15 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${(props) => props.theme.spacing.lg}
-    ${(props) => props.theme.spacing.xl};
-  border-bottom: 1px solid ${(props) => props.theme.border.light};
+  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.xl};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const ModalTitle = styled.h2`
   margin: 0;
-  font-size: ${(props) => props.theme.typography.fontSize.xl};
-  font-weight: ${(props) => props.theme.typography.fontWeight.semibold};
-  color: ${(props) => props.theme.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
 `;
 
 export const ModalClose = styled.button`
@@ -57,24 +56,24 @@ export const ModalClose = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: ${(props) => props.theme.text.secondary};
+  color: ${({ theme }) => theme.text.secondary};
   padding: 0;
   width: 30px;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${(props) => props.theme.borderRadius.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   transition: all 0.2s ease;
 
   &:hover {
-    color: ${(props) => props.theme.text.primary};
-    background-color: ${(props) => props.theme.background.secondary};
+    color: ${({ theme }) => theme.text.primary};
+    background-color: ${({ theme }) => theme.background.secondary};
   }
 `;
 
 export const ModalContent = styled.div`
-  padding: ${(props) => props.theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.xl};
   overflow-y: auto;
   flex: 1;
 `;

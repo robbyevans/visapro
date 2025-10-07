@@ -1,136 +1,138 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const AdminApplicationContainer = styled.div`
   max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 24px;
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
 `;
 
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const BackButton = styled.button`
   background: none;
-  border: 1px solid #d1d5db;
-  padding: 8px 16px;
-  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.border.default};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #374151;
+  gap: ${({ theme }) => theme.spacing.sm};
+  color: ${({ theme }) => theme.text.secondary};
+  font-family: inherit;
 
   &:hover {
-    background-color: #f9fafb;
+    background-color: ${({ theme }) => theme.background.secondary};
   }
 `;
 
 export const PageTitle = styled.h1`
-  font-size: 32px;
-  font-weight: 700;
-  color: #111827;
+  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
   margin: 0;
 `;
 
 export const Content = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 40px;
+  gap: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const Section = styled.section`
-  background: white;
-  padding: 32px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 24px;
+  font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const DetailGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const DetailItem = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const DetailLabel = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.text.secondary};
 `;
 
 export const DetailValue = styled.span`
-  font-size: 16px;
-  color: #111827;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  color: ${({ theme }) => theme.text.primary};
 `;
 
 export const StatusBadge = styled.span<{ status: string }>`
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   text-transform: capitalize;
 
-  ${(props) => {
-    switch (props.status) {
+  ${({ status, theme }) => {
+    switch (status) {
       case "approved":
-        return `
-          background-color: #d1fae5;
-          color: #065f46;
+        return css`
+          background-color: ${theme.successColors["100"]};
+          color: ${theme.successColors["700"]};
         `;
       case "rejected":
-        return `
-          background-color: #fee2e2;
-          color: #991b1b;
+        return css`
+          background-color: ${theme.errorColors["100"]};
+          color: ${theme.errorColors["700"]};
         `;
       case "completed":
-        return `
-          background-color: #dbeafe;
-          color: #1e40af;
+        return css`
+          background-color: ${theme.primaryColors["100"]};
+          color: ${theme.primaryColors["700"]};
         `;
       case "invoiced":
-        return `
-          background-color: #f3e8ff;
-          color: #7e22ce;
+        return css`
+          background-color: ${theme.secondaryColors["100"]};
+          color: ${theme.secondaryColors["700"]};
         `;
       default:
-        return `
-          background-color: #fef3c7;
-          color: #92400e;
+        return css`
+          background-color: ${theme.warningColors["100"]};
+          color: ${theme.warningColors["700"]};
         `;
     }
   }}
 `;
 
 export const Remarks = styled.div`
-  background-color: #f8fafc;
-  border-left: 3px solid #3b82f6;
-  padding: 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #4b5563;
+  background-color: ${({ theme }) => theme.background.secondary};
+  border-left: 3px solid ${({ theme }) => theme.primaryColors["500"]};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.text.secondary};
 `;
 
 export const DocumentsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: ${({ theme }) => theme.spacing.xl};
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -140,139 +142,147 @@ export const DocumentsGrid = styled.div`
 export const DocumentSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 export const DocumentList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const DocumentItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
-  background-color: #f8fafc;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
+  padding: ${({ theme }) => theme.spacing.sm};
+  background-color: ${({ theme }) => theme.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const DocumentInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const DocumentType = styled.span`
-  background-color: #3b82f6;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
+  background-color: ${({ theme }) => theme.primaryColors["500"]};
+  color: ${({ theme }) => theme.text.inverse};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   text-transform: capitalize;
 `;
 
 export const DocumentName = styled.span`
-  font-weight: 500;
-  color: #374151;
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.text.primary};
 `;
 
 export const UploadControls = styled.div`
   display: flex;
-  gap: 12px;
+  gap: ${({ theme }) => theme.spacing.sm};
   align-items: center;
 `;
 
 export const AdminActions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const RemarksInput = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const TextArea = styled.textarea`
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
   resize: vertical;
   min-height: 80px;
+  font-family: inherit;
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryColors["100"]};
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.text.tertiary};
   }
 `;
 
 export const StatusButtons = styled.div`
   display: flex;
-  gap: 12px;
+  gap: ${({ theme }) => theme.spacing.sm};
   flex-wrap: wrap;
 `;
 
 export const StatusButton = styled.button<{ variant: string }>`
-  padding: 12px 24px;
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: inherit;
 
-  ${(props) => {
-    switch (props.variant) {
+  ${({ variant, theme }) => {
+    switch (variant) {
       case "approve":
-        return `
-          background-color: #10b981;
-          color: white;
+        return css`
+          background-color: ${theme.successColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover {
-            background-color: #059669;
+            background-color: ${theme.successColors["600"]};
           }
 
           &:disabled {
-            background-color: #9ca3af;
+            background-color: ${theme.neutralColors["400"]};
             cursor: not-allowed;
           }
         `;
       case "reject":
-        return `
-          background-color: #ef4444;
-          color: white;
+        return css`
+          background-color: ${theme.errorColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover {
-            background-color: #dc2626;
+            background-color: ${theme.errorColors["600"]};
           }
         `;
       case "complete":
-        return `
-          background-color: #3b82f6;
-          color: white;
+        return css`
+          background-color: ${theme.primaryColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover {
-            background-color: #2563eb;
+            background-color: ${theme.primaryColors["600"]};
           }
 
           &:disabled {
-            background-color: #9ca3af;
+            background-color: ${theme.neutralColors["400"]};
             cursor: not-allowed;
           }
         `;
       default:
-        return `
-          background-color: #6b7280;
-          color: white;
+        return css`
+          background-color: ${theme.neutralColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover {
-            background-color: #4b5563;
+            background-color: ${theme.neutralColors["600"]};
           }
         `;
     }

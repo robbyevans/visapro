@@ -86,7 +86,7 @@ const Navbar: React.FC = () => {
       </S.NavbarContent>
 
       {isAuthenticated ? (
-        <S.MobileMenu isOpen={isMenuOpen}>
+        <S.MobileMenu $isOpen={isMenuOpen}>
           <Link to="/dashboard">
             <S.MobileNavLink onClick={() => setIsMenuOpen(false)}>
               Dashboard
@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
           <S.MobileSignOut onClick={handleSignOut}>Sign Out</S.MobileSignOut>
         </S.MobileMenu>
       ) : (
-        <S.MobileMenu isOpen={isMenuOpen}>
+        <S.MobileMenu $isOpen={isMenuOpen}>
           <S.MobileThemeToggle onClick={handleThemeToggle}>
             {themeMode === "light"
               ? "🌙 Switch to Dark Mode"

@@ -3,10 +3,10 @@ import styled from "styled-components";
 export const FooterContainer = styled.footer`
   background: linear-gradient(
     135deg,
-    ${(props) => props.theme.neutral[900]} 0%,
-    ${(props) => props.theme.neutral[800]} 100%
+    ${({ theme }) => theme.neutralColors["900"]} 0%,
+    ${({ theme }) => theme.neutralColors["800"]} 100%
   );
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   padding: 80px 0 0;
   transition: background 0.3s ease;
 `;
@@ -37,11 +37,11 @@ export const Logo = styled.div`
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 16px;
-  color: ${(props) => props.theme.primary[500]};
+  color: ${({ theme }) => theme.primaryColors["500"]};
 `;
 
 export const BrandDescription = styled.p`
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   opacity: 0.7;
   line-height: 1.6;
   margin-bottom: 24px;
@@ -64,14 +64,14 @@ export const SocialLink = styled.a`
   text-decoration: none;
 
   &:hover {
-    background: ${(props) => props.theme.primary[500]}20;
+    background: ${({ theme }) => theme.primaryColors["500"]}20;
     transform: translateY(-2px);
   }
 `;
 
 export const SocialIcon = styled.span`
   font-size: 16px;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
 `;
 
 export const FooterLinksGrid = styled.div`
@@ -99,11 +99,11 @@ export const LinksTitle = styled.h3`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: ${(props) => props.theme.primary[500]};
+  color: ${({ theme }) => theme.primaryColors["500"]};
 `;
 
 export const FooterLink = styled.a`
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   opacity: 0.7;
   text-decoration: none;
   padding: 8px 0;
@@ -111,7 +111,7 @@ export const FooterLink = styled.a`
   font-size: 14px;
 
   &:hover {
-    color: ${(props) => props.theme.primary[500]};
+    color: ${({ theme }) => theme.primaryColors["500"]};
     opacity: 1;
   }
 `;
@@ -131,7 +131,7 @@ export const FooterBottom = styled.div`
 `;
 
 export const Copyright = styled.p`
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   opacity: 0.5;
   font-size: 14px;
   margin: 0;
@@ -143,7 +143,7 @@ export const BottomLinks = styled.div`
 `;
 
 export const BottomLink = styled.a`
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   opacity: 0.5;
   text-decoration: none;
   font-size: 14px;

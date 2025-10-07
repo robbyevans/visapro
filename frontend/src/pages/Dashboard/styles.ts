@@ -3,8 +3,8 @@ import styled from "styled-components";
 export const DashboardContainer = styled.div`
   max-width: 1400px;
   margin: 0 auto;
-  padding: 32px 24px;
-  background: #f8fafc;
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
+  background: ${({ theme }) => theme.background.secondary};
   min-height: 100vh;
 `;
 
@@ -12,12 +12,12 @@ export const DashboardHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 32px;
-  background: white;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.md};
+  border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const WelcomeSection = styled.div`
@@ -25,33 +25,37 @@ export const WelcomeSection = styled.div`
 `;
 
 export const WelcomeTitle = styled.h1`
-  font-size: 32px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  background: linear-gradient(
+    135deg,
+    ${({ theme }) => theme.primaryColors["500"]} 0%,
+    ${({ theme }) => theme.secondaryColors["500"]} 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 `;
 
 export const WelcomeSubtitle = styled.p`
-  font-size: 16px;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  color: ${({ theme }) => theme.text.secondary};
   line-height: 1.5;
   max-width: 500px;
 `;
 
 export const HeaderActions = styled.div`
   display: flex;
-  gap: 12px;
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const StatsOverview = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 32px;
+  gap: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 interface StatCardProps {
@@ -65,51 +69,49 @@ interface StatCardProps {
 }
 
 export const StatCard = styled.div<StatCardProps>`
-  background: white;
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.md};
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: ${({ theme }) => theme.spacing.md};
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border-left: 4px solid
-    ${(props) => {
-      switch (props.variant) {
+    ${({ variant, theme }) => {
+      switch (variant) {
         case "total":
-          return "#6366f1";
+          return theme.primaryColors["500"];
         case "pending":
-          return "#f59e0b";
+          return theme.warningColors["500"];
         case "approved":
-          return "#10b981";
+          return theme.successColors["500"];
         case "rejected":
-          return "#ef4444";
+          return theme.errorColors["500"];
         case "inReview":
-          return "#3b82f6";
+          return theme.secondaryColors["500"];
         case "completed":
-          return "#8b5cf6";
+          return theme.primaryColors["400"];
         default:
-          return "#6b7280";
+          return theme.neutralColors["500"];
       }
     }};
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: ${({ theme }) => theme.shadows.lg};
   }
 `;
 
 export const StatIcon = styled.div`
-  font-size: 32px;
+  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
   width: 60px;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
-  border-radius: 12px;
+  background: ${({ theme }) => theme.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
 `;
 
 export const StatContent = styled.div`
@@ -117,105 +119,103 @@ export const StatContent = styled.div`
 `;
 
 export const StatValue = styled.div`
-  font-size: 32px;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const StatLabel = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.secondary};
   text-transform: uppercase;
   letter-spacing: 0.05em;
 `;
 
 export const StatTrend = styled.div`
-  font-size: 12px;
-  color: #9ca3af;
-  font-weight: 500;
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.text.tertiary};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 export const QuickActionsSection = styled.section`
-  background: white;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  margin-bottom: 32px;
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.md};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const QuickActionsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const QuickActionCard = styled.div`
-  background: #f8fafc;
-  padding: 24px;
-  border-radius: 12px;
+  background: ${({ theme }) => theme.background.secondary};
+  padding: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
 
   &:hover {
-    border-color: #6366f1;
-    background: #eff6ff;
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    background: ${({ theme }) => theme.primaryColors["50"]};
     transform: translateY(-2px);
   }
 `;
 
 export const QuickActionIcon = styled.div`
-  font-size: 32px;
-  margin-bottom: 12px;
+  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const QuickActionTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 8px 0;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin: 0 0 ${({ theme }) => theme.spacing.xs} 0;
 `;
 
 export const QuickActionDescription = styled.p`
-  font-size: 14px;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.text.secondary};
   margin: 0;
   line-height: 1.4;
 `;
 
 export const StatusDistribution = styled.section`
-  background: white;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  margin-bottom: 32px;
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.md};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const DistributionGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const StatusItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: #f8fafc;
-  border-radius: 12px;
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   transition: background 0.2s ease;
 
   &:hover {
-    background: #f1f5f9;
+    background: ${({ theme }) => theme.background.tertiary};
   }
 `;
 
@@ -227,7 +227,7 @@ export const StatusIndicator = styled.div<StatusIndicatorProps>`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: ${(props) => props.color};
+  background: ${({ color }) => color};
 `;
 
 export const StatusInfo = styled.div`
@@ -235,74 +235,74 @@ export const StatusInfo = styled.div`
 `;
 
 export const StatusName = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
   text-transform: capitalize;
 `;
 
 export const StatusCount = styled.div`
-  font-size: 12px;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.text.secondary};
 `;
 
 export const StatusPercentage = styled.div`
-  font-size: 16px;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
 `;
 
 export const ApplicationsSection = styled.section`
-  background: white;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  margin-bottom: 32px;
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.md};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const SectionHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
   margin: 0;
 `;
 
 export const SectionSubtitle = styled.p`
-  font-size: 14px;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.text.secondary};
   margin: 0;
 `;
 
 export const EmptyState = styled.div`
   text-align: center;
-  padding: 60px 20px;
-  color: #6b7280;
+  padding: ${({ theme }) => theme.spacing["3xl"]};
+  ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.text.secondary};
 `;
 
 export const EmptyStateIcon = styled.div`
-  font-size: 64px;
-  margin-bottom: 20px;
+  font-size: ${({ theme }) => theme.typography.fontSize["5xl"]};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
   opacity: 0.5;
 `;
 
 export const EmptyStateTitle = styled.h3`
-  font-size: 20px;
-  font-weight: 600;
-  color: #374151;
-  margin: 0 0 12px 0;
+  font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
 `;
 
 export const EmptyStateDescription = styled.p`
-  font-size: 16px;
-  margin: 0 0 32px 0;
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  margin: 0 0 ${({ theme }) => theme.spacing.xl} 0;
   line-height: 1.5;
   max-width: 400px;
   margin-left: auto;
@@ -310,45 +310,44 @@ export const EmptyStateDescription = styled.p`
 `;
 
 export const AdminInsights = styled.section`
-  background: white;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.md};
 `;
 
 export const InsightsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  gap: ${({ theme }) => theme.spacing.lg};
+  margin-top: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const InsightCard = styled.div`
   text-align: center;
-  padding: 24px;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: ${({ theme }) => theme.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const InsightValue = styled.div`
-  font-size: 28px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 8px;
+  font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const InsightLabel = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: #6b7280;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.secondary};
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const InsightTrend = styled.div`
-  font-size: 12px;
-  color: #9ca3af;
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.text.tertiary};
 `;

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 export const NavbarContainer = styled.nav`
-  background: ${(props) => props.theme.background.primary};
-  border-bottom: 1px solid ${(props) => props.theme.border.light};
+  background: ${({ theme }) => theme.background.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: ${(props) => props.theme.shadows.sm};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
   transition: background-color 0.3s ease, border-color 0.3s ease;
 `;
 
@@ -41,7 +41,7 @@ export const BrandLogo = styled.img`
 export const BrandText = styled.span`
   font-size: 20px;
   font-weight: 700;
-  color: ${(props) => props.theme.text.primary};
+  color: ${({ theme }) => theme.text.primary};
   transition: color 0.3s ease;
 `;
 
@@ -57,14 +57,14 @@ export const NavLinks = styled.div`
 
 export const NavLink = styled.a`
   text-decoration: none;
-  color: ${(props) => props.theme.text.secondary};
+  color: ${({ theme }) => theme.text.secondary};
   font-weight: 500;
   transition: all 0.2s ease;
   padding: 8px 0;
   position: relative;
 
   &:hover {
-    color: ${(props) => props.theme.text.primary};
+    color: ${({ theme }) => theme.text.primary};
   }
 
   &::after {
@@ -74,7 +74,7 @@ export const NavLink = styled.a`
     left: 0;
     width: 0;
     height: 2px;
-    background-color: ${(props) => props.theme.primary[500]};
+    background-color: ${({ theme }) => theme.primaryColors["500"]};
     transition: width 0.2s ease;
   }
 
@@ -108,7 +108,7 @@ export const ThemeToggleButton = styled.button`
   height: 40px;
 
   &:hover {
-    background-color: ${(props) => props.theme.background.secondary};
+    background-color: ${({ theme }) => theme.background.secondary};
     transform: scale(1.1);
   }
 
@@ -118,13 +118,13 @@ export const ThemeToggleButton = styled.button`
 `;
 
 export const UserGreeting = styled.span`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${({ theme }) => theme.text.secondary};
   font-size: 14px;
 `;
 
 export const UserRole = styled.span`
-  background-color: ${(props) => props.theme.background.secondary};
-  color: ${(props) => props.theme.text.secondary};
+  background-color: ${({ theme }) => theme.background.secondary};
+  color: ${({ theme }) => theme.text.secondary};
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -154,21 +154,22 @@ export const MobileMenuToggle = styled.button`
   span {
     width: 20px;
     height: 2px;
-    background-color: ${(props) => props.theme.text.primary};
+    background-color: ${({ theme }) => theme.text.primary};
     transition: all 0.3s ease;
   }
 `;
 
-export const MobileMenu = styled.div<{ isOpen: boolean }>`
-  display: ${(props) => (props.isOpen ? "flex" : "none")};
+// FIX: Use $ prefix for transient prop to prevent DOM warning
+export const MobileMenu = styled.div<{ $isOpen: boolean }>`
+  display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
   flex-direction: column;
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: ${(props) => props.theme.background.primary};
-  border-bottom: 1px solid ${(props) => props.theme.border.light};
-  box-shadow: ${(props) => props.theme.shadows.md};
+  background: ${({ theme }) => theme.background.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
+  box-shadow: ${({ theme }) => theme.shadows.md};
   transition: background-color 0.3s ease, border-color 0.3s ease;
 
   @media (min-width: 769px) {
@@ -179,13 +180,13 @@ export const MobileMenu = styled.div<{ isOpen: boolean }>`
 export const MobileNavLink = styled.a`
   padding: 16px 24px;
   text-decoration: none;
-  color: ${(props) => props.theme.text.primary};
-  border-bottom: 1px solid ${(props) => props.theme.border.light};
+  color: ${({ theme }) => theme.text.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
   transition: background-color 0.2s ease;
   cursor: pointer;
 
   &:hover {
-    background-color: ${(props) => props.theme.background.secondary};
+    background-color: ${({ theme }) => theme.background.secondary};
   }
 
   &:last-child {
@@ -198,8 +199,8 @@ export const MobileThemeToggle = styled.button`
   background: none;
   border: none;
   text-align: left;
-  color: ${(props) => props.theme.text.primary};
-  border-bottom: 1px solid ${(props) => props.theme.border.light};
+  color: ${({ theme }) => theme.text.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
   cursor: pointer;
   transition: background-color 0.2s ease;
   display: flex;
@@ -208,7 +209,7 @@ export const MobileThemeToggle = styled.button`
   font-size: 16px;
 
   &:hover {
-    background-color: ${(props) => props.theme.background.secondary};
+    background-color: ${({ theme }) => theme.background.secondary};
   }
 `;
 
@@ -217,12 +218,12 @@ export const MobileSignOut = styled.button`
   background: none;
   border: none;
   text-align: left;
-  color: ${(props) => props.theme.error[500]};
-  border-bottom: 1px solid ${(props) => props.theme.border.light};
+  color: ${({ theme }) => theme.errorColors["500"]};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
   cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${(props) => props.theme.error[50]};
+    background-color: ${({ theme }) => theme.errorColors["50"]};
   }
 `;

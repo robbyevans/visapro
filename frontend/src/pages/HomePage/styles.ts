@@ -5,7 +5,7 @@ export const HomePageContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: ${(props) => props.theme.background.primary};
+  background: ${({ theme }) => theme.background.primary};
   transition: background-color 0.3s ease;
 `;
 
@@ -67,7 +67,7 @@ export const HeroContent = styled.div`
 export const HeroTitle = styled.h1`
   font-size: 64px;
   font-weight: 800;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   margin-bottom: 24px;
   line-height: 1.1;
 
@@ -96,8 +96,8 @@ export const HeroTitle = styled.h1`
 export const HeroHighlight = styled.span`
   background: linear-gradient(
     135deg,
-    ${(props) => props.theme.primaryColors["500"]},
-    ${(props) => props.theme.primaryColors["400"]}
+    ${({ theme }) => theme.primaryColors["500"]},
+    ${({ theme }) => theme.primaryColors["400"]}
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -107,7 +107,7 @@ export const HeroHighlight = styled.span`
 
 export const HeroSubtitle = styled.p`
   font-size: 20px;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   opacity: 0.95;
   margin-bottom: 48px;
   line-height: 1.6;
@@ -156,14 +156,14 @@ export const StatItem = styled.div`
 export const StatNumber = styled.div`
   font-size: 32px;
   font-weight: 700;
-  color: ${(props) => props.theme.primaryColors["500"]};
+  color: ${({ theme }) => theme.primaryColors["500"]};
   margin-bottom: 8px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 export const StatLabel = styled.div`
   font-size: 14px;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   opacity: 0.9;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -200,7 +200,7 @@ export const SectionHeader = styled.div`
 export const SectionPreTitle = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: ${(props) => props.theme.secondaryColors["500"]};
+  color: ${({ theme }) => theme.secondaryColors["500"]};
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 12px;
@@ -209,7 +209,7 @@ export const SectionPreTitle = styled.div`
 export const SectionTitle = styled.h2`
   font-size: 42px;
   font-weight: 700;
-  color: ${(props) => props.theme.text.primary};
+  color: ${({ theme }) => theme.text.primary};
   margin-bottom: 16px;
 
   @media (max-width: 768px) {
@@ -224,7 +224,7 @@ export const SectionTitle = styled.h2`
 
 export const SectionSubtitle = styled.p`
   font-size: 18px;
-  color: ${(props) => props.theme.text.secondary};
+  color: ${({ theme }) => theme.text.secondary};
   line-height: 1.6;
 
   @media (max-width: 768px) {
@@ -240,7 +240,7 @@ export const SectionSubtitle = styled.p`
 // Features Section
 export const FeaturesSection = styled.section`
   padding: 120px 0;
-  background: ${(props) => props.theme.background.primary};
+  background: ${({ theme }) => theme.background.primary};
   transition: background-color 0.3s ease;
 `;
 
@@ -270,9 +270,9 @@ export const FeatureCard = styled.div`
   text-align: center;
   padding: 40px 24px;
   border-radius: 16px;
-  background: ${(props) => props.theme.background.secondary};
+  background: ${({ theme }) => theme.background.secondary};
   transition: all 0.3s ease;
-  border: 1px solid ${(props) => props.theme.border.light};
+  border: 1px solid ${({ theme }) => theme.border.light};
   min-height: 220px;
   display: flex;
   flex-direction: column;
@@ -280,9 +280,9 @@ export const FeatureCard = styled.div`
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: ${($theme) => $theme.theme.shadows.xl};
-    background: ${(props) => props.theme.background.primary};
-    border-color: ${(props) => props.theme.primaryColors["200"]};
+    box-shadow: ${({ theme }) => theme.shadows.xl};
+    background: ${({ theme }) => theme.background.primary};
+    border-color: ${({ theme }) => theme.primaryColors["200"]};
   }
 
   @media (max-width: 1024px) {
@@ -311,14 +311,14 @@ export const FeatureIcon = styled.div`
   margin: 0 auto 20px;
   background: linear-gradient(
     135deg,
-    ${(props) => props.theme.primaryColors["500"]},
-    ${(props) => props.theme.primaryColors["600"]}
+    ${({ theme }) => theme.primaryColors["500"]},
+    ${({ theme }) => theme.primaryColors["600"]}
   );
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   font-size: 28px;
 
   @media (max-width: 1024px) {
@@ -348,7 +348,7 @@ export const FeatureTitle = styled.h3`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: ${(props) => props.theme.text.primary};
+  color: ${({ theme }) => theme.text.primary};
   line-height: 1.3;
 
   @media (max-width: 1024px) {
@@ -367,7 +367,7 @@ export const FeatureTitle = styled.h3`
 `;
 
 export const FeatureDescription = styled.p`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${({ theme }) => theme.text.secondary};
   line-height: 1.6;
   font-size: 15px;
   margin: 0;
@@ -391,7 +391,7 @@ export const FeatureDescription = styled.p`
 // Process Section
 export const ProcessSection = styled.section`
   padding: 120px 0;
-  background: ${(props) => props.theme.background.secondary};
+  background: ${({ theme }) => theme.background.secondary};
   transition: background-color 0.3s ease;
 `;
 
@@ -404,16 +404,16 @@ export const ProcessGrid = styled.div`
 export const ProcessCard = styled.div`
   text-align: center;
   padding: 40px 24px;
-  background: ${(props) => props.theme.background.primary};
+  background: ${({ theme }) => theme.background.primary};
   border-radius: 16px;
-  box-shadow: ${(props) => props.theme.shadows.md};
+  box-shadow: ${({ theme }) => theme.shadows.md};
   transition: all 0.3s ease;
-  border: 1px solid ${(props) => props.theme.border.light};
+  border: 1px solid ${({ theme }) => theme.border.light};
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: ${(props) => props.theme.shadows.lg};
-    border-color: ${(props) => props.theme.primaryColors["200"]};
+    box-shadow: ${({ theme }) => theme.shadows.lg};
+    border-color: ${({ theme }) => theme.primaryColors["200"]};
   }
 `;
 
@@ -423,14 +423,14 @@ export const ProcessStep = styled.div`
   margin: 0 auto 20px;
   background: linear-gradient(
     135deg,
-    ${(props) => props.theme.successColors["500"]},
-    ${(props) => props.theme.successColors["600"]}
+    ${({ theme }) => theme.successColors["500"]},
+    ${({ theme }) => theme.successColors["600"]}
   );
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   font-size: 20px;
   font-weight: 700;
 `;
@@ -439,11 +439,11 @@ export const ProcessTitle = styled.h3`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: ${(props) => props.theme.text.primary};
+  color: ${({ theme }) => theme.text.primary};
 `;
 
 export const ProcessDescription = styled.p`
-  color: ${(props) => props.theme.text.secondary};
+  color: ${({ theme }) => theme.text.secondary};
   line-height: 1.6;
   font-size: 14px;
 `;
@@ -453,10 +453,10 @@ export const CTASection = styled.section`
   padding: 120px 0;
   background: linear-gradient(
     135deg,
-    ${(props) => props.theme.neutralColors["900"]} 0%,
-    ${(props) => props.theme.neutralColors["800"]} 100%
+    ${({ theme }) => theme.neutralColors["900"]} 0%,
+    ${({ theme }) => theme.neutralColors["800"]} 100%
   );
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   transition: background 0.3s ease;
 `;
 
@@ -470,7 +470,7 @@ export const CTATitle = styled.h2`
   font-size: 48px;
   font-weight: 700;
   margin-bottom: 24px;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
 
   @media (max-width: 768px) {
     font-size: 36px;
@@ -479,7 +479,7 @@ export const CTATitle = styled.h2`
 
 export const CTADescription = styled.p`
   font-size: 20px;
-  color: ${(props) => props.theme.text.inverse};
+  color: ${({ theme }) => theme.text.inverse};
   opacity: 0.8;
   margin-bottom: 40px;
   line-height: 1.6;

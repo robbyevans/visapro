@@ -2,30 +2,31 @@ import styled from "styled-components";
 
 export const EmptyStateContainer = styled.div`
   text-align: center;
-  padding: 48px 24px;
-  color: #6b7280;
+  color: ${({ theme }) => theme.text.secondary};
+  padding: ${({ theme }) => theme.spacing["2xl"]};
+  ${({ theme }) => theme.spacing.lg};
 `;
 
 export const EmptyStateIcon = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 
   svg {
     width: 64px;
     height: 64px;
-    color: #d1d5db;
+    color: ${({ theme }) => theme.text.tertiary};
   }
 `;
 
 export const EmptyStateTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  color: #374151;
-  margin: 0 0 8px 0;
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
 `;
 
 export const EmptyStateDescription = styled.p`
-  font-size: 14px;
-  margin: 0 0 24px 0;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  margin: 0 0 ${({ theme }) => theme.spacing.lg} 0;
   line-height: 1.5;
 `;
 
