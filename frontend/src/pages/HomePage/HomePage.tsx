@@ -88,7 +88,6 @@ const HomePage: React.FC = () => {
         <S.HeroBackground>
           <S.HeroOverlay />
           <S.HeroContent>
-            <S.HeroBadge>🏃‍♂️ Built for Champions</S.HeroBadge>
             <S.HeroTitle>
               Empowering <S.HeroHighlight>Kenyan Athletes</S.HeroHighlight>{" "}
               Worldwide

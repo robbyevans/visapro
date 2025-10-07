@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import kenyanAthleteHero from "../../assets/_111858986_kipchogetopbody.png";
 
 export const HomePageContainer = styled.div`
   min-height: 100vh;
@@ -27,7 +28,7 @@ export const HeroBackground = styled.div`
       rgba(0, 0, 0, 0.6) 0%,
       rgba(0, 0, 0, 0.4) 100%
     ),
-    url("/kenyan-athlete-hero.jpg") center/cover;
+    url(${kenyanAthleteHero}) center/cover;
 
   &::before {
     content: "";
@@ -57,12 +58,6 @@ export const HeroOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 82, 0, 0.3) 0%,
-    rgba(255, 215, 0, 0.2) 50%,
-    rgba(0, 82, 0, 0.3) 100%
-  );
 `;
 
 export const HeroContent = styled.div`
@@ -71,18 +66,7 @@ export const HeroContent = styled.div`
   text-align: center;
   padding: 0 24px;
   z-index: 2;
-`;
-
-export const HeroBadge = styled.div`
-  display: inline-block;
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
-  color: #000;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 32px;
-  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+  top: 70px;
 `;
 
 export const HeroTitle = styled.h1`
