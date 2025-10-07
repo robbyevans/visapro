@@ -3,6 +3,7 @@ import { useApplications } from "../../../redux/hooks/useApplications";
 import ApplicationCard from "../ApplicationCard/ApplicationCard";
 import { ApplicationFilter } from "../ApplicationFilter/ApplicationFilter";
 import type { IApplication } from "../../../redux/types";
+import type { FilterState } from "../types";
 import Spinner from "../../Spinner/Spinner";
 import EmptyState from "../../Common/EmptyState";
 import * as S from "./styles";
@@ -11,18 +12,16 @@ interface ApplicationListProps {
   applications?: IApplication[];
   onApplicationClick?: (applicationId: number) => void;
   showActions?: boolean;
-  filterStatus?: string;
   isLoading?: boolean;
   viewMode?: "admin" | "user";
   showFilters?: boolean;
-  defaultFilter?: any;
+  defaultFilter?: Partial<FilterState>;
 }
 
 const ApplicationList: React.FC<ApplicationListProps> = ({
   applications: propApplications,
   onApplicationClick,
   showActions = false,
-  filterStatus,
   isLoading: propIsLoading,
   viewMode = "user",
   showFilters = true,
@@ -34,33 +33,40 @@ const ApplicationList: React.FC<ApplicationListProps> = ({
     error,
   } = useApplications();
 
-  // Use provided applications or fall back to hook
   const applications = propApplications || hookApplications;
   const isLoading = propIsLoading !== undefined ? propIsLoading : hookIsLoading;
 
-  // Set default filters based on view mode
-  const getDefaultFilter = () => {
-    if (defaultFilter) return defaultFilter;
+  const getDefaultFilter = (): FilterState => {
+    const baseFilter: FilterState = {
+      status: [],
+      timeRange: "all_time",
+      sortBy: "created_at",
+      sortOrder: "desc",
+    };
+
+    if (defaultFilter) {
+      return { ...baseFilter, ...defaultFilter };
+    }
 
     if (viewMode === "admin") {
       return {
-        status: ["pending", "invoiced"], // Focus on actionable items for admin
-        timeRange: "all_time",
+        ...baseFilter,
+        status: ["pending", "invoiced"],
         sortBy: "created_at",
-        sortOrder: "desc",
       };
     }
 
-    // For regular users (individual/corporate)
     return {
-      status: ["pending", "invoiced", "approved", "rejected"], // All active statuses
-      timeRange: "last_3_months", // Recent applications
-      sortBy: "updated_at", // Most recently active first
-      sortOrder: "desc",
+      ...baseFilter,
+      status: ["pending", "invoiced", "approved", "rejected"],
+      timeRange: "last_3_months",
+      sortBy: "updated_at",
     };
   };
 
-  const [currentFilter, setCurrentFilter] = useState(getDefaultFilter());
+  const [currentFilter, setCurrentFilter] = useState<FilterState>(
+    getDefaultFilter()
+  );
   const [showFilterPanel, setShowFilterPanel] = useState(false);
 
   // Reset filter when viewMode changes
@@ -82,8 +88,29 @@ const ApplicationList: React.FC<ApplicationListProps> = ({
         return new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
       case "all_time":
       default:
-        return new Date(0); // Beginning of time
+        return new Date(0);
     }
+  };
+
+  // Safe value getter for sorting
+  const getSortValue = (
+    application: IApplication,
+    sortBy: FilterState["sortBy"]
+  ): Date | string => {
+    if (sortBy === "status") {
+      return application.status;
+    }
+
+    const value = application[sortBy];
+
+    if (
+      typeof value === "string" &&
+      (sortBy === "created_at" || sortBy === "updated_at")
+    ) {
+      return new Date(value);
+    }
+
+    return value as Date | string;
   };
 
   // Filter and sort applications
@@ -91,14 +118,14 @@ const ApplicationList: React.FC<ApplicationListProps> = ({
     let filtered = applications;
 
     // Apply status filter
-    if (currentFilter.status && currentFilter.status.length > 0) {
+    if (currentFilter.status.length > 0) {
       filtered = filtered.filter((app) =>
         currentFilter.status.includes(app.status)
       );
     }
 
     // Apply time range filter
-    if (currentFilter.timeRange && currentFilter.timeRange !== "all_time") {
+    if (currentFilter.timeRange !== "all_time") {
       const cutoffDate = getCutoffDate(currentFilter.timeRange);
       filtered = filtered.filter(
         (app) => new Date(app.updated_at) >= cutoffDate
@@ -107,13 +134,20 @@ const ApplicationList: React.FC<ApplicationListProps> = ({
 
     // Apply sorting
     filtered = [...filtered].sort((a, b) => {
-      const aValue = a[currentFilter.sortBy];
-      const bValue = b[currentFilter.sortBy];
+      const aValue = getSortValue(a, currentFilter.sortBy);
+      const bValue = getSortValue(b, currentFilter.sortBy);
 
       if (currentFilter.sortOrder === "desc") {
-        return new Date(bValue).getTime() - new Date(aValue).getTime();
+        if (aValue instanceof Date && bValue instanceof Date) {
+          return bValue.getTime() - aValue.getTime();
+        }
+        return String(bValue).localeCompare(String(aValue));
+      } else {
+        if (aValue instanceof Date && bValue instanceof Date) {
+          return aValue.getTime() - bValue.getTime();
+        }
+        return String(aValue).localeCompare(String(bValue));
       }
-      return new Date(aValue).getTime() - new Date(bValue).getTime();
     });
 
     return filtered;
@@ -122,10 +156,10 @@ const ApplicationList: React.FC<ApplicationListProps> = ({
   // Get active filter count for badge
   const getActiveFilterCount = () => {
     let count = 0;
-    if (currentFilter.status && currentFilter.status.length > 0) {
+    if (currentFilter.status.length > 0) {
       count += currentFilter.status.length;
     }
-    if (currentFilter.timeRange && currentFilter.timeRange !== "all_time") {
+    if (currentFilter.timeRange !== "all_time") {
       count += 1;
     }
     return count;
@@ -133,6 +167,11 @@ const ApplicationList: React.FC<ApplicationListProps> = ({
 
   const handleClearFilters = () => {
     setCurrentFilter(getDefaultFilter());
+  };
+
+  // Create a wrapper function for the filter change
+  const handleFilterChange = (filter: FilterState) => {
+    setCurrentFilter(filter);
   };
 
   if (isLoading) {
@@ -210,7 +249,7 @@ const ApplicationList: React.FC<ApplicationListProps> = ({
         <S.FilterPanel>
           <ApplicationFilter
             currentFilter={currentFilter}
-            onFilterChange={setCurrentFilter}
+            onFilterChange={handleFilterChange}
             viewMode={viewMode}
           />
           <S.FilterActions>

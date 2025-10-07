@@ -1,18 +1,13 @@
 import React from "react";
+import type { ApplicationFilterProps, StatusOption } from "../types";
 import * as S from "./styles";
-
-interface ApplicationFilterProps {
-  currentFilter: any;
-  onFilterChange: (filter: any) => void;
-  viewMode: "admin" | "user";
-}
 
 export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
   currentFilter,
   onFilterChange,
   viewMode,
 }) => {
-  const statusOptions =
+  const statusOptions: StatusOption[] =
     viewMode === "admin"
       ? [
           { value: "pending", label: "Pending", color: "#F59E0B" },
@@ -44,9 +39,9 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
   ];
 
   const handleStatusToggle = (statusValue: string) => {
-    const newStatus = currentFilter.status?.includes(statusValue)
+    const newStatus = currentFilter.status.includes(statusValue)
       ? currentFilter.status.filter((s: string) => s !== statusValue)
-      : [...(currentFilter.status || []), statusValue];
+      : [...currentFilter.status, statusValue];
 
     onFilterChange({ ...currentFilter, status: newStatus });
   };
@@ -56,7 +51,11 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
   };
 
   const handleSortChange = (sortBy: string) => {
-    onFilterChange({ ...currentFilter, sortBy });
+    // Type assertion since we know these are valid values
+    onFilterChange({
+      ...currentFilter,
+      sortBy: sortBy as "created_at" | "updated_at" | "status",
+    });
   };
 
   const handleSortOrderToggle = () => {
@@ -79,7 +78,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
           {statusOptions.map((option) => (
             <S.StatusFilterChip
               key={option.value}
-              selected={currentFilter.status?.includes(option.value)}
+              selected={currentFilter.status.includes(option.value)}
               color={option.color}
               onClick={() => handleStatusToggle(option.value)}
             >
@@ -94,7 +93,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
         <S.FilterGroup>
           <S.FilterLabel>Time Range</S.FilterLabel>
           <S.TimeRangeSelect
-            value={currentFilter.timeRange || "last_3_months"}
+            value={currentFilter.timeRange}
             onChange={(e) => handleTimeRangeChange(e.target.value)}
           >
             {timeRangeOptions.map((option) => (
@@ -109,7 +108,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
           <S.FilterLabel>Sort By</S.FilterLabel>
           <S.SortContainer>
             <S.SortSelect
-              value={currentFilter.sortBy || "created_at"}
+              value={currentFilter.sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
             >
               {sortOptions.map((option) => (
@@ -133,7 +132,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
       <S.ActiveFilters>
         <S.FilterLabel>Active Filters:</S.FilterLabel>
         <S.ActiveFilterTags>
-          {currentFilter.status?.map((status: string) => {
+          {currentFilter.status.map((status: string) => {
             const option = statusOptions.find((opt) => opt.value === status);
             return (
               <S.ActiveFilterTag key={status} color={option?.color}>
@@ -146,21 +145,20 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
               </S.ActiveFilterTag>
             );
           })}
-          {currentFilter.timeRange &&
-            currentFilter.timeRange !== "all_time" && (
-              <S.ActiveFilterTag color="#6B7280">
-                {
-                  timeRangeOptions.find(
-                    (opt) => opt.value === currentFilter.timeRange
-                  )?.label
-                }
-                <S.RemoveFilterButton
-                  onClick={() => handleTimeRangeChange("all_time")}
-                >
-                  ×
-                </S.RemoveFilterButton>
-              </S.ActiveFilterTag>
-            )}
+          {currentFilter.timeRange !== "all_time" && (
+            <S.ActiveFilterTag color="#6B7280">
+              {
+                timeRangeOptions.find(
+                  (opt) => opt.value === currentFilter.timeRange
+                )?.label
+              }
+              <S.RemoveFilterButton
+                onClick={() => handleTimeRangeChange("all_time")}
+              >
+                ×
+              </S.RemoveFilterButton>
+            </S.ActiveFilterTag>
+          )}
         </S.ActiveFilterTags>
       </S.ActiveFilters>
     </S.FiltersContainer>

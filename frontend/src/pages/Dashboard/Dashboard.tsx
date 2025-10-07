@@ -273,16 +273,16 @@ const Dashboard: React.FC = () => {
         </S.StatusDistribution>
       )}
 
-      {/* Applications List Section */}
+      {/* Applications List Section - UPDATED */}
       <S.ApplicationsSection>
         <S.SectionHeader>
           <S.SectionTitle>
             {isAdmin ? "All Applications" : "Your Applications"}
           </S.SectionTitle>
           <S.SectionSubtitle>
-            {userApplications.length}{" "}
-            {userApplications.length === 1 ? "application" : "applications"}{" "}
-            total
+            {isAdmin
+              ? "Focus on pending and in-review applications"
+              : "Your recent and active applications"}
           </S.SectionSubtitle>
         </S.SectionHeader>
 
@@ -306,33 +306,6 @@ const Dashboard: React.FC = () => {
                 Start Your First Application
               </Button>
             )}
-          </S.EmptyState>
-        ) : (
-          <ApplicationList
-            applications={userApplications}
-            onApplicationClick={handleApplicationClick}
-            showActions={isAdmin}
-          />
-        )}
-      </S.ApplicationsSection>
-
-           {/* Applications List Section - UPDATED */}
-      <S.ApplicationsSection>
-        <S.SectionHeader>
-          <S.SectionTitle>
-            {isAdmin ? "All Applications" : "Your Applications"}
-          </S.SectionTitle>
-          <S.SectionSubtitle>
-            {isAdmin 
-              ? "Focus on pending and in-review applications"
-              : "Your recent and active applications"
-            }
-          </S.SectionSubtitle>
-        </S.SectionHeader>
-
-        {userApplications.length === 0 ? (
-          <S.EmptyState>
-            {/* ... existing empty state */}
           </S.EmptyState>
         ) : (
           <ApplicationList
