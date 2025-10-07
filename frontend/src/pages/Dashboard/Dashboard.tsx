@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../redux/hooks/useUser";
 import { useApplications } from "../../redux/hooks/useApplications";
@@ -10,9 +10,20 @@ const Dashboard: React.FC = () => {
   const { currentUser } = useUser();
   const { applications, fetchApplications } = useApplications();
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     fetchApplications();
+
+    // Check screen size for mobile view
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, [fetchApplications]);
 
   const userApplications =
@@ -50,7 +61,7 @@ const Dashboard: React.FC = () => {
       pending: "#F59E0B",
       approved: "#10B981",
       rejected: "#EF4444",
-      in_review: "#3B82F6",
+      invoiced: "#3B82F6",
       completed: "#8B5CF6",
     };
     return colors[status as keyof typeof colors] || "#6B7280";
@@ -81,61 +92,120 @@ const Dashboard: React.FC = () => {
         )}
       </S.DashboardHeader>
 
-      {/* Statistics Overview */}
+      {/* Statistics Overview - Updated for Mobile */}
       <S.StatsOverview>
-        <S.StatCard variant="total">
-          <S.StatIcon>📊</S.StatIcon>
-          <S.StatContent>
-            <S.StatValue>{stats.total}</S.StatValue>
-            <S.StatLabel>Total Applications</S.StatLabel>
-          </S.StatContent>
-          <S.StatTrend>All submissions</S.StatTrend>
-        </S.StatCard>
+        {isMobile ? (
+          // Mobile: Single consolidated stats card
+          <S.MobileStatsCard>
+            <S.MobileStatsHeader>
+              <S.MobileStatsTitle>Application Overview</S.MobileStatsTitle>
+              <S.MobileStatsTotal>{stats.total} Total</S.MobileStatsTotal>
+            </S.MobileStatsHeader>
 
-        <S.StatCard variant="pending">
-          <S.StatIcon>⏳</S.StatIcon>
-          <S.StatContent>
-            <S.StatValue>{stats.pending}</S.StatValue>
-            <S.StatLabel>Pending</S.StatLabel>
-          </S.StatContent>
-          <S.StatTrend>Awaiting action</S.StatTrend>
-        </S.StatCard>
+            <S.MobileStatsGrid>
+              <S.MobileStatItem>
+                <S.MobileStatIndicator color={getStatusColor("pending")} />
+                <S.MobileStatInfo>
+                  <S.MobileStatValue>{stats.pending}</S.MobileStatValue>
+                  <S.MobileStatLabel>Pending</S.MobileStatLabel>
+                </S.MobileStatInfo>
+              </S.MobileStatItem>
 
-        <S.StatCard variant="inReview">
-          <S.StatIcon>🔍</S.StatIcon>
-          <S.StatContent>
-            <S.StatValue>{stats.invoiced}</S.StatValue>
-            <S.StatLabel>In Review</S.StatLabel>
-          </S.StatContent>
-          <S.StatTrend>Under examination</S.StatTrend>
-        </S.StatCard>
+              <S.MobileStatItem>
+                <S.MobileStatIndicator color={getStatusColor("approved")} />
+                <S.MobileStatInfo>
+                  <S.MobileStatValue>{stats.approved}</S.MobileStatValue>
+                  <S.MobileStatLabel>Approved</S.MobileStatLabel>
+                </S.MobileStatInfo>
+              </S.MobileStatItem>
 
-        <S.StatCard variant="approved">
-          <S.StatIcon>✅</S.StatIcon>
-          <S.StatContent>
-            <S.StatValue>{stats.approved}</S.StatValue>
-            <S.StatLabel>Approved</S.StatLabel>
-          </S.StatContent>
-          <S.StatTrend>Successful applications</S.StatTrend>
-        </S.StatCard>
+              <S.MobileStatItem>
+                <S.MobileStatIndicator color={getStatusColor("invoiced")} />
+                <S.MobileStatInfo>
+                  <S.MobileStatValue>{stats.invoiced}</S.MobileStatValue>
+                  <S.MobileStatLabel>In Review</S.MobileStatLabel>
+                </S.MobileStatInfo>
+              </S.MobileStatItem>
 
-        <S.StatCard variant="rejected">
-          <S.StatIcon>❌</S.StatIcon>
-          <S.StatContent>
-            <S.StatValue>{stats.rejected}</S.StatValue>
-            <S.StatLabel>Rejected</S.StatLabel>
-          </S.StatContent>
-          <S.StatTrend>Requires attention</S.StatTrend>
-        </S.StatCard>
+              <S.MobileStatItem>
+                <S.MobileStatIndicator color={getStatusColor("completed")} />
+                <S.MobileStatInfo>
+                  <S.MobileStatValue>{stats.completed}</S.MobileStatValue>
+                  <S.MobileStatLabel>Completed</S.MobileStatLabel>
+                </S.MobileStatInfo>
+              </S.MobileStatItem>
+            </S.MobileStatsGrid>
 
-        <S.StatCard variant="completed">
-          <S.StatIcon>🎉</S.StatIcon>
-          <S.StatContent>
-            <S.StatValue>{stats.completed}</S.StatValue>
-            <S.StatLabel>Completed</S.StatLabel>
-          </S.StatContent>
-          <S.StatTrend>Process finished</S.StatTrend>
-        </S.StatCard>
+            {stats.rejected > 0 && (
+              <S.MobileStatsFooter>
+                <S.MobileStatItem>
+                  <S.MobileStatIndicator color={getStatusColor("rejected")} />
+                  <S.MobileStatInfo>
+                    <S.MobileStatValue>{stats.rejected}</S.MobileStatValue>
+                    <S.MobileStatLabel>Rejected</S.MobileStatLabel>
+                  </S.MobileStatInfo>
+                </S.MobileStatItem>
+              </S.MobileStatsFooter>
+            )}
+          </S.MobileStatsCard>
+        ) : (
+          // Desktop: Original 6 cards layout
+          <>
+            <S.StatCard variant="total">
+              <S.StatIcon>📊</S.StatIcon>
+              <S.StatContent>
+                <S.StatValue>{stats.total}</S.StatValue>
+                <S.StatLabel>Total Applications</S.StatLabel>
+              </S.StatContent>
+              <S.StatTrend>All submissions</S.StatTrend>
+            </S.StatCard>
+
+            <S.StatCard variant="pending">
+              <S.StatIcon>⏳</S.StatIcon>
+              <S.StatContent>
+                <S.StatValue>{stats.pending}</S.StatValue>
+                <S.StatLabel>Pending</S.StatLabel>
+              </S.StatContent>
+              <S.StatTrend>Awaiting action</S.StatTrend>
+            </S.StatCard>
+
+            <S.StatCard variant="inReview">
+              <S.StatIcon>🔍</S.StatIcon>
+              <S.StatContent>
+                <S.StatValue>{stats.invoiced}</S.StatValue>
+                <S.StatLabel>In Review</S.StatLabel>
+              </S.StatContent>
+              <S.StatTrend>Under examination</S.StatTrend>
+            </S.StatCard>
+
+            <S.StatCard variant="approved">
+              <S.StatIcon>✅</S.StatIcon>
+              <S.StatContent>
+                <S.StatValue>{stats.approved}</S.StatValue>
+                <S.StatLabel>Approved</S.StatLabel>
+              </S.StatContent>
+              <S.StatTrend>Successful applications</S.StatTrend>
+            </S.StatCard>
+
+            <S.StatCard variant="rejected">
+              <S.StatIcon>❌</S.StatIcon>
+              <S.StatContent>
+                <S.StatValue>{stats.rejected}</S.StatValue>
+                <S.StatLabel>Rejected</S.StatLabel>
+              </S.StatContent>
+              <S.StatTrend>Requires attention</S.StatTrend>
+            </S.StatCard>
+
+            <S.StatCard variant="completed">
+              <S.StatIcon>🎉</S.StatIcon>
+              <S.StatContent>
+                <S.StatValue>{stats.completed}</S.StatValue>
+                <S.StatLabel>Completed</S.StatLabel>
+              </S.StatContent>
+              <S.StatTrend>Process finished</S.StatTrend>
+            </S.StatCard>
+          </>
+        )}
       </S.StatsOverview>
 
       {/* Quick Actions for Regular Users */}

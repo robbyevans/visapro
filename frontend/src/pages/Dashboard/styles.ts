@@ -6,6 +6,11 @@ export const DashboardContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
   background: ${({ theme }) => theme.background.secondary};
   min-height: 100vh;
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.md};
+    ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const DashboardHeader = styled.header`
@@ -18,6 +23,13 @@ export const DashboardHeader = styled.header`
   border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
   box-shadow: ${({ theme }) => theme.shadows.md};
   border: 1px solid ${({ theme }) => theme.border.light};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+  }
 `;
 
 export const WelcomeSection = styled.div`
@@ -37,6 +49,10 @@ export const WelcomeTitle = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
+  }
 `;
 
 export const WelcomeSubtitle = styled.p`
@@ -44,11 +60,23 @@ export const WelcomeSubtitle = styled.p`
   color: ${({ theme }) => theme.text.secondary};
   line-height: 1.5;
   max-width: 500px;
+
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  }
 `;
 
 export const HeaderActions = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.sm};
+
+  @media (max-width: 768px) {
+    width: 100%;
+
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 export const StatsOverview = styled.div`
@@ -56,6 +84,12 @@ export const StatsOverview = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: ${({ theme }) => theme.spacing.lg};
   margin-bottom: ${({ theme }) => theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+  }
 `;
 
 interface StatCardProps {
@@ -67,6 +101,92 @@ interface StatCardProps {
     | "inReview"
     | "completed";
 }
+
+// Mobile Stats Card Components
+export const MobileStatsCard = styled.div`
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.md};
+  border: 1px solid ${({ theme }) => theme.border.light};
+`;
+
+export const MobileStatsHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.md};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
+`;
+
+export const MobileStatsTitle = styled.h3`
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin: 0;
+`;
+
+export const MobileStatsTotal = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.primaryColors["500"]};
+  background: ${({ theme }) => theme.primaryColors["50"]};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+`;
+
+export const MobileStatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`;
+
+export const MobileStatsFooter = styled.div`
+  padding-top: ${({ theme }) => theme.spacing.md};
+  border-top: 1px solid ${({ theme }) => theme.border.light};
+`;
+
+export const MobileStatItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.background.secondary};
+  }
+`;
+
+export const MobileStatIndicator = styled.div<{ color: string }>`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: ${({ color }) => color};
+  flex-shrink: 0;
+`;
+
+export const MobileStatInfo = styled.div`
+  flex: 1;
+`;
+
+export const MobileStatValue = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
+  line-height: 1;
+`;
+
+export const MobileStatLabel = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.text.secondary};
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+`;
 
 export const StatCard = styled.div<StatCardProps>`
   background: ${({ theme }) => theme.background.primary};
@@ -153,6 +273,11 @@ export const QuickActionsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: ${({ theme }) => theme.spacing.md};
   margin-top: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const QuickActionCard = styled.div`
@@ -203,6 +328,11 @@ export const DistributionGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: ${({ theme }) => theme.spacing.md};
   margin-top: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const StatusItem = styled.div`
@@ -321,6 +451,11 @@ export const InsightsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: ${({ theme }) => theme.spacing.lg};
   margin-top: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const InsightCard = styled.div`

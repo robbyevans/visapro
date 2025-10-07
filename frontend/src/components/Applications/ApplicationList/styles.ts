@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 export const ApplicationListContainer = styled.div`
   width: 100%;
 `;
@@ -11,6 +10,12 @@ export const ApplicationListHeader = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   padding-bottom: ${({ theme }) => theme.spacing.md};
   border-bottom: 1px solid ${({ theme }) => theme.border.light};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const ApplicationListHeaderTitle = styled.h2`
@@ -21,6 +26,10 @@ export const ApplicationListHeaderTitle = styled.h2`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.md};
+
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  }
 `;
 
 export const FilterBadge = styled.span`
@@ -42,6 +51,15 @@ export const ApplicationGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    gap: ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const ApplicationListLoading = styled.div`
