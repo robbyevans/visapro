@@ -39,7 +39,8 @@ const Footer: React.FC = () => {
           <S.FooterBrand>
             <S.Logo>🏃‍♂️ AthleteVisa Pro</S.Logo>
             <S.BrandDescription>
-              Empowering Kenyan athletes to compete globally with streamlined visa solutions and dedicated support.
+              Empowering Kenyan athletes to compete globally with streamlined
+              visa solutions and dedicated support.
             </S.BrandDescription>
             <S.SocialLinks>
               <S.SocialLink href="#" aria-label="Twitter">

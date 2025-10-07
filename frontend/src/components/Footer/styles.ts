@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { STATIC_COLORS } from "../../styles";
 
 export const FooterContainer = styled.footer`
   background: linear-gradient(
@@ -41,7 +42,7 @@ export const Logo = styled.div`
 `;
 
 export const BrandDescription = styled.p`
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
   opacity: 0.7;
   line-height: 1.6;
   margin-bottom: 24px;
@@ -103,7 +104,7 @@ export const LinksTitle = styled.h3`
 `;
 
 export const FooterLink = styled.a`
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
   opacity: 0.7;
   text-decoration: none;
   padding: 8px 0;
@@ -131,7 +132,7 @@ export const FooterBottom = styled.div`
 `;
 
 export const Copyright = styled.p`
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
   opacity: 0.5;
   font-size: 14px;
   margin: 0;
@@ -143,7 +144,7 @@ export const BottomLinks = styled.div`
 `;
 
 export const BottomLink = styled.a`
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
   opacity: 0.5;
   text-decoration: none;
   font-size: 14px;

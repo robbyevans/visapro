@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import kenyanAthleteHero from "../../assets/_111858986_kipchogetopbody.png";
+import { STATIC_COLORS } from "../../styles";
 
 export const HomePageContainer = styled.div`
   min-height: 100vh;
@@ -61,7 +62,7 @@ export const HeroContent = styled.div`
   text-align: center;
   padding: 0 24px;
   z-index: 2;
-  top: 70px;
+  top: 150px;
 `;
 
 export const HeroTitle = styled.h1`
@@ -107,7 +108,7 @@ export const HeroHighlight = styled.span`
 
 export const HeroSubtitle = styled.p`
   font-size: 20px;
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
   opacity: 0.95;
   margin-bottom: 48px;
   line-height: 1.6;
@@ -163,7 +164,7 @@ export const StatNumber = styled.div`
 
 export const StatLabel = styled.div`
   font-size: 14px;
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
   opacity: 0.9;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -470,7 +471,7 @@ export const CTATitle = styled.h2`
   font-size: 48px;
   font-weight: 700;
   margin-bottom: 24px;
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
 
   @media (max-width: 768px) {
     font-size: 36px;
@@ -479,7 +480,7 @@ export const CTATitle = styled.h2`
 
 export const CTADescription = styled.p`
   font-size: 20px;
-  color: ${({ theme }) => theme.text.inverse};
+  color: ${STATIC_COLORS.base.white};
   opacity: 0.8;
   margin-bottom: 40px;
   line-height: 1.6;
