@@ -79,15 +79,3 @@ export const RetryButton = styled.button`
     background-color: #4b5563;
   }
 `;
-
-// @media (max-width: 768px) {
-//   .application-grid {
-//     grid-template-columns: 1fr;
-//   }
-
-//   .application-list-header {
-//     flex-direction: column;
-//     align-items: flex-start;
-//     gap: 8px;
-//   }
-// }
