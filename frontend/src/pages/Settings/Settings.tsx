@@ -1,19 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../redux/hooks/useAuth";
+import { useUser } from "../../redux/hooks/useUser";
 import Button from "../../components/Button/Button";
 import Modal from "../../components/Modals/Modal";
 import * as S from "./styles";
 
+interface UserSettings {
+  notifications: boolean;
+  emailUpdates: boolean;
+  defaultCountry: string;
+  language: string;
+}
+
 const Settings: React.FC = () => {
   const { handleLogOut } = useAuth();
-  const [notifications, setNotifications] = useState(true);
-  const [emailUpdates, setEmailUpdates] = useState(true);
+  const { currentUser, updateUserSettings } = useUser();
+  const [settings, setSettings] = useState<UserSettings>({
+    notifications: true,
+    emailUpdates: true,
+    defaultCountry: "United States",
+    language: "English (US)",
+  });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleDeleteAccount = () => {
-    // Implement account deletion logic
-    console.log("Account deletion requested");
-    setShowDeleteModal(false);
+  // Load settings from user data when available
+  useEffect(() => {
+    if (currentUser?.settings) {
+      setSettings(currentUser.settings as UserSettings);
+    }
+  }, [currentUser]);
+
+  const handleSettingChange = (key: keyof UserSettings, value: any) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+
+    // Auto-save settings
+    if (currentUser) {
+      setIsSaving(true);
+      updateUserSettings(newSettings).finally(() => setIsSaving(false));
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      // Implement account deletion logic here
+      console.log("Account deletion requested for user:", currentUser?.id);
+      // await deleteUserAccount(currentUser.id);
+      setShowDeleteModal(false);
+      handleLogOut();
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+    }
   };
 
   return (
@@ -23,6 +61,7 @@ const Settings: React.FC = () => {
         <S.SettingsSubtitle>
           Manage your application preferences and account settings
         </S.SettingsSubtitle>
+        {isSaving && <S.SavingIndicator>Saving changes...</S.SavingIndicator>}
       </S.SettingsHeader>
 
       <S.SettingsContent>
@@ -45,8 +84,10 @@ const Settings: React.FC = () => {
               <S.ToggleContainer>
                 <S.ToggleInput
                   type="checkbox"
-                  checked={notifications}
-                  onChange={(e) => setNotifications(e.target.checked)}
+                  checked={settings.notifications}
+                  onChange={(e) =>
+                    handleSettingChange("notifications", e.target.checked)
+                  }
                 />
                 <S.ToggleSlider />
               </S.ToggleContainer>
@@ -62,8 +103,10 @@ const Settings: React.FC = () => {
               <S.ToggleContainer>
                 <S.ToggleInput
                   type="checkbox"
-                  checked={emailUpdates}
-                  onChange={(e) => setEmailUpdates(e.target.checked)}
+                  checked={settings.emailUpdates}
+                  onChange={(e) =>
+                    handleSettingChange("emailUpdates", e.target.checked)
+                  }
                 />
                 <S.ToggleSlider />
               </S.ToggleContainer>
@@ -87,15 +130,39 @@ const Settings: React.FC = () => {
                   Set your preferred destination country
                 </S.SettingDescription>
               </S.SettingInfo>
-              <Button variant="secondary">Change</Button>
+              <S.Select
+                value={settings.defaultCountry}
+                onChange={(e) =>
+                  handleSettingChange("defaultCountry", e.target.value)
+                }
+              >
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+                <option value="Germany">Germany</option>
+              </S.Select>
             </S.SettingItem>
 
             <S.SettingItem>
               <S.SettingInfo>
                 <S.SettingLabel>Language</S.SettingLabel>
-                <S.SettingDescription>English (US)</S.SettingDescription>
+                <S.SettingDescription>
+                  Interface language preference
+                </S.SettingDescription>
               </S.SettingInfo>
-              <Button variant="secondary">Change</Button>
+              <S.Select
+                value={settings.language}
+                onChange={(e) =>
+                  handleSettingChange("language", e.target.value)
+                }
+              >
+                <option value="English (US)">English (US)</option>
+                <option value="English (UK)">English (UK)</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <option value="German">German</option>
+              </S.Select>
             </S.SettingItem>
           </S.SettingsGrid>
         </S.SettingsSection>

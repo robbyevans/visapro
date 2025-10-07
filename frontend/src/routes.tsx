@@ -1,3 +1,5 @@
+// File 7: /frontend/src/routes.tsx
+
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -19,6 +21,8 @@ import HocWrapper from "./components/HocWrapper/HocWrapper";
 import HomePage from "./pages/HomePage/HomePage";
 import AuthPage from "./pages/AuthPage/AuthPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Profile from "./pages/Profile/Profile";
+import Settings from "./pages/Settings/Settings";
 import ApplicationFormPage from "./pages/ApplicationFormPage/ApplicationFormPage";
 import ApplicationDetailsPage from "./pages/ApplicationDetailsPage/ApplicationDetailsPage";
 import AdminApplicationPage from "./pages/AdminApplicationPage/AdminApplicationPage";
@@ -46,6 +50,24 @@ const AppContent: React.FC = () => {
                   element={
                     <ProtectedRoute>
                       <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute>
+                      <Settings />
                     </ProtectedRoute>
                   }
                 />

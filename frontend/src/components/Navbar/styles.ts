@@ -1,3 +1,5 @@
+// File 6: /frontend/src/components/Navbar/styles.ts
+
 import styled from "styled-components";
 
 export const NavbarContainer = styled.nav`
@@ -54,34 +56,6 @@ export const NavLinks = styled.div`
   }
 `;
 
-export const NavLink = styled.a`
-  text-decoration: none;
-  color: ${({ theme }) => theme.text.secondary};
-  font-weight: 500;
-  transition: all 0.2s ease;
-  padding: 8px 0;
-  position: relative;
-
-  &:hover {
-    color: ${({ theme }) => theme.text.primary};
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: ${({ theme }) => theme.primaryColors["500"]};
-    transition: width 0.2s ease;
-  }
-
-  &:hover::after {
-    width: 100%;
-  }
-`;
-
 export const UserSection = styled.div`
   display: flex;
   align-items: center;
@@ -91,6 +65,97 @@ export const UserSection = styled.div`
     display: none;
   }
 `;
+
+export const UserMenuContainer = styled.div`
+  position: relative;
+`;
+
+export const UserMenuButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.background.secondary};
+  }
+`;
+
+export const UserAvatar = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.primaryColors["500"]};
+  color: ${({ theme }) => theme.text.inverse};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+`;
+
+export const UserGreeting = styled.span`
+  color: ${({ theme }) => theme.text.secondary};
+  font-size: 14px;
+`;
+
+export const UserMenuArrow = styled.span<{ $isOpen: boolean }>`
+  font-size: 10px;
+  transform: ${({ $isOpen }) => ($isOpen ? "rotate(180deg)" : "rotate(0)")};
+  transition: transform 0.2s ease;
+`;
+
+export const UserDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: ${({ theme }) => theme.background.primary};
+  border: 1px solid ${({ theme }) => theme.border.light};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
+  min-width: 200px;
+  margin-top: 8px;
+  z-index: 1000;
+`;
+
+export const UserDropdownItem = styled.button`
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text.primary};
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.background.secondary};
+  }
+
+  &:first-child {
+    border-radius: ${({ theme }) => theme.borderRadius.md}
+      ${({ theme }) => theme.borderRadius.md} 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 ${({ theme }) => theme.borderRadius.md};
+    ${({ theme }) => theme.borderRadius.md};
+  }
+`;
+
+export const UserDropdownDivider = styled.div`
+  height: 1px;
+  background-color: ${({ theme }) => theme.border.light};
+  margin: 4px 0;
+`;
+
+// ... (rest of the existing styles remain the same)
 
 // New Theme Toggle Styles
 export const ThemeToggleContainer = styled.label`
@@ -186,11 +251,6 @@ export const ThemeIcon = styled.span`
   }
 `;
 
-export const UserGreeting = styled.span`
-  color: ${({ theme }) => theme.text.secondary};
-  font-size: 14px;
-`;
-
 export const AuthSection = styled.div`
   display: flex;
   align-items: center;
@@ -235,16 +295,50 @@ export const MobileMenu = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
-export const MobileNavLink = styled.a`
-  padding: 16px 24px;
+export const NavLink = styled.a<{ $isActive?: boolean }>`
   text-decoration: none;
-  color: ${({ theme }) => theme.text.primary};
-  border-bottom: 1px solid ${({ theme }) => theme.border.light};
-  transition: background-color 0.2s ease;
-  cursor: pointer;
+  color: ${({ theme, $isActive }) =>
+    $isActive ? theme.text.primary : theme.text.secondary};
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 8px 0;
+  position: relative;
 
   &:hover {
-    background-color: ${({ theme }) => theme.background.secondary};
+    color: ${({ theme }) => theme.text.primary};
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: ${({ $isActive }) => ($isActive ? "100%" : "0")};
+    height: 2px;
+    background-color: ${({ theme }) => theme.primaryColors["500"]};
+    transition: width 0.2s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+`;
+
+export const MobileNavLink = styled.a<{ $isActive?: boolean }>`
+  padding: 16px 24px;
+  text-decoration: none;
+  color: ${({ theme, $isActive }) =>
+    $isActive ? theme.primaryColors["500"] : theme.text.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.border.light};
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-weight: ${({ $isActive }) => ($isActive ? "600" : "400")};
+  background-color: ${({ theme, $isActive }) =>
+    $isActive ? theme.primaryColors["50"] : "transparent"};
+
+  &:hover {
+    background-color: ${({ theme, $isActive }) =>
+      $isActive ? theme.primaryColors["100"] : theme.background.secondary};
   }
 
   &:last-child {

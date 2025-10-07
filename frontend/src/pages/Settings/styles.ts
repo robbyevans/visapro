@@ -1,3 +1,5 @@
+// File 4: /frontend/src/pages/Settings/styles.ts
+
 import styled from "styled-components";
 
 export const SettingsContainer = styled.div`
@@ -8,6 +10,7 @@ export const SettingsContainer = styled.div`
 
 export const SettingsHeader = styled.header`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
+  position: relative;
 `;
 
 export const SettingsTitle = styled.h1`
@@ -20,6 +23,19 @@ export const SettingsTitle = styled.h1`
 export const SettingsSubtitle = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.lg};
   color: ${({ theme }) => theme.text.secondary};
+  margin: 0;
+`;
+
+export const SavingIndicator = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.successColors["500"]};
+  background: ${({ theme }) => theme.successColors["50"]};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.successColors["200"]};
 `;
 
 export const SettingsContent = styled.div`
@@ -68,12 +84,19 @@ export const SettingItem = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const SettingInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};
+  flex: 1;
 `;
 
 export const SettingLabel = styled.span`
@@ -85,6 +108,23 @@ export const SettingLabel = styled.span`
 export const SettingDescription = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.text.secondary};
+`;
+
+export const Select = styled.select`
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.border.light};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  min-width: 150px;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+  }
 `;
 
 export const ToggleContainer = styled.label`
