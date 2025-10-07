@@ -5,7 +5,9 @@ import {
   fetchAthletes,
   createAthlete,
   updateUserProfile,
+  updateUserTheme,
   clearError,
+  updateThemeLocal,
 } from "../slices/userSlice";
 import {
   selectCurrentUser,
@@ -50,6 +52,20 @@ export const useUser = () => {
     [dispatch]
   );
 
+  const handleUpdateTheme = useCallback(
+    (theme: "light" | "dark") => {
+      return dispatch(updateUserTheme(theme));
+    },
+    [dispatch]
+  );
+
+  const handleUpdateThemeLocal = useCallback(
+    (theme: "light" | "dark") => {
+      dispatch(updateThemeLocal(theme));
+    },
+    [dispatch]
+  );
+
   const handleClearError = useCallback(() => {
     dispatch(clearError());
   }, [dispatch]);
@@ -63,6 +79,8 @@ export const useUser = () => {
     fetchAthletes: handleFetchAthletes,
     createAthlete: handleCreateAthlete,
     updateUser: handleUpdateUser,
+    updateTheme: handleUpdateTheme,
+    updateThemeLocal: handleUpdateThemeLocal,
     clearUserError: handleClearError,
   };
 };

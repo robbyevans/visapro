@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../redux/hooks/useAuth";
 import { useUser } from "../../redux/hooks/useUser";
+import { useTheme } from "../../hooks/useTheme";
 import { useApplications } from "../../redux/hooks/useApplications";
 import Spinner from "../Spinner/Spinner";
 
@@ -13,6 +14,7 @@ const HocWrapper: React.FC<HocWrapperProps> = ({ children }) => {
   const { currentUser, fetchUser, isLoading: userLoading } = useUser();
   const { fetchApplications, isLoading: isApplicationsLoading } =
     useApplications();
+  const { setThemeMode } = useTheme();
 
   // Track if we've already loaded data to prevent multiple loads
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -42,6 +44,13 @@ const HocWrapper: React.FC<HocWrapperProps> = ({ children }) => {
       fetchApplications();
     }
   }, [isAuthenticated, currentUser]);
+
+  // NEW: Sync theme with backend when user data loads
+  useEffect(() => {
+    if (currentUser && currentUser.theme_preference) {
+      setThemeMode(currentUser.theme_preference);
+    }
+  }, [currentUser]);
 
   // Show loading spinner while initializing app
   const isAppLoading = authLoading || (isAuthenticated && userLoading);

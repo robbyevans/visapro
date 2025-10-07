@@ -25,6 +25,7 @@ export interface IUser {
   name: string;
   email: string;
   role: TUserRole;
+  theme_preference: "light" | "dark";
 }
 
 /* --- Application --- */

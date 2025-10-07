@@ -22,6 +22,25 @@ const fetchUser = createAsyncThunk(
   }
 );
 
+const updateUserTheme = createAsyncThunk(
+  "user/updateTheme",
+  async (theme: "light" | "dark", { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as any;
+      const token = state.auth.token;
+      if (!token) throw new Error("Not authenticated");
+
+      const api = axiosInstance(token);
+      const res = await api.patch<{ user: IUser }>("/users/update_theme", {
+        theme,
+      });
+      return res.data.user;
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err));
+    }
+  }
+);
+
 const fetchAthletes = createAsyncThunk(
   "user/fetchAthletes",
   async (_, { rejectWithValue, getState }) => {
@@ -101,6 +120,11 @@ const userSlice = createSlice({
     clearAthletes(state) {
       state.athletes = [];
     },
+    updateThemeLocal(state, action: PayloadAction<"light" | "dark">) {
+      if (state.currentUser) {
+        state.currentUser.theme_preference = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -155,12 +179,27 @@ const userSlice = createSlice({
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      .addCase(updateUserTheme.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(updateUserTheme.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+      })
+      .addCase(updateUserTheme.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   },
 });
 
-export { fetchUser, fetchAthletes, createAthlete, updateUserProfile };
+export {
+  fetchUser,
+  fetchAthletes,
+  createAthlete,
+  updateUserProfile,
+  updateUserTheme,
+};
 
-export const { setUser, clearError, clearAthletes } = userSlice.actions;
+export const { setUser, clearError, clearAthletes, updateThemeLocal } = userSlice.actions;
 
 export default userSlice.reducer;

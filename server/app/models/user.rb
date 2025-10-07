@@ -1,6 +1,9 @@
 class User < ApplicationRecord
   has_secure_password
   
+  # Add theme preference validation
+  validates :theme_preference, inclusion: { in: %w[light dark], message: "must be 'light' or 'dark'" }
+  
   def generate_password_reset_token!
     update!(
       reset_password_token: SecureRandom.hex(10),

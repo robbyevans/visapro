@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../redux/hooks/useAuth";
 import { useUser } from "../../redux/hooks/useUser";
+import { useTheme } from "../../hooks/useTheme";
 import Button from "../Button/Button";
 import * as S from "./styles";
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, handleLogOut } = useAuth();
   const { currentUser } = useUser();
+  const { themeMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -20,6 +22,10 @@ const Navbar: React.FC = () => {
   const handleNavigation = (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
+  };
+
+  const handleThemeToggle = () => {
+    toggleTheme();
   };
 
   return (
@@ -48,6 +54,9 @@ const Navbar: React.FC = () => {
             </S.NavLinks>
 
             <S.UserSection>
+              <S.ThemeToggleButton onClick={handleThemeToggle}>
+                {themeMode === "light" ? "🌙" : "☀️"}
+              </S.ThemeToggleButton>
               <S.UserGreeting>Hello, {currentUser?.name}</S.UserGreeting>
               <S.UserRole>{currentUser?.role}</S.UserRole>
               <Button onClick={handleSignOut} variant="secondary">
@@ -63,10 +72,12 @@ const Navbar: React.FC = () => {
           </>
         ) : (
           <S.AuthSection>
+            <S.ThemeToggleButton onClick={handleThemeToggle}>
+              {themeMode === "light" ? "🌙" : "☀️"}
+            </S.ThemeToggleButton>
             <Button
               onClick={() => handleNavigation("/login")}
               variant="primary"
-              // size="small"
             >
               Sign In
             </Button>
@@ -74,7 +85,7 @@ const Navbar: React.FC = () => {
         )}
       </S.NavbarContent>
 
-      {isAuthenticated && (
+      {isAuthenticated ? (
         <S.MobileMenu isOpen={isMenuOpen}>
           <Link to="/dashboard">
             <S.MobileNavLink onClick={() => setIsMenuOpen(false)}>
@@ -88,7 +99,23 @@ const Navbar: React.FC = () => {
               </S.MobileNavLink>
             </Link>
           )}
+          <S.MobileThemeToggle onClick={handleThemeToggle}>
+            {themeMode === "light"
+              ? "🌙 Switch to Dark Mode"
+              : "☀️ Switch to Light Mode"}
+          </S.MobileThemeToggle>
           <S.MobileSignOut onClick={handleSignOut}>Sign Out</S.MobileSignOut>
+        </S.MobileMenu>
+      ) : (
+        <S.MobileMenu isOpen={isMenuOpen}>
+          <S.MobileThemeToggle onClick={handleThemeToggle}>
+            {themeMode === "light"
+              ? "🌙 Switch to Dark Mode"
+              : "☀️ Switch to Light Mode"}
+          </S.MobileThemeToggle>
+          <S.MobileNavLink onClick={() => handleNavigation("/login")}>
+            Sign In
+          </S.MobileNavLink>
         </S.MobileMenu>
       )}
     </S.NavbarContainer>
