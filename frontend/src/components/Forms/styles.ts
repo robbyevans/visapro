@@ -1,24 +1,22 @@
-// File 6: /frontend/src/components/Forms/styles.ts
-
 import styled from "styled-components";
 
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: ${(props) => props.theme.spacing.xs};
+  margin-bottom: ${(props) => props.theme.spacing.md};
 `;
 
 export const InputLabel = styled.label`
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 4px;
+  font-size: ${(props) => props.theme.typography.fontSize.sm};
+  font-weight: ${(props) => props.theme.typography.fontWeight.medium};
+  color: ${(props) => props.theme.text.primary};
+  margin-bottom: ${(props) => props.theme.spacing.xs};
 `;
 
 export const Required = styled.span`
-  color: #ef4444;
-  margin-left: 4px;
+  color: ${(props) => props.theme.error[500]};
+  margin-left: ${(props) => props.theme.spacing.xs};
 `;
 
 export const InputWrapper = styled.div`
@@ -32,30 +30,33 @@ export const StyledInput = styled.input<{
   $isPassword?: boolean;
 }>`
   width: 100%;
-  padding: 12px;
-  padding-right: ${(props) => (props.$isPassword ? "40px" : "12px")};
-  border: 1px solid ${(props) => (props.$hasError ? "#ef4444" : "#d1d5db")};
-  border-radius: 6px;
-  font-size: 14px;
+  padding: ${(props) => props.theme.spacing.md};
+  padding-right: ${(props) =>
+    props.$isPassword ? "40px" : props.theme.spacing.md};
+  border: 1px solid
+    ${(props) =>
+      props.$hasError ? props.theme.error[500] : props.theme.border.default};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  font-size: ${(props) => props.theme.typography.fontSize.sm};
   transition: all 0.2s ease;
-  background-color: white;
-  color: #111827;
+  background-color: ${(props) => props.theme.background.primary};
+  color: ${(props) => props.theme.text.primary};
   font-family: inherit;
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: ${(props) => props.theme.primary[500]};
+    box-shadow: 0 0 0 3px ${(props) => props.theme.primary[100]};
   }
 
   &:disabled {
-    background-color: #f9fafb;
-    color: #6b7280;
+    background-color: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.text.tertiary};
     cursor: not-allowed;
   }
 
   &::placeholder {
-    color: #9ca3af;
+    color: ${(props) => props.theme.text.tertiary};
   }
 `;
 
@@ -67,15 +68,15 @@ export const PasswordToggle = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  padding: ${(props) => props.theme.spacing.xs};
+  border-radius: ${(props) => props.theme.borderRadius.sm};
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  color: ${(props) => props.theme.text.secondary};
 
   &:hover {
-    background-color: #f3f4f6;
+    background-color: ${(props) => props.theme.background.secondary};
   }
 
   &:disabled {
@@ -91,7 +92,6 @@ export const EyeIcon = styled.span`
   justify-content: center;
   width: 20px;
   height: 20px;
-  border: none;
 `;
 
 export const EyeSlashIcon = styled.span`
@@ -101,22 +101,20 @@ export const EyeSlashIcon = styled.span`
   justify-content: center;
   width: 20px;
   height: 20px;
-  border: none;
 `;
 
 export const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: ${(props) => props.theme.spacing.xs};
+  margin-bottom: ${(props) => props.theme.spacing.md};
 `;
 
-// New Select-specific styles
 export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: ${(props) => props.theme.spacing.xs};
+  margin-bottom: ${(props) => props.theme.spacing.md};
   width: 100%;
 `;
 
@@ -125,18 +123,20 @@ export const SelectWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  /* Remove the red border - it was for debugging */
 `;
 
 export const SelectField = styled.select<{ $hasError?: boolean }>`
   width: 100%;
-  padding: 12px 40px 12px 12px;
-  border: 1px solid ${(props) => (props.$hasError ? "#ef4444" : "#d1d5db")};
-  border-radius: 6px;
-  font-size: 14px;
+  padding: ${(props) => props.theme.spacing.md} 40px
+    ${(props) => props.theme.spacing.md} ${(props) => props.theme.spacing.md};
+  border: 1px solid
+    ${(props) =>
+      props.$hasError ? props.theme.error[500] : props.theme.border.default};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  font-size: ${(props) => props.theme.typography.fontSize.sm};
   transition: all 0.2s ease;
-  background-color: white;
-  color: #111827;
+  background-color: ${(props) => props.theme.background.primary};
+  color: ${(props) => props.theme.text.primary};
   appearance: none;
   cursor: pointer;
   font-family: inherit;
@@ -144,52 +144,51 @@ export const SelectField = styled.select<{ $hasError?: boolean }>`
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: ${(props) => props.theme.primary[500]};
+    box-shadow: 0 0 0 3px ${(props) => props.theme.primary[100]};
   }
 
   &:disabled {
-    background-color: #f9fafb;
-    color: #6b7280;
+    background-color: ${(props) => props.theme.background.secondary};
+    color: ${(props) => props.theme.text.tertiary};
     cursor: not-allowed;
   }
 
-  /* Style for placeholder option */
   option[value=""] {
-    color: #9ca3af;
+    color: ${(props) => props.theme.text.tertiary};
   }
 
-  /* Basic option styling - limited browser support */
   option {
-    padding: 8px;
-    background: white;
-    color: #111827;
+    padding: ${(props) => props.theme.spacing.sm};
+    background: ${(props) => props.theme.background.primary};
+    color: ${(props) => props.theme.text.primary};
   }
 `;
 
 export const SelectArrow = styled.span<{ $disabled?: boolean }>`
   position: absolute;
-  right: 12px;
+  right: ${(props) => props.theme.spacing.md};
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: ${(props) => (props.$disabled ? "#9ca3af" : "#6b7280")};
+  color: ${(props) =>
+    props.$disabled ? props.theme.text.tertiary : props.theme.text.secondary};
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
 
   ${SelectField}:focus + & {
-    color: #3b82f6;
+    color: ${(props) => props.theme.primary[500]};
   }
 `;
 
 export const InputError = styled.span`
-  color: #ef4444;
-  font-size: 12px;
-  margin-top: 4px;
+  color: ${(props) => props.theme.error[500]};
+  font-size: ${(props) => props.theme.typography.fontSize.xs};
+  margin-top: ${(props) => props.theme.spacing.xs};
 `;
-// File Dropzone Styles
+
 export const FileDropzoneContainer = styled.div`
   width: 100%;
 `;
@@ -198,28 +197,29 @@ export const DropzoneArea = styled.div<{
   isDragging?: boolean;
   disabled?: boolean;
 }>`
-  border: 2px dashed #d1d5db;
-  border-radius: 6px;
-  padding: 32px;
+  border: 2px dashed ${(props) => props.theme.border.default};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  padding: ${(props) => props.theme.spacing.xl};
   text-align: center;
   transition: all 0.2s ease;
   cursor: pointer;
   position: relative;
+  background-color: ${(props) => props.theme.background.primary};
 
   ${(props) =>
     !props.disabled &&
     `
     &:hover {
-      border-color: #3b82f6;
-      background-color: #f8fafc;
+      border-color: ${props.theme.primary[500]};
+      background-color: ${props.theme.background.secondary};
     }
   `}
 
   ${(props) =>
     props.isDragging &&
     `
-    border-color: #3b82f6;
-    background-color: #eff6ff;
+    border-color: ${props.theme.primary[500]};
+    background-color: ${props.theme.primary[50]};
   `}
 
   ${(props) =>
@@ -248,29 +248,29 @@ export const DropzoneContent = styled.div`
 export const DropzoneIcon = styled.svg`
   width: 48px;
   height: 48px;
-  color: #9ca3af;
-  margin: 0 auto 12px;
+  color: ${(props) => props.theme.text.tertiary};
+  margin: 0 auto ${(props) => props.theme.spacing.md};
 
   ${DropzoneArea}:hover &, ${DropzoneArea}[data-dragging="true"] & {
-    color: #3b82f6;
+    color: ${(props) => props.theme.primary[500]};
   }
 `;
 
 export const DropzoneText = styled.p`
-  color: #6b7280;
-  font-size: 14px;
+  color: ${(props) => props.theme.text.secondary};
+  font-size: ${(props) => props.theme.typography.fontSize.sm};
   margin: 0;
 `;
 
 export const DropzoneError = styled.div`
-  color: #ef4444;
-  font-size: 12px;
-  margin-top: 8px;
+  color: ${(props) => props.theme.error[500]};
+  font-size: ${(props) => props.theme.typography.fontSize.xs};
+  margin-top: ${(props) => props.theme.spacing.sm};
   text-align: center;
 `;
 
 export const DropzoneHint = styled.p`
-  color: #9ca3af;
-  font-size: 12px;
-  margin: 4px 0 0 0;
+  color: ${(props) => props.theme.text.tertiary};
+  font-size: ${(props) => props.theme.typography.fontSize.xs};
+  margin: ${(props) => props.theme.spacing.xs} 0 0 0;
 `;

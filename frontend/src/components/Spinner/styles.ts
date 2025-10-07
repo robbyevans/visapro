@@ -12,19 +12,28 @@ export const SpinnerContainer = styled.div<{ size?: "sm" | "md" | "lg" }>`
 
   &::after {
     content: "";
-    border: 2px solid #f3f4f6;
-    border-top: 2px solid #3b82f6;
+    border: 2px solid ${(props) => props.theme.neutral[200]};
+    border-top: 2px solid ${(props) => props.theme.primary[500]};
     border-radius: 50%;
     animation: ${spin} 1s linear infinite;
 
     ${(props) => {
       switch (props.size) {
         case "sm":
-          return "width: 16px; height: 16px;";
+          return `
+            width: 16px;
+            height: 16px;
+          `;
         case "lg":
-          return "width: 32px; height: 32px;";
+          return `
+            width: 32px;
+            height: 32px;
+          `;
         default:
-          return "width: 24px; height: 24px;";
+          return `
+            width: 24px;
+            height: 24px;
+          `;
       }
     }}
   }

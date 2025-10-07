@@ -5,6 +5,8 @@ export const HomePageContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: ${(props) => props.theme.background.primary};
+  transition: background-color 0.3s ease;
 `;
 
 // Hero Section
@@ -28,7 +30,6 @@ export const HeroBackground = styled.div`
   background-position: center;
   background-repeat: no-repeat;
 
-  /* Remove any dark overlays and make image bright */
   &::before {
     content: "";
     position: absolute;
@@ -36,13 +37,8 @@ export const HeroBackground = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(
-      255,
-      255,
-      255,
-      0.1
-    ); /* Very light overlay to enhance readability */
-    backdrop-filter: blur(0px); /* Remove blur from background */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(0px);
   }
 `;
 
@@ -52,7 +48,11 @@ export const HeroOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  /* Remove dark overlay completely */
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
 `;
 
 export const HeroContent = styled.div`
@@ -67,7 +67,7 @@ export const HeroContent = styled.div`
 export const HeroTitle = styled.h1`
   font-size: 64px;
   font-weight: 800;
-  color: white;
+  color: ${(props) => props.theme.text.inverse};
   margin-bottom: 24px;
   line-height: 1.1;
 
@@ -76,12 +76,9 @@ export const HeroTitle = styled.h1`
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-radius: 20px;
-  /* border: 1px solid rgba(255, 255, 255, 0.2); */
   padding: 30px 40px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-
-  /* Text shadow for better readability */
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
@@ -97,16 +94,21 @@ export const HeroTitle = styled.h1`
 `;
 
 export const HeroHighlight = styled.span`
-  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  background: linear-gradient(
+    135deg,
+    ${(props) => props.theme.primaryColors["500"]},
+    ${(props) => props.theme.primaryColors["400"]}
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: none; /* Remove text shadow for the highlighted part */
+  text-shadow: none;
 `;
 
 export const HeroSubtitle = styled.p`
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.95);
+  color: ${(props) => props.theme.text.inverse};
+  opacity: 0.95;
   margin-bottom: 48px;
   line-height: 1.6;
   font-weight: 500;
@@ -144,7 +146,6 @@ export const HeroStats = styled.div`
 
 export const StatItem = styled.div`
   text-align: center;
-  /* Optional: Add subtle glass effect to stats if desired */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 12px;
@@ -155,19 +156,19 @@ export const StatItem = styled.div`
 export const StatNumber = styled.div`
   font-size: 32px;
   font-weight: 700;
-  color: #ffd700;
+  color: ${(props) => props.theme.primaryColors["500"]};
   margin-bottom: 8px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 export const StatLabel = styled.div`
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
+  color: ${(props) => props.theme.text.inverse};
+  opacity: 0.9;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
-// ... (rest of the styles remain exactly the same)
 export const SectionContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -199,7 +200,7 @@ export const SectionHeader = styled.div`
 export const SectionPreTitle = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: #3b82f6;
+  color: ${(props) => props.theme.secondaryColors["500"]};
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 12px;
@@ -208,7 +209,7 @@ export const SectionPreTitle = styled.div`
 export const SectionTitle = styled.h2`
   font-size: 42px;
   font-weight: 700;
-  color: #111827;
+  color: ${(props) => props.theme.text.primary};
   margin-bottom: 16px;
 
   @media (max-width: 768px) {
@@ -223,7 +224,7 @@ export const SectionTitle = styled.h2`
 
 export const SectionSubtitle = styled.p`
   font-size: 18px;
-  color: #6b7280;
+  color: ${(props) => props.theme.text.secondary};
   line-height: 1.6;
 
   @media (max-width: 768px) {
@@ -239,7 +240,8 @@ export const SectionSubtitle = styled.p`
 // Features Section
 export const FeaturesSection = styled.section`
   padding: 120px 0;
-  background: white;
+  background: ${(props) => props.theme.background.primary};
+  transition: background-color 0.3s ease;
 `;
 
 export const FeaturesGrid = styled.div`
@@ -268,9 +270,9 @@ export const FeatureCard = styled.div`
   text-align: center;
   padding: 40px 24px;
   border-radius: 16px;
-  background: #f8fafc;
+  background: ${(props) => props.theme.background.secondary};
   transition: all 0.3s ease;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(props) => props.theme.border.light};
   min-height: 220px;
   display: flex;
   flex-direction: column;
@@ -278,8 +280,9 @@ export const FeatureCard = styled.div`
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    background: white;
+    box-shadow: ${($theme) => $theme.theme.shadows.xl};
+    background: ${(props) => props.theme.background.primary};
+    border-color: ${(props) => props.theme.primaryColors["200"]};
   }
 
   @media (max-width: 1024px) {
@@ -290,7 +293,6 @@ export const FeatureCard = styled.div`
   @media (max-width: 768px) {
     padding: 28px 20px;
     min-height: auto;
-    transform: none;
 
     &:hover {
       transform: translateY(-4px);
@@ -307,12 +309,16 @@ export const FeatureIcon = styled.div`
   width: 70px;
   height: 70px;
   margin: 0 auto 20px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(
+    135deg,
+    ${(props) => props.theme.primaryColors["500"]},
+    ${(props) => props.theme.primaryColors["600"]}
+  );
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: ${(props) => props.theme.text.inverse};
   font-size: 28px;
 
   @media (max-width: 1024px) {
@@ -342,7 +348,7 @@ export const FeatureTitle = styled.h3`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: #111827;
+  color: ${(props) => props.theme.text.primary};
   line-height: 1.3;
 
   @media (max-width: 1024px) {
@@ -361,7 +367,7 @@ export const FeatureTitle = styled.h3`
 `;
 
 export const FeatureDescription = styled.p`
-  color: #6b7280;
+  color: ${(props) => props.theme.text.secondary};
   line-height: 1.6;
   font-size: 15px;
   margin: 0;
@@ -385,7 +391,8 @@ export const FeatureDescription = styled.p`
 // Process Section
 export const ProcessSection = styled.section`
   padding: 120px 0;
-  background: #f8fafc;
+  background: ${(props) => props.theme.background.secondary};
+  transition: background-color 0.3s ease;
 `;
 
 export const ProcessGrid = styled.div`
@@ -397,13 +404,16 @@ export const ProcessGrid = styled.div`
 export const ProcessCard = styled.div`
   text-align: center;
   padding: 40px 24px;
-  background: white;
+  background: ${(props) => props.theme.background.primary};
   border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  box-shadow: ${(props) => props.theme.shadows.md};
+  transition: all 0.3s ease;
+  border: 1px solid ${(props) => props.theme.border.light};
 
   &:hover {
     transform: translateY(-4px);
+    box-shadow: ${(props) => props.theme.shadows.lg};
+    border-color: ${(props) => props.theme.primaryColors["200"]};
   }
 `;
 
@@ -411,12 +421,16 @@ export const ProcessStep = styled.div`
   width: 60px;
   height: 60px;
   margin: 0 auto 20px;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(
+    135deg,
+    ${(props) => props.theme.successColors["500"]},
+    ${(props) => props.theme.successColors["600"]}
+  );
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: ${(props) => props.theme.text.inverse};
   font-size: 20px;
   font-weight: 700;
 `;
@@ -425,11 +439,11 @@ export const ProcessTitle = styled.h3`
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: #111827;
+  color: ${(props) => props.theme.text.primary};
 `;
 
 export const ProcessDescription = styled.p`
-  color: #6b7280;
+  color: ${(props) => props.theme.text.secondary};
   line-height: 1.6;
   font-size: 14px;
 `;
@@ -437,8 +451,13 @@ export const ProcessDescription = styled.p`
 // CTA Section
 export const CTASection = styled.section`
   padding: 120px 0;
-  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-  color: white;
+  background: linear-gradient(
+    135deg,
+    ${(props) => props.theme.neutralColors["900"]} 0%,
+    ${(props) => props.theme.neutralColors["800"]} 100%
+  );
+  color: ${(props) => props.theme.text.inverse};
+  transition: background 0.3s ease;
 `;
 
 export const CTAContent = styled.div`
@@ -451,7 +470,7 @@ export const CTATitle = styled.h2`
   font-size: 48px;
   font-weight: 700;
   margin-bottom: 24px;
-  color: white;
+  color: ${(props) => props.theme.text.inverse};
 
   @media (max-width: 768px) {
     font-size: 36px;
@@ -460,7 +479,8 @@ export const CTATitle = styled.h2`
 
 export const CTADescription = styled.p`
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${(props) => props.theme.text.inverse};
+  opacity: 0.8;
   margin-bottom: 40px;
   line-height: 1.6;
 `;

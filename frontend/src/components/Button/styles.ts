@@ -7,38 +7,38 @@ const spin = keyframes`
 
 export const Button = styled.button<{
   variant?: "primary" | "secondary" | "danger" | "success";
-  size?: "sm" | "md" | "lg"; // Add this
+  size?: "sm" | "md" | "lg";
   loading?: boolean;
 }>`
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   cursor: pointer;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: ${({ theme }) => theme.spacing.sm};
   text-decoration: none;
   justify-content: center;
   position: relative;
 
   // Size styles
-  ${(props) => {
-    switch (props.size) {
+  ${({ size, theme }) => {
+    switch (size) {
       case "sm":
         return css`
-          padding: 8px 16px;
-          font-size: 12px;
+          padding: ${theme.spacing.xs} ${theme.spacing.md};
+          font-size: ${theme.typography.fontSize.sm};
         `;
       case "lg":
         return css`
-          padding: 16px 32px;
-          font-size: 16px;
+          padding: ${theme.spacing.md} ${theme.spacing.xl};
+          font-size: ${theme.typography.fontSize.lg};
         `;
       default: // md
         return css`
-          padding: 12px 24px;
-          font-size: 14px;
+          padding: ${theme.spacing.sm} ${theme.spacing.lg};
+          font-size: ${theme.typography.fontSize.base};
         `;
     }
   }}
@@ -48,49 +48,65 @@ export const Button = styled.button<{
     cursor: not-allowed;
   }
 
-  ${(props) => {
-    switch (props.variant) {
+  ${({ variant, theme }) => {
+    switch (variant) {
       case "secondary":
         return css`
-          background-color: #6b7280;
-          color: white;
+          background-color: ${theme.secondaryColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover:not(:disabled) {
-            background-color: #4b5563;
+            background-color: ${theme.secondaryColors["600"]};
+          }
+
+          &:active:not(:disabled) {
+            background-color: ${theme.secondaryColors["700"]};
           }
         `;
       case "danger":
         return css`
-          background-color: #ef4444;
-          color: white;
+          background-color: ${theme.errorColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover:not(:disabled) {
-            background-color: #dc2626;
+            background-color: ${theme.errorColors["600"]};
+          }
+
+          &:active:not(:disabled) {
+            background-color: ${theme.errorColors["700"]};
           }
         `;
       case "success":
         return css`
-          background-color: #10b981;
-          color: white;
+          background-color: ${theme.successColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover:not(:disabled) {
-            background-color: #059669;
+            background-color: ${theme.successColors["600"]};
+          }
+
+          &:active:not(:disabled) {
+            background-color: ${theme.successColors["700"]};
           }
         `;
       default:
         return css`
-          background-color: #3b82f6;
-          color: white;
+          background-color: ${theme.primaryColors["500"]};
+          color: ${theme.text.inverse};
 
           &:hover:not(:disabled) {
-            background-color: #2563eb;
+            background-color: ${theme.primaryColors["600"]};
+          }
+
+          &:active:not(:disabled) {
+            background-color: ${theme.primaryColors["700"]};
           }
         `;
     }
   }}
 
-  ${(props) =>
-    props.loading &&
+  ${({ loading }) =>
+    loading &&
     css`
       color: transparent;
 
@@ -105,39 +121,4 @@ export const Button = styled.button<{
         animation: ${spin} 1s linear infinite;
       }
     `}
-`;
-
-// Your Spinner component remains the same
-export const Spinner = styled.div<{ size?: "sm" | "md" | "lg" }>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  &::after {
-    content: "";
-    border: 2px solid #f3f4f6;
-    border-top: 2px solid #3b82f6;
-    border-radius: 50%;
-    animation: ${spin} 1s linear infinite;
-
-    ${(props) => {
-      switch (props.size) {
-        case "sm":
-          return css`
-            width: 16px;
-            height: 16px;
-          `;
-        case "lg":
-          return css`
-            width: 32px;
-            height: 32px;
-          `;
-        default:
-          return css`
-            width: 24px;
-            height: 24px;
-          `;
-      }
-    }}
-  }
 `;

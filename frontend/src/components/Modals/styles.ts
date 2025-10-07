@@ -11,17 +11,18 @@ export const ModalOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: ${(props) => props.theme.spacing.lg};
 `;
 
 export const ModalContainer = styled.div<{ size?: "sm" | "md" | "lg" }>`
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background: ${(props) => props.theme.background.primary};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
+  box-shadow: ${(props) => props.theme.shadows.xl};
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+  border: 1px solid ${(props) => props.theme.border.light};
 
   ${(props) => {
     switch (props.size) {
@@ -39,15 +40,16 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: ${(props) => props.theme.spacing.lg}
+    ${(props) => props.theme.spacing.xl};
+  border-bottom: 1px solid ${(props) => props.theme.border.light};
 `;
 
 export const ModalTitle = styled.h2`
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
+  font-size: ${(props) => props.theme.typography.fontSize.xl};
+  font-weight: ${(props) => props.theme.typography.fontWeight.semibold};
+  color: ${(props) => props.theme.text.primary};
 `;
 
 export const ModalClose = styled.button`
@@ -55,23 +57,24 @@ export const ModalClose = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #6b7280;
+  color: ${(props) => props.theme.text.secondary};
   padding: 0;
   width: 30px;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: ${(props) => props.theme.borderRadius.sm};
+  transition: all 0.2s ease;
 
   &:hover {
-    color: #374151;
-    background-color: #f3f4f6;
-    border-radius: 4px;
+    color: ${(props) => props.theme.text.primary};
+    background-color: ${(props) => props.theme.background.secondary};
   }
 `;
 
 export const ModalContent = styled.div`
-  padding: 24px;
+  padding: ${(props) => props.theme.spacing.xl};
   overflow-y: auto;
   flex: 1;
 `;

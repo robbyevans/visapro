@@ -1,9 +1,14 @@
 import styled from "styled-components";
 
 export const FooterContainer = styled.footer`
-  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-  color: white;
+  background: linear-gradient(
+    135deg,
+    ${(props) => props.theme.neutral[900]} 0%,
+    ${(props) => props.theme.neutral[800]} 100%
+  );
+  color: ${(props) => props.theme.text.inverse};
   padding: 80px 0 0;
+  transition: background 0.3s ease;
 `;
 
 export const FooterContent = styled.div`
@@ -32,11 +37,12 @@ export const Logo = styled.div`
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 16px;
-  color: #ffd700;
+  color: ${(props) => props.theme.primary[500]};
 `;
 
 export const BrandDescription = styled.p`
-  color: rgba(255, 255, 255, 0.7);
+  color: ${(props) => props.theme.text.inverse};
+  opacity: 0.7;
   line-height: 1.6;
   margin-bottom: 24px;
 `;
@@ -58,13 +64,14 @@ export const SocialLink = styled.a`
   text-decoration: none;
 
   &:hover {
-    background: rgba(255, 215, 0, 0.2);
+    background: ${(props) => props.theme.primary[500]}20;
     transform: translateY(-2px);
   }
 `;
 
 export const SocialIcon = styled.span`
   font-size: 16px;
+  color: ${(props) => props.theme.text.inverse};
 `;
 
 export const FooterLinksGrid = styled.div`
@@ -92,18 +99,20 @@ export const LinksTitle = styled.h3`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #ffd700;
+  color: ${(props) => props.theme.primary[500]};
 `;
 
 export const FooterLink = styled.a`
-  color: rgba(255, 255, 255, 0.7);
+  color: ${(props) => props.theme.text.inverse};
+  opacity: 0.7;
   text-decoration: none;
   padding: 8px 0;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
   font-size: 14px;
 
   &:hover {
-    color: #ffd700;
+    color: ${(props) => props.theme.primary[500]};
+    opacity: 1;
   }
 `;
 
@@ -122,7 +131,8 @@ export const FooterBottom = styled.div`
 `;
 
 export const Copyright = styled.p`
-  color: rgba(255, 255, 255, 0.5);
+  color: ${(props) => props.theme.text.inverse};
+  opacity: 0.5;
   font-size: 14px;
   margin: 0;
 `;
@@ -133,12 +143,13 @@ export const BottomLinks = styled.div`
 `;
 
 export const BottomLink = styled.a`
-  color: rgba(255, 255, 255, 0.5);
+  color: ${(props) => props.theme.text.inverse};
+  opacity: 0.5;
   text-decoration: none;
   font-size: 14px;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    color: rgba(255, 255, 255, 0.8);
+    opacity: 0.8;
   }
 `;
