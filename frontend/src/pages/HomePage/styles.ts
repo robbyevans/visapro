@@ -23,13 +23,12 @@ export const HeroBackground = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.6) 0%,
-      rgba(0, 0, 0, 0.4) 100%
-    ),
-    url(${kenyanAthleteHero}) center/cover;
+  background: url(${kenyanAthleteHero}) center/cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
+  /* Remove any dark overlays and make image bright */
   &::before {
     content: "";
     position: absolute;
@@ -37,18 +36,13 @@ export const HeroBackground = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.05) 100%
-    );
-    backdrop-filter: blur(10px);
-    mask: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0, 0, 0, 0.3) 30%,
-      rgba(0, 0, 0, 0.8) 100%
-    );
+    background: rgba(
+      255,
+      255,
+      255,
+      0.1
+    ); /* Very light overlay to enhance readability */
+    backdrop-filter: blur(0px); /* Remove blur from background */
   }
 `;
 
@@ -58,6 +52,7 @@ export const HeroOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+  /* Remove dark overlay completely */
 `;
 
 export const HeroContent = styled.div`
@@ -76,12 +71,28 @@ export const HeroTitle = styled.h1`
   margin-bottom: 24px;
   line-height: 1.1;
 
+  /* Glass glossy background effect */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 20px;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+  padding: 30px 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+
+  /* Text shadow for better readability */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
   @media (max-width: 768px) {
     font-size: 48px;
+    padding: 25px 30px;
   }
 
   @media (max-width: 480px) {
     font-size: 36px;
+    padding: 20px 25px;
+    border-radius: 16px;
   }
 `;
 
@@ -90,13 +101,16 @@ export const HeroHighlight = styled.span`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: none; /* Remove text shadow for the highlighted part */
 `;
 
 export const HeroSubtitle = styled.p`
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
   margin-bottom: 48px;
   line-height: 1.6;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
     font-size: 18px;
@@ -130,6 +144,12 @@ export const HeroStats = styled.div`
 
 export const StatItem = styled.div`
   text-align: center;
+  /* Optional: Add subtle glass effect to stats if desired */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
 export const StatNumber = styled.div`
@@ -137,15 +157,17 @@ export const StatNumber = styled.div`
   font-weight: 700;
   color: #ffd700;
   margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 export const StatLabel = styled.div`
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 `;
 
-// Common Section Styles
+// ... (rest of the styles remain exactly the same)
 export const SectionContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -220,20 +242,16 @@ export const FeaturesSection = styled.section`
   background: white;
 `;
 
-// ... (other styles remain the same)
-
 export const FeaturesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
 
-  /* Tablet */
   @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
   }
 
-  /* Mobile */
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -241,7 +259,6 @@ export const FeaturesGrid = styled.div`
     margin: 0 auto;
   }
 
-  /* Small Mobile */
   @media (max-width: 480px) {
     gap: 16px;
   }
@@ -265,13 +282,11 @@ export const FeatureCard = styled.div`
     background: white;
   }
 
-  /* Tablet */
   @media (max-width: 1024px) {
     padding: 32px 20px;
     min-height: 200px;
   }
 
-  /* Mobile */
   @media (max-width: 768px) {
     padding: 28px 20px;
     min-height: auto;
@@ -282,7 +297,6 @@ export const FeatureCard = styled.div`
     }
   }
 
-  /* Small Mobile */
   @media (max-width: 480px) {
     padding: 24px 16px;
     border-radius: 12px;
@@ -301,7 +315,6 @@ export const FeatureIcon = styled.div`
   color: white;
   font-size: 28px;
 
-  /* Tablet */
   @media (max-width: 1024px) {
     width: 60px;
     height: 60px;
@@ -309,7 +322,6 @@ export const FeatureIcon = styled.div`
     margin-bottom: 16px;
   }
 
-  /* Mobile */
   @media (max-width: 768px) {
     width: 55px;
     height: 55px;
@@ -317,7 +329,6 @@ export const FeatureIcon = styled.div`
     margin-bottom: 14px;
   }
 
-  /* Small Mobile */
   @media (max-width: 480px) {
     width: 50px;
     height: 50px;
@@ -334,19 +345,16 @@ export const FeatureTitle = styled.h3`
   color: #111827;
   line-height: 1.3;
 
-  /* Tablet */
   @media (max-width: 1024px) {
     font-size: 18px;
     margin-bottom: 10px;
   }
 
-  /* Mobile */
   @media (max-width: 768px) {
     font-size: 17px;
     margin-bottom: 8px;
   }
 
-  /* Small Mobile */
   @media (max-width: 480px) {
     font-size: 16px;
   }
@@ -358,19 +366,16 @@ export const FeatureDescription = styled.p`
   font-size: 15px;
   margin: 0;
 
-  /* Tablet */
   @media (max-width: 1024px) {
     font-size: 14px;
     line-height: 1.5;
   }
 
-  /* Mobile */
   @media (max-width: 768px) {
     font-size: 14px;
     line-height: 1.5;
   }
 
-  /* Small Mobile */
   @media (max-width: 480px) {
     font-size: 13px;
     line-height: 1.4;
