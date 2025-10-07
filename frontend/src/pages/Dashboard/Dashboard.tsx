@@ -1,27 +1,19 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../redux/hooks/useAuth";
 import { useUser } from "../../redux/hooks/useUser";
 import { useApplications } from "../../redux/hooks/useApplications";
 import ApplicationList from "../../components/Applications/ApplicationList/ApplicationList";
 import Button from "../../components/Button/Button";
-import Spinner from "../../components/Spinner/Spinner";
 import * as S from "./styles";
 
 const Dashboard: React.FC = () => {
-  const { isAuthenticated } = useAuth();
   const { currentUser } = useUser();
-  const { applications, fetchApplications, isLoading } = useApplications();
+  const { applications, fetchApplications } = useApplications();
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchApplications();
-  }, []);
-
-  if (!isAuthenticated) {
-    navigate("/login");
-    return null;
-  }
+  }, [fetchApplications]);
 
   const userApplications =
     currentUser?.role === "admin"
@@ -39,8 +31,6 @@ const Dashboard: React.FC = () => {
 
   const isRegularUser =
     currentUser?.role === "individual" || currentUser?.role === "corporate";
-  console.log("currentUser", currentUser);
-  console.log("isRegularUse", isRegularUser);
   const isAdmin = currentUser?.role === "admin";
 
   const handleApplicationClick = (id: number) => {
@@ -50,10 +40,6 @@ const Dashboard: React.FC = () => {
       navigate(`/applications/${id}`);
     }
   };
-
-  if (isLoading) {
-    return <Spinner size="lg" />;
-  }
 
   return (
     <S.DashboardContainer>

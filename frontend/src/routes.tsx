@@ -12,6 +12,7 @@ import { GlobalStyle } from "./styles/global";
 // Layout Components
 import Navbar from "./components/Navbar/Navbar";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import HocWrapper from "./components/HocWrapper/HocWrapper"; // Updated import
 
 // Page Components
 import HomePage from "./pages/HomePage/HomePage";
@@ -27,57 +28,60 @@ const AppContent: React.FC = () => {
     <Router>
       <GlobalStyle />
       <div className="app">
-        <Navbar />
-        <main style={{ minHeight: "calc(100vh - 64px)" }}>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<AuthPage />} />
-            <Route path="/signup" element={<AuthPage />} />
+        {/* Wrap everything with HocWrapper */}
+        <HocWrapper>
+          <Navbar />
+          <main style={{ minHeight: "calc(100vh - 64px)" }}>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<AuthPage />} />
+              <Route path="/signup" element={<AuthPage />} />
 
-            {/* Protected routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Application routes */}
-            <Route
-              path="/applications/new"
-              element={
-                <ProtectedRoute allowedRoles={["individual", "corporate"]}>
-                  <ApplicationFormPage />
-                </ProtectedRoute>
-              }
-            />
+              {/* Application routes */}
+              <Route
+                path="/applications/new"
+                element={
+                  <ProtectedRoute allowedRoles={["individual", "corporate"]}>
+                    <ApplicationFormPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/applications/:id"
-              element={
-                <ProtectedRoute>
-                  <ApplicationDetailsPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/applications/:id"
+                element={
+                  <ProtectedRoute>
+                    <ApplicationDetailsPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Admin specific routes */}
-            <Route
-              path="/admin/applications/:id"
-              element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <AdminApplicationPage />
-                </ProtectedRoute>
-              }
-            />
+              {/* Admin specific routes */}
+              <Route
+                path="/admin/applications/:id"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminApplicationPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Catch all route - redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+              {/* Catch all route - redirect to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+        </HocWrapper>
       </div>
     </Router>
   );
