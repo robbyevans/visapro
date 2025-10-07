@@ -155,9 +155,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
       <S.AuthFooter>
         <S.AuthFooterText>
           {mode === "login"
-            ? "Don't have an account?"
-            : "Already have an account?"}{" "}
-          <S.AuthLink type="button" onClick={onToggleMode} disabled={isLoading}>
+            ? "Don't have an account? "
+            : "Already have an account? "}{" "}
+          <S.AuthLink type="button" onClick={onToggleMode}>
             {mode === "login" ? "Sign up" : "Sign in"}
           </S.AuthLink>
         </S.AuthFooterText>

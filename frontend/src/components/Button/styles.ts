@@ -5,10 +5,26 @@ const spin = keyframes`
   100% { transform: rotate(360deg); }
 `;
 
+const pulsate = keyframes`
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+`;
+
 export const Button = styled.button<{
   variant?: "primary" | "secondary" | "danger" | "success";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
+  pulsating?: boolean;
 }>`
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -119,6 +135,19 @@ export const Button = styled.button<{
         border-top: 2px solid currentColor;
         border-radius: 50%;
         animation: ${spin} 1s linear infinite;
+      }
+    `}
+
+  ${({ pulsating }) =>
+    pulsating &&
+    css`
+      animation: ${pulsate} 2s infinite;
+      position: relative;
+      z-index: 1;
+
+      &:hover {
+        animation: none;
+        transform: scale(1.05);
       }
     `}
 `;

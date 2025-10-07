@@ -69,7 +69,7 @@ const Login: React.FC<LoginProps> = ({ onToggleMode, onSuccess }) => {
       <S.AuthFooter>
         <S.AuthFooterText>
           Don't have an account?{" "}
-          <S.AuthLink type="button" onClick={onToggleMode} disabled={isLoading}>
+          <S.AuthLink type="button" onClick={onToggleMode}>
             Sign up
           </S.AuthLink>
         </S.AuthFooterText>

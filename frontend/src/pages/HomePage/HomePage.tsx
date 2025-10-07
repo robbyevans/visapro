@@ -100,20 +100,15 @@ const HomePage: React.FC = () => {
             <S.HeroButtons>
               {isAuthenticated ? (
                 <Link to="/dashboard">
-                  <Button variant="primary" size="lg">
+                  <Button variant="primary" size="lg" pulsating>
                     Go to Dashboard
                   </Button>
                 </Link>
               ) : (
                 <>
                   <Link to="/signup">
-                    <Button variant="primary" size="lg">
+                    <Button variant="primary" size="lg" pulsating>
                       Start Your Journey
-                    </Button>
-                  </Link>
-                  <Link to="/login">
-                    <Button variant="secondary" size="lg">
-                      Sign In
                     </Button>
                   </Link>
                 </>

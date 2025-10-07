@@ -52,14 +52,15 @@ export const AuthFooterText = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
 `;
 
-export const AuthLink = styled.button`
+export const AuthLink = styled.a`
   background: none;
-  border: none;
+  border: 0px solid black;
   color: ${({ theme }) => theme.primaryColors["500"]};
   cursor: pointer;
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   text-decoration: underline;
   transition: color 0.2s ease;
+  margin-left: 10px;
 
   &:hover {
     color: ${({ theme }) => theme.primaryColors["600"]};
