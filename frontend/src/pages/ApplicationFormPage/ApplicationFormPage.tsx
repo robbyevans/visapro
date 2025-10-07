@@ -7,6 +7,7 @@ import FileDropzone from "../../components/Forms/FileDropzone";
 import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner";
 import type { ICreateApplicationPayload } from "../../redux/types";
+import EditDocument from "../../components/Documents/EditDocument";
 import * as S from "./styles";
 
 interface DocumentUpload {
@@ -146,6 +147,17 @@ const ApplicationFormPage: React.FC = () => {
     }
   };
 
+  const handleDownloadFile = (file: File) => {
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const countryOptions = [
     { value: "usa", label: "United States" },
     { value: "uk", label: "United Kingdom" },
@@ -156,6 +168,13 @@ const ApplicationFormPage: React.FC = () => {
   ];
 
   const isSubmitting = isLoading || uploading;
+
+  // Get document references with proper null checking
+  const passportDoc = documents.find((doc) => doc.type === "passport");
+  const invitationDoc = documents.find(
+    (doc) => doc.type === "invitation_letter"
+  );
+
   if (isLoading) {
     return (
       <S.ApplicationFormContainer>
@@ -263,19 +282,28 @@ const ApplicationFormPage: React.FC = () => {
             <S.DocumentDescription>
               Upload a clear copy of the passport information page
             </S.DocumentDescription>
-            <FileDropzone
-              onFileSelect={(file) => handleFileSelect(file, "passport")}
-              accept=".pdf,.jpg,.jpeg,.png"
-              maxSize={5 * 1024 * 1024} // 5MB
-              label="Drop passport copy here or click to browse"
-            />
-            {formErrors.passport && (
-              <S.DocumentError>{formErrors.passport}</S.DocumentError>
-            )}
-            {documents.find((doc) => doc.type === "passport")?.file && (
-              <S.UploadedFile>
-                ✓ {documents.find((doc) => doc.type === "passport")?.file?.name}
-              </S.UploadedFile>
+
+            {/* Show FileDropzone only if no passport file is selected */}
+            {!passportDoc?.file ? (
+              <>
+                <FileDropzone
+                  onFileSelect={(file) => handleFileSelect(file, "passport")}
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  maxSize={5 * 1024 * 1024} // 5MB
+                  label="Drop passport copy here or click to browse"
+                />
+                {formErrors.passport && (
+                  <S.DocumentError>{formErrors.passport}</S.DocumentError>
+                )}
+              </>
+            ) : (
+              <EditDocument
+                fileName={passportDoc.file.name}
+                fileUrl={URL.createObjectURL(passportDoc.file)}
+                onReplace={(file) => handleFileSelect(file, "passport")}
+                onDownload={() => handleDownloadFile(passportDoc.file!)}
+                type="passport"
+              />
             )}
           </S.DocumentUploadSection>
 
@@ -288,23 +316,27 @@ const ApplicationFormPage: React.FC = () => {
             <S.DocumentDescription>
               Upload invitation letter from the host organization (if available)
             </S.DocumentDescription>
-            <FileDropzone
-              onFileSelect={(file) =>
-                handleFileSelect(file, "invitation_letter")
-              }
-              accept=".pdf,.jpg,.jpeg,.png"
-              maxSize={5 * 1024 * 1024} // 5MB
-              label="Drop invitation letter here or click to browse"
-            />
-            {documents.find((doc) => doc.type === "invitation_letter")
-              ?.file && (
-              <S.UploadedFile>
-                ✓{" "}
-                {
-                  documents.find((doc) => doc.type === "invitation_letter")
-                    ?.file?.name
+
+            {/* Show FileDropzone only if no invitation letter file is selected */}
+            {!invitationDoc?.file ? (
+              <FileDropzone
+                onFileSelect={(file) =>
+                  handleFileSelect(file, "invitation_letter")
                 }
-              </S.UploadedFile>
+                accept=".pdf,.jpg,.jpeg,.png"
+                maxSize={5 * 1024 * 1024} // 5MB
+                label="Drop invitation letter here or click to browse"
+              />
+            ) : (
+              <EditDocument
+                fileName={invitationDoc.file.name}
+                fileUrl={URL.createObjectURL(invitationDoc.file)}
+                onReplace={(file) =>
+                  handleFileSelect(file, "invitation_letter")
+                }
+                onDownload={() => handleDownloadFile(invitationDoc.file!)}
+                type="invitation_letter"
+              />
             )}
           </S.DocumentUploadSection>
         </S.FormSection>

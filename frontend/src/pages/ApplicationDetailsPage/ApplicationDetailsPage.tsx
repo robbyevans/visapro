@@ -1,19 +1,48 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useApplications } from "../../redux/hooks/useApplications";
+import { useUser } from "../../redux/hooks/useUser";
 import Spinner from "../../components/Spinner/Spinner";
+import EditDocument from "../../components/Documents/EditDocument";
 import * as S from "./styles";
 
 const ApplicationDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { currentApplication, fetchApplication, isLoading } = useApplications();
+  const { currentUser } = useUser();
 
   useEffect(() => {
     if (id) {
       fetchApplication(parseInt(id));
     }
   }, [id, fetchApplication]);
+
+  // Fix TypeScript error by providing default empty array
+  const documents = currentApplication?.documents || [];
+
+  const passportDocuments = documents.filter(
+    (doc) => doc.doc_type === "passport"
+  );
+  const otherDocuments = documents.filter(
+    (doc) => doc.doc_type !== "passport" && doc.doc_type !== "visa"
+  );
+  const visaDocuments = documents.filter((doc) => doc.doc_type === "visa");
+
+  const handleDownloadDocument = (fileUrl: string, fileName: string) => {
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleReplaceDocument = async (file: File, documentId: number) => {
+    // Implement document replacement logic here
+    console.log("Replace document:", documentId, file);
+    // You'll need to add a replaceDocument function to your useApplications hook
+  };
 
   if (isLoading || !currentApplication) {
     return (
@@ -23,15 +52,8 @@ const ApplicationDetailsPage: React.FC = () => {
     );
   }
 
-  const passportDocuments = currentApplication?.documents.filter(
-    (doc) => doc.doc_type === "passport"
-  );
-  const otherDocuments = currentApplication?.documents.filter(
-    (doc) => doc.doc_type !== "passport" && doc.doc_type !== "visa"
-  );
-  const visaDocuments = currentApplication?.documents.filter(
-    (doc) => doc.doc_type === "visa"
-  );
+  const isAdmin = currentUser?.role === "admin";
+  const canEdit = !isAdmin && currentApplication.status === "pending";
 
   return (
     <S.ApplicationDetailsContainer>
@@ -112,18 +134,43 @@ const ApplicationDetailsPage: React.FC = () => {
                       <S.DocumentType>{doc.doc_type}</S.DocumentType>
                       <S.DocumentName>Passport Document</S.DocumentName>
                     </S.DocumentInfo>
-                    <a
-                      href={doc.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#3b82f6",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                      }}
-                    >
-                      View Document
-                    </a>
+                    {canEdit ? (
+                      <EditDocument
+                        fileName={`passport_${doc.id}.${doc.file_url
+                          .split(".")
+                          .pop()}`}
+                        fileUrl={doc.file_url}
+                        onReplace={(file) =>
+                          handleReplaceDocument(file, doc.id)
+                        }
+                        onDownload={() =>
+                          handleDownloadDocument(
+                            doc.file_url,
+                            `passport_${doc.id}`
+                          )
+                        }
+                        type="passport"
+                      />
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleDownloadDocument(
+                            doc.file_url,
+                            `passport_${doc.id}`
+                          )
+                        }
+                        style={{
+                          color: "#3b82f6",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "14px",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {isAdmin ? "Preview & Download" : "Download"}
+                      </button>
+                    )}
                   </S.DocumentItem>
                 ))}
               </S.DocumentList>
@@ -151,18 +198,43 @@ const ApplicationDetailsPage: React.FC = () => {
                           .join(" ")}
                       </S.DocumentName>
                     </S.DocumentInfo>
-                    <a
-                      href={doc.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#3b82f6",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                      }}
-                    >
-                      View Document
-                    </a>
+                    {canEdit && doc.doc_type === "invitation_letter" ? (
+                      <EditDocument
+                        fileName={`${doc.doc_type}_${doc.id}.${doc.file_url
+                          .split(".")
+                          .pop()}`}
+                        fileUrl={doc.file_url}
+                        onReplace={(file) =>
+                          handleReplaceDocument(file, doc.id)
+                        }
+                        onDownload={() =>
+                          handleDownloadDocument(
+                            doc.file_url,
+                            `${doc.doc_type}_${doc.id}`
+                          )
+                        }
+                        type="invitation_letter"
+                      />
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleDownloadDocument(
+                            doc.file_url,
+                            `${doc.doc_type}_${doc.id}`
+                          )
+                        }
+                        style={{
+                          color: "#3b82f6",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "14px",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {isAdmin ? "Preview & Download" : "Download"}
+                      </button>
+                    )}
                   </S.DocumentItem>
                 ))}
               </S.DocumentList>
@@ -180,26 +252,32 @@ const ApplicationDetailsPage: React.FC = () => {
                       <S.DocumentType>visa</S.DocumentType>
                       <S.DocumentName>Visa Document</S.DocumentName>
                     </S.DocumentInfo>
-                    <a
-                      href={doc.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() =>
+                        handleDownloadDocument(
+                          doc.file_url,
+                          `visa_${currentApplication.athlete?.first_name}_${currentApplication.athlete?.last_name}`
+                        )
+                      }
                       style={{
                         color: "#10b981",
-                        textDecoration: "none",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
                         fontSize: "14px",
+                        textDecoration: "underline",
                         fontWeight: "500",
                       }}
                     >
                       Download Visa
-                    </a>
+                    </button>
                   </S.DocumentItem>
                 ))}
               </S.DocumentList>
             </S.DocumentSection>
           )}
 
-          {currentApplication.documents.length === 0 && (
+          {documents.length === 0 && (
             <S.NoDocuments>
               No documents uploaded for this application yet.
             </S.NoDocuments>

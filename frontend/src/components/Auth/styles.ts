@@ -1,52 +1,68 @@
-// File: /frontend/src/components/Auth/styles.ts
-
 import styled from "styled-components";
 
 export const AuthFormContainer = styled.div`
-  background: white;
-  padding: 32px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.xl};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
+  border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const AuthTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 600;
-  color: #111827;
+  font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const AuthError = styled.div`
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626; /* Error text color */
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 16px;
-  font-size: 14px;
+  background-color: ${({ theme }) => theme.errorColors["50"]};
+  border: 1px solid ${({ theme }) => theme.errorColors["200"]};
+  color: ${({ theme }) => theme.errorColors["700"]};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+`;
+
+export const AuthMessage = styled.div<{ type: "success" | "error" }>`
+  background-color: ${({ theme, type }) =>
+    type === "success" ? theme.successColors["50"] : theme.errorColors["50"]};
+  border: 1px solid
+    ${({ theme, type }) =>
+      type === "success"
+        ? theme.successColors["200"]
+        : theme.errorColors["200"]};
+  color: ${({ theme, type }) =>
+    type === "success" ? theme.successColors["700"] : theme.errorColors["700"]};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
 `;
 
 export const AuthFooter = styled.div`
-  margin-top: 24px;
+  margin-top: ${({ theme }) => theme.spacing.lg};
   text-align: center;
 `;
 
 export const AuthFooterText = styled.p`
-  color: #6b7280; /* Footer text color */
-  font-size: 14px;
+  color: ${({ theme }) => theme.text.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
 `;
 
 export const AuthLink = styled.button`
   background: none;
   border: none;
-  color: #3b82f6;
+  color: ${({ theme }) => theme.primaryColors["500"]};
   cursor: pointer;
-  font-size: 14px;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
   text-decoration: underline;
+  transition: color 0.2s ease;
 
   &:hover {
-    color: #2563eb;
+    color: ${({ theme }) => theme.primaryColors["600"]};
   }
 
   &:disabled {
@@ -55,36 +71,42 @@ export const AuthLink = styled.button`
   }
 `;
 
-// Add to your /frontend/src/components/Auth/styles.ts
-
 export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 export const NativeSelect = styled.select<{ $hasError?: boolean }>`
   width: 100%;
-  padding: 12px;
-  border: 1px solid ${(props) => (props.$hasError ? "#ef4444" : "#d1d5db")};
-  border-radius: 6px;
-  font-size: 14px;
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid
+    ${({ theme, $hasError }) =>
+      $hasError ? theme.errorColors["500"] : theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
   transition: all 0.2s ease;
-  background-color: white;
-  color: #111827;
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
   cursor: pointer;
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryColors["100"]};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.background.secondary};
+    color: ${({ theme }) => theme.text.tertiary};
+    cursor: not-allowed;
   }
 `;
 
 export const InputLabel = styled.label`
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 4px;
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;

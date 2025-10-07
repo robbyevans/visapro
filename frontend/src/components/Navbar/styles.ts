@@ -16,8 +16,7 @@ export const NavbarContent = styled.div`
   justify-content: space-between;
   padding: 0 24px;
   height: 64px;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
 `;
 
 export const Brand = styled.div`

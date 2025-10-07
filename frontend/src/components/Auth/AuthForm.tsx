@@ -1,5 +1,3 @@
-// File 1: /frontend/src/components/Auth/AuthForm.tsx
-
 import React, { useState } from "react";
 import { useAuth } from "../../redux/hooks/useAuth";
 import Input from "../Forms/Input";
@@ -27,11 +25,6 @@ const AuthForm: React.FC<AuthFormProps> = ({
     role: "individual" as "individual" | "corporate",
   });
   const [localError, setLocalError] = useState<string | null>(null);
-
-  // const roleOptions = [
-  //   { value: "individual", label: "Individual" },
-  //   { value: "corporate", label: "Corporate" },
-  // ];
 
   const handleChange = (field: string, value: string) => {
     if (error || localError) {
@@ -111,28 +104,18 @@ const AuthForm: React.FC<AuthFormProps> = ({
         />
 
         {mode === "signup" && (
-          <div>
+          <S.SelectContainer>
             <S.InputLabel>Account Type *</S.InputLabel>
-            <select
+            <S.NativeSelect
               value={formData.role}
               onChange={(e) => handleChange("role", e.target.value)}
               required
               disabled={isLoading}
-              style={{
-                width: "100%",
-                padding: "12px",
-                border: "1px solid #d1d5db",
-                borderRadius: "6px",
-                fontSize: "14px",
-                backgroundColor: "white",
-                color: "#111827",
-                cursor: "pointer",
-              }}
             >
               <option value="individual">Individual</option>
               <option value="corporate">Corporate</option>
-            </select>
-          </div>
+            </S.NativeSelect>
+          </S.SelectContainer>
         )}
 
         <Input

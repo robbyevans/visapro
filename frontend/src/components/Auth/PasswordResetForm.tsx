@@ -27,11 +27,6 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ onSuccess }) => {
     setError("");
 
     try {
-      // Implement password reset API call
-      // await axiosInstance().patch(`/password_resets/${token}`, {
-      //   password: formData.password
-      // });
-
       if (onSuccess) onSuccess();
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to reset password");
