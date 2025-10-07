@@ -316,6 +316,50 @@ const Dashboard: React.FC = () => {
         )}
       </S.ApplicationsSection>
 
+           {/* Applications List Section - UPDATED */}
+      <S.ApplicationsSection>
+        <S.SectionHeader>
+          <S.SectionTitle>
+            {isAdmin ? "All Applications" : "Your Applications"}
+          </S.SectionTitle>
+          <S.SectionSubtitle>
+            {isAdmin 
+              ? "Focus on pending and in-review applications"
+              : "Your recent and active applications"
+            }
+          </S.SectionSubtitle>
+        </S.SectionHeader>
+
+        {userApplications.length === 0 ? (
+          <S.EmptyState>
+            {/* ... existing empty state */}
+          </S.EmptyState>
+        ) : (
+          <ApplicationList
+            applications={userApplications}
+            onApplicationClick={handleApplicationClick}
+            showActions={isAdmin}
+            viewMode={isAdmin ? "admin" : "user"}
+            showFilters={true}
+            defaultFilter={
+              isAdmin
+                ? {
+                    status: ["pending", "invoiced"],
+                    timeRange: "all_time",
+                    sortBy: "created_at",
+                    sortOrder: "desc",
+                  }
+                : {
+                    status: ["pending", "invoiced", "approved", "rejected"],
+                    timeRange: "last_3_months",
+                    sortBy: "updated_at",
+                    sortOrder: "desc",
+                  }
+            }
+          />
+        )}
+      </S.ApplicationsSection>
+
       {/* Admin Quick Stats */}
       {isAdmin && (
         <S.AdminInsights>
