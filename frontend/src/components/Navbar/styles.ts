@@ -192,16 +192,6 @@ export const UserGreeting = styled.span`
   font-size: 14px;
 `;
 
-export const UserRole = styled.span`
-  background-color: ${({ theme }) => theme.background.secondary};
-  color: ${({ theme }) => theme.text.secondary};
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: capitalize;
-`;
-
 export const AuthSection = styled.div`
   display: flex;
   align-items: center;

@@ -66,7 +66,6 @@ const Navbar: React.FC = () => {
                 </S.ThemeToggleSlider>
               </S.ThemeToggleContainer>
               <S.UserGreeting>Hello, {currentUser?.name}</S.UserGreeting>
-              <S.UserRole>{currentUser?.role}</S.UserRole>
               <Button onClick={handleSignOut} variant="secondary">
                 Sign Out
               </Button>
