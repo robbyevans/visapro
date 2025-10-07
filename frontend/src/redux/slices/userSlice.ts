@@ -36,6 +36,7 @@ const updateUserTheme = createAsyncThunk(
       });
       return res.data.user;
     } catch (err: unknown) {
+      console.error("Theme update error:", err);
       return rejectWithValue(getErrorMessage(err));
     }
   }
@@ -200,6 +201,7 @@ export {
   updateUserTheme,
 };
 
-export const { setUser, clearError, clearAthletes, updateThemeLocal } = userSlice.actions;
+export const { setUser, clearError, clearAthletes, updateThemeLocal } =
+  userSlice.actions;
 
 export default userSlice.reducer;

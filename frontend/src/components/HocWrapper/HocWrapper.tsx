@@ -43,14 +43,14 @@ const HocWrapper: React.FC<HocWrapperProps> = ({ children }) => {
     if (isAuthenticated && currentUser && !isApplicationsLoading) {
       fetchApplications();
     }
-  }, [isAuthenticated, currentUser]);
+  }, []);
 
   // NEW: Sync theme with backend when user data loads
   useEffect(() => {
     if (currentUser && currentUser.theme_preference) {
       setThemeMode(currentUser.theme_preference);
     }
-  }, [currentUser]);
+  }, []);
 
   // Show loading spinner while initializing app
   const isAppLoading = authLoading || (isAuthenticated && userLoading);
