@@ -41,7 +41,7 @@ const HocWrapper: React.FC<HocWrapperProps> = ({ children }) => {
     if (isAuthenticated && currentUser && !isApplicationsLoading) {
       fetchApplications();
     }
-  }, [isAuthenticated, currentUser, isApplicationsLoading, fetchApplications]);
+  }, [isAuthenticated, currentUser]);
 
   // Show loading spinner while initializing app
   const isAppLoading = authLoading || (isAuthenticated && userLoading);
