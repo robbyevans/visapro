@@ -54,9 +54,17 @@ const Navbar: React.FC = () => {
             </S.NavLinks>
 
             <S.UserSection>
-              <S.ThemeToggleButton onClick={handleThemeToggle}>
-                {themeMode === "light" ? "🌙" : "☀️"}
-              </S.ThemeToggleButton>
+              <S.ThemeToggleContainer>
+                <S.ThemeToggleInput
+                  type="checkbox"
+                  checked={themeMode === "dark"}
+                  onChange={handleThemeToggle}
+                />
+                <S.ThemeToggleSlider>
+                  <S.ThemeIcon className="sun">☀️</S.ThemeIcon>
+                  <S.ThemeIcon className="moon">🌙</S.ThemeIcon>
+                </S.ThemeToggleSlider>
+              </S.ThemeToggleContainer>
               <S.UserGreeting>Hello, {currentUser?.name}</S.UserGreeting>
               <S.UserRole>{currentUser?.role}</S.UserRole>
               <Button onClick={handleSignOut} variant="secondary">
@@ -72,9 +80,17 @@ const Navbar: React.FC = () => {
           </>
         ) : (
           <S.AuthSection>
-            <S.ThemeToggleButton onClick={handleThemeToggle}>
-              {themeMode === "light" ? "🌙" : "☀️"}
-            </S.ThemeToggleButton>
+            <S.ThemeToggleContainer>
+              <S.ThemeToggleInput
+                type="checkbox"
+                checked={themeMode === "dark"}
+                onChange={handleThemeToggle}
+              />
+              <S.ThemeToggleSlider>
+                <S.ThemeIcon className="sun">☀️</S.ThemeIcon>
+                <S.ThemeIcon className="moon">🌙</S.ThemeIcon>
+              </S.ThemeToggleSlider>
+            </S.ThemeToggleContainer>
             <Button
               onClick={() => handleNavigation("/login")}
               variant="primary"

@@ -93,27 +93,97 @@ export const UserSection = styled.div`
   }
 `;
 
-export const ThemeToggleButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 20px;
+// New Theme Toggle Styles
+export const ThemeToggleContainer = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+`;
+
+export const ThemeToggleInput = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
+
+  &:checked + span {
+    background-color: ${({ theme }) => theme.primaryColors["500"]};
+  }
+
+  &:checked + span:before {
+    transform: translateX(30px);
+  }
+
+  &:checked + span .sun {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  &:checked + span .moon {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+export const ThemeToggleSlider = styled.span`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: ${({ theme }) => theme.neutralColors["300"]};
+  transition: all 0.4s ease;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: transform 0.4s ease;
+    border-radius: 50%;
+    z-index: 2;
+  }
+`;
+
+export const ThemeIcon = styled.span`
+  font-size: 14px;
+  transition: all 0.4s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 16px;
+  height: 16px;
 
-  &:hover {
-    background-color: ${({ theme }) => theme.background.secondary};
-    transform: scale(1.1);
+  &.sun {
+    opacity: 1;
+    transform: translateX(0);
   }
 
-  &:active {
-    transform: scale(0.95);
+  &.moon {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  ${ThemeToggleInput}:checked + ${ThemeToggleSlider} & {
+    &.sun {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    &.moon {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 `;
 
@@ -159,7 +229,6 @@ export const MobileMenuToggle = styled.button`
   }
 `;
 
-// FIX: Use $ prefix for transient prop to prevent DOM warning
 export const MobileMenu = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
   flex-direction: column;
