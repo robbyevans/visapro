@@ -251,9 +251,6 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
             isFiltering={false} // No server filtering, so no loading state needed
           />
           <S.FilterActions>
-            <S.ClearFiltersButton onClick={handleClearFilters}>
-              Clear All
-            </S.ClearFiltersButton>
             <S.CloseFiltersButton onClick={handleApplyFilters}>
               Apply Filters
             </S.CloseFiltersButton>

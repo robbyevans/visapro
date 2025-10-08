@@ -36,9 +36,25 @@ const Navbar: React.FC = () => {
     return location.pathname === path;
   };
 
+  // Common Theme Toggle Component
+  const ThemeToggle = ({ mobile = false }: { mobile?: boolean }) => (
+    <S.ThemeToggleContainer $mobile={mobile}>
+      <S.ThemeToggleInput
+        type="checkbox"
+        checked={themeMode === "dark"}
+        onChange={handleThemeToggle}
+      />
+      <S.ThemeToggleSlider>
+        <S.ThemeIcon className="sun">☀️</S.ThemeIcon>
+        <S.ThemeIcon className="moon">🌙</S.ThemeIcon>
+      </S.ThemeToggleSlider>
+    </S.ThemeToggleContainer>
+  );
+
   return (
     <S.NavbarContainer>
       <S.NavbarContent>
+        {/* Brand Section */}
         <S.Brand>
           <Link to="/" style={{ textDecoration: "none" }}>
             <S.BrandLink>
@@ -50,6 +66,7 @@ const Navbar: React.FC = () => {
 
         {isAuthenticated ? (
           <>
+            {/* Desktop Navigation */}
             <S.NavLinks>
               <Link to="/dashboard">
                 <S.NavLink $isActive={isActiveRoute("/dashboard")}>
@@ -65,18 +82,9 @@ const Navbar: React.FC = () => {
               )}
             </S.NavLinks>
 
+            {/* Desktop User Section */}
             <S.UserSection>
-              <S.ThemeToggleContainer>
-                <S.ThemeToggleInput
-                  type="checkbox"
-                  checked={themeMode === "dark"}
-                  onChange={handleThemeToggle}
-                />
-                <S.ThemeToggleSlider>
-                  <S.ThemeIcon className="sun">☀️</S.ThemeIcon>
-                  <S.ThemeIcon className="moon">🌙</S.ThemeIcon>
-                </S.ThemeToggleSlider>
-              </S.ThemeToggleContainer>
+              <ThemeToggle />
 
               <S.UserMenuContainer>
                 <S.UserMenuButton
@@ -110,28 +118,24 @@ const Navbar: React.FC = () => {
               </S.UserMenuContainer>
             </S.UserSection>
 
-            <S.MobileMenuToggle onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {/* Mobile Menu Toggle */}
+            <S.MobileMenuToggle
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              $isOpen={isMenuOpen}
+            >
               <span></span>
               <span></span>
               <span></span>
             </S.MobileMenuToggle>
           </>
         ) : (
+          /* Unauthenticated User Section */
           <S.AuthSection>
-            <S.ThemeToggleContainer>
-              <S.ThemeToggleInput
-                type="checkbox"
-                checked={themeMode === "dark"}
-                onChange={handleThemeToggle}
-              />
-              <S.ThemeToggleSlider>
-                <S.ThemeIcon className="sun">☀️</S.ThemeIcon>
-                <S.ThemeIcon className="moon">🌙</S.ThemeIcon>
-              </S.ThemeToggleSlider>
-            </S.ThemeToggleContainer>
+            <ThemeToggle />
             <Button
               onClick={() => handleNavigation("/login")}
               variant="primary"
+              size="md"
             >
               Sign In
             </Button>
@@ -139,61 +143,90 @@ const Navbar: React.FC = () => {
         )}
       </S.NavbarContent>
 
-      {isAuthenticated ? (
-        <S.MobileMenu $isOpen={isMenuOpen}>
-          <Link to="/dashboard">
-            <S.MobileNavLink
-              $isActive={isActiveRoute("/dashboard")}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Dashboard
-            </S.MobileNavLink>
-          </Link>
-          {currentUser?.role === "admin" && (
-            <Link to="/admin/dashboard">
-              <S.MobileNavLink
-                $isActive={isActiveRoute("/admin/dashboard")}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Admin
+      {/* Mobile Menu */}
+      <S.MobileMenu $isOpen={isMenuOpen}>
+        {isAuthenticated ? (
+          /* Authenticated Mobile Menu */
+          <>
+            <S.MobileMenuHeader>
+              <S.MobileUserInfo>
+                <S.UserAvatar $large>
+                  {currentUser?.name?.charAt(0)?.toUpperCase() || "U"}
+                </S.UserAvatar>
+                <div>
+                  <S.MobileUserName>{currentUser?.name}</S.MobileUserName>
+                  <S.MobileUserRole>
+                    {currentUser?.role === "admin" ? "Administrator" : "User"}
+                  </S.MobileUserRole>
+                </div>
+              </S.MobileUserInfo>
+            </S.MobileMenuHeader>
+
+            <S.MobileNavSection>
+              <Link to="/dashboard">
+                <S.MobileNavLink
+                  $isActive={isActiveRoute("/dashboard")}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  📊 Dashboard
+                </S.MobileNavLink>
+              </Link>
+              {currentUser?.role === "admin" && (
+                <Link to="/admin/dashboard">
+                  <S.MobileNavLink
+                    $isActive={isActiveRoute("/admin/dashboard")}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    🛠️ Admin
+                  </S.MobileNavLink>
+                </Link>
+              )}
+              <Link to="/profile">
+                <S.MobileNavLink
+                  $isActive={isActiveRoute("/profile")}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  👤 Profile
+                </S.MobileNavLink>
+              </Link>
+              <Link to="/settings">
+                <S.MobileNavLink
+                  $isActive={isActiveRoute("/settings")}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  ⚙️ Settings
+                </S.MobileNavLink>
+              </Link>
+            </S.MobileNavSection>
+
+            <S.MobileMenuFooter>
+              <S.MobileThemeSection>
+                <S.MobileThemeLabel>Theme</S.MobileThemeLabel>
+                <ThemeToggle mobile />
+              </S.MobileThemeSection>
+              <S.MobileSignOut onClick={handleSignOut}>
+                🚪 Sign Out
+              </S.MobileSignOut>
+            </S.MobileMenuFooter>
+          </>
+        ) : (
+          /* Unauthenticated Mobile Menu */
+          <>
+            <S.MobileNavSection>
+              <S.MobileNavLink onClick={() => handleNavigation("/login")}>
+                🔐 Sign In
               </S.MobileNavLink>
-            </Link>
-          )}
-          <Link to="/profile">
-            <S.MobileNavLink
-              $isActive={isActiveRoute("/profile")}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Profile
-            </S.MobileNavLink>
-          </Link>
-          <Link to="/settings">
-            <S.MobileNavLink
-              $isActive={isActiveRoute("/settings")}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Settings
-            </S.MobileNavLink>
-          </Link>
-          <S.MobileThemeToggle onClick={handleThemeToggle}>
-            {themeMode === "light"
-              ? "🌙 Switch to Dark Mode"
-              : "☀️ Switch to Light Mode"}
-          </S.MobileThemeToggle>
-          <S.MobileSignOut onClick={handleSignOut}>Sign Out</S.MobileSignOut>
-        </S.MobileMenu>
-      ) : (
-        <S.MobileMenu $isOpen={isMenuOpen}>
-          <S.MobileThemeToggle onClick={handleThemeToggle}>
-            {themeMode === "light"
-              ? "🌙 Switch to Dark Mode"
-              : "☀️ Switch to Light Mode"}
-          </S.MobileThemeToggle>
-          <S.MobileNavLink onClick={() => handleNavigation("/login")}>
-            Sign In
-          </S.MobileNavLink>
-        </S.MobileMenu>
-      )}
+            </S.MobileNavSection>
+
+            <S.MobileMenuFooter>
+              <S.MobileThemeSection>
+                <S.MobileThemeLabel>Theme</S.MobileThemeLabel>
+                <ThemeToggle mobile />
+              </S.MobileThemeSection>
+            </S.MobileMenuFooter>
+          </>
+        )}
+      </S.MobileMenu>
     </S.NavbarContainer>
   );
 };
