@@ -5,6 +5,7 @@ import { useUser } from "../../redux/hooks/useUser";
 import Spinner from "../../components/Spinner/Spinner";
 import EditDocument from "../../components/Documents/EditDocument";
 import DocumentPreview from "../../components/Documents/DocumentPreview";
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import * as S from "./styles";
 import type { IDocument as AppDocument } from "../../redux/types";
 import type { IDocument } from "../../redux/types";
@@ -49,6 +50,37 @@ const ApplicationDetailsPage: React.FC = () => {
     (doc) => doc.doc_type !== "passport" && doc.doc_type !== "visa"
   );
   const visaDocuments = documents.filter((doc) => doc.doc_type === "visa");
+
+  const getProgressInfo = () => {
+    if (!currentApplication) {
+      return { percentage: 0, status: "Unknown" };
+    }
+
+    let percentage = 0;
+    const status = currentApplication.status;
+
+    switch (status) {
+      case "pending":
+        percentage = 25; // Application submitted
+        break;
+      case "approved":
+        percentage = 50; // Application approved
+        break;
+      case "invoiced":
+        percentage = 75; // Payment processed
+        break;
+      case "completed":
+        percentage = 100; // Visa issued
+        break;
+      case "rejected":
+        percentage = 100; // Process ended (rejected)
+        break;
+      default:
+        percentage = 0;
+    }
+
+    return { percentage, status };
+  };
 
   // FIXED: Use the constant instead of process.env directly
   const getDocumentUrl = (document: AppDocument): string => {
@@ -161,6 +193,7 @@ const ApplicationDetailsPage: React.FC = () => {
 
   const isAdmin = currentUser?.role === "admin";
   const canEdit = !isAdmin && currentApplication.status === "pending";
+  const progressInfo = getProgressInfo();
 
   return (
     <S.ApplicationDetailsContainer>
@@ -176,7 +209,58 @@ const ApplicationDetailsPage: React.FC = () => {
       </S.Header>
 
       <S.Content>
-        {/* Application Details - unchanged */}
+        {/* Progress Bar Section */}
+        <ProgressBar
+          percentage={progressInfo.percentage}
+          status={currentApplication.status}
+        />
+
+        <S.Section>
+          <S.SectionTitle>Application Details</S.SectionTitle>
+          <S.DetailGrid>
+            <S.DetailItem>
+              <S.DetailLabel>Applicant Name</S.DetailLabel>
+              <S.DetailValue>
+                {currentApplication.athlete?.first_name}{" "}
+                {currentApplication.athlete?.last_name}
+              </S.DetailValue>
+            </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Passport Number</S.DetailLabel>
+              <S.DetailValue>
+                {currentApplication.athlete?.passport_number || "N/A"}
+              </S.DetailValue>
+            </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Destination Country</S.DetailLabel>
+              <S.DetailValue>{currentApplication.country}</S.DetailValue>
+            </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Status</S.DetailLabel>
+              <S.StatusBadge status={currentApplication.status}>
+                {currentApplication.status}
+              </S.StatusBadge>
+            </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Submitted Date</S.DetailLabel>
+              <S.DetailValue>
+                {new Date(currentApplication.created_at).toLocaleDateString()}
+              </S.DetailValue>
+            </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Last Updated</S.DetailLabel>
+              <S.DetailValue>
+                {new Date(currentApplication.updated_at).toLocaleDateString()}
+              </S.DetailValue>
+            </S.DetailItem>
+          </S.DetailGrid>
+
+          {currentApplication.remarks && (
+            <S.Remarks>
+              <strong>Admin Remarks:</strong> {currentApplication.remarks}
+            </S.Remarks>
+          )}
+        </S.Section>
 
         {/* Documents Section */}
         <S.Section>
@@ -346,10 +430,88 @@ const ApplicationDetailsPage: React.FC = () => {
           )}
         </S.Section>
 
-        {/* Status Timeline - unchanged */}
+        <S.Section>
+          <S.SectionTitle>Application Status Timeline</S.SectionTitle>
+          <S.StatusTimeline>
+            <S.TimelineItem status="completed">
+              <S.TimelineDot />
+              <S.TimelineContent>
+                <S.TimelineTitle>Application Submitted</S.TimelineTitle>
+                <S.TimelineDate>
+                  {new Date(currentApplication.created_at).toLocaleDateString()}
+                </S.TimelineDate>
+              </S.TimelineContent>
+            </S.TimelineItem>
+
+            <S.TimelineItem
+              status={
+                ["approved", "completed", "invoiced"].includes(
+                  currentApplication.status
+                )
+                  ? "completed"
+                  : currentApplication.status === "rejected"
+                  ? "rejected"
+                  : "pending"
+              }
+            >
+              <S.TimelineDot />
+              <S.TimelineContent>
+                <S.TimelineTitle>
+                  {currentApplication.status === "rejected"
+                    ? "Application Rejected"
+                    : "Under Review"}
+                </S.TimelineTitle>
+                <S.TimelineDate>
+                  {currentApplication.status !== "pending"
+                    ? `Updated: ${new Date(
+                        currentApplication.updated_at
+                      ).toLocaleDateString()}`
+                    : "Waiting for admin review"}
+                </S.TimelineDate>
+                {currentApplication.status === "rejected" &&
+                  currentApplication.remarks && (
+                    <S.TimelineRemarks>
+                      Reason: {currentApplication.remarks}
+                    </S.TimelineRemarks>
+                  )}
+              </S.TimelineContent>
+            </S.TimelineItem>
+
+            {currentApplication.status !== "rejected" && (
+              <S.TimelineItem
+                status={
+                  currentApplication.status === "completed"
+                    ? "completed"
+                    : ["approved", "invoiced"].includes(
+                        currentApplication.status
+                      )
+                    ? "completed"
+                    : "pending"
+                }
+              >
+                <S.TimelineDot />
+                <S.TimelineContent>
+                  <S.TimelineTitle>
+                    {currentApplication.status === "completed"
+                      ? "Visa Issued"
+                      : "Processing Visa"}
+                  </S.TimelineTitle>
+                  <S.TimelineDate>
+                    {currentApplication.status === "completed"
+                      ? `Completed: ${new Date(
+                          currentApplication.updated_at
+                        ).toLocaleDateString()}`
+                      : currentApplication.status === "invoiced"
+                      ? "Payment received, processing visa"
+                      : "Waiting for visa processing"}
+                  </S.TimelineDate>
+                </S.TimelineContent>
+              </S.TimelineItem>
+            )}
+          </S.StatusTimeline>
+        </S.Section>
       </S.Content>
 
-      {/* Document Preview Modal */}
       {previewDocument && (
         <DocumentPreview
           fileUrl={previewDocument.fileUrl}
