@@ -208,11 +208,6 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
     return count;
   }, [currentFilter]);
 
-  const handleClearFilters = () => {
-    const defaultFilter = getDefaultFilter();
-    setCurrentFilter(defaultFilter);
-  };
-
   const handleFilterChange = (filter: FilterState) => {
     setCurrentFilter(filter);
   };

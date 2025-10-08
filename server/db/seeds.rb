@@ -9,17 +9,13 @@
 #   end
 
 # Create default admin user
-User.create!(
-  name: "Admin User",
-  email: "admin@visapro.com",
-  password: "password123",
-  password_confirmation: "password123",
-  role: :admin
-)
+# In db/seeds.rb
+User.where(role: :admin).destroy_all 
+
 User.create!(
   name: "Admin User",
   email: "user@admin.com",
-  password: "@admin001",
+  password: "@admin001", 
   password_confirmation: "@admin001",
   role: :admin
 )
