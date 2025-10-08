@@ -48,13 +48,13 @@ const Dashboard: React.FC = () => {
     currentUser?.role === "individual" || currentUser?.role === "corporate";
   const isAdmin = currentUser?.role === "admin";
 
-  // const handleApplicationClick = (id: number) => {
-  //   if (isAdmin) {
-  //     navigate(`/admin/applications/${id}`);
-  //   } else {
-  //     navigate(`/applications/${id}`);
-  //   }
-  // };
+  const handleApplicationClick = (id: number) => {
+    if (isAdmin) {
+      navigate(`/admin/applications/${id}`);
+    } else {
+      navigate(`/applications/${id}`);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     const colors = {
@@ -308,7 +308,11 @@ const Dashboard: React.FC = () => {
             )}
           </S.EmptyState>
         ) : (
-          <ApplicationsView showFilters />
+          <ApplicationsView
+            showFilters
+            onApplicationClick={handleApplicationClick} 
+            viewMode={isAdmin ? "admin" : "user"} 
+          />
         )}
       </S.ApplicationsSection>
 
