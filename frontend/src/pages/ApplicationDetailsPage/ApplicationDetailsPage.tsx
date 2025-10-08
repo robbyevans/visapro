@@ -9,6 +9,20 @@ import * as S from "./styles";
 import type { IDocument as AppDocument } from "../../redux/types";
 import type { IDocument } from "../../redux/types";
 
+// FIX: Use a hardcoded API URL or window location for client-side
+const getApiBaseUrl = () => {
+  // For client-side, use window location or a hardcoded value
+  if (typeof window !== "undefined") {
+    // You can use the current window origin or a configured value
+    return window.location.origin.includes("localhost")
+      ? "http://localhost:3000"
+      : "https://your-production-api.com";
+  }
+  return "http://localhost:3000"; // Fallback
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
 const ApplicationDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -36,26 +50,26 @@ const ApplicationDetailsPage: React.FC = () => {
   );
   const visaDocuments = documents.filter((doc) => doc.doc_type === "visa");
 
-  // In ApplicationDetailsPage.tsx, update getDocumentUrl:
-  const getDocumentUrl = (document: AppDocument) => {
-    // First try the full URL if available
-    if (document.file_full_url && document.file_full_url.startsWith("http")) {
-      return document.file_full_url;
+  // FIXED: Use the constant instead of process.env directly
+  const getDocumentUrl = (document: AppDocument): string => {
+    if (!document) {
+      console.warn("Document is undefined or null");
+      return "";
     }
 
-    // Then try the regular file_url as full URL
-    if (document.file_url && document.file_url.startsWith("http")) {
-      return document.file_url;
+    if (document.file_url && typeof document.file_url === "string") {
+      if (document.file_url.startsWith("http")) {
+        return document.file_url;
+      }
+
+      if (document.file_url.startsWith("/")) {
+        return `${API_BASE_URL}${document.file_url}`;
+      }
+
+      return `${API_BASE_URL}/uploads/${document.file_url}`;
     }
 
-    // If it's a relative path, construct the full URL
-    if (document.file_url && document.file_url.startsWith("/")) {
-      const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:3000";
-      return `${baseUrl}${document.file_url}`;
-    }
-
-    // Fallback
-    console.warn("Invalid document file_url:", document.file_url);
+    console.warn("Invalid document file_url:", document.file_url, document);
     return "";
   };
 
@@ -83,12 +97,12 @@ const ApplicationDetailsPage: React.FC = () => {
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const link = globalThis.document.createElement("a"); // Use globalThis.document
+      const link = globalThis.document.createElement("a");
       link.href = url;
       link.download = fileName || `document_${document.id}`;
-      globalThis.document.body.appendChild(link); // Use globalThis.document
+      globalThis.document.body.appendChild(link);
       link.click();
-      globalThis.document.body.removeChild(link); // Use globalThis.document
+      globalThis.document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download error:", error);
@@ -105,7 +119,6 @@ const ApplicationDetailsPage: React.FC = () => {
   };
 
   const handlePreviewDocument = (document: AppDocument, fileName: string) => {
-    // Use AppDocument here
     const fileUrl = getDocumentUrl(document);
     if (fileUrl) {
       setPreviewDocument({
@@ -120,28 +133,10 @@ const ApplicationDetailsPage: React.FC = () => {
   const handleClosePreview = () => {
     setPreviewDocument(null);
   };
-  // Add this debug function to ApplicationDetailsPage.tsx
-  const debugDocumentUrls = (documents: AppDocument[]) => {
-    console.log("=== DOCUMENT URL DEBUG ===");
-    documents.forEach((doc, index) => {
-      console.log(`Document ${index + 1}:`, {
-        id: doc.id,
-        type: doc.doc_type,
-        file_url: doc.file_url,
-        constructed_url: getDocumentUrl(doc),
-      });
-    });
-    console.log("=== END DEBUG ===");
-  };
-
-  // Call this in your component (temporarily)
-  useEffect(() => {
-    if (documents.length > 0) {
-      debugDocumentUrls(documents);
-    }
-  }, [documents]);
 
   const getFileNameFromUrl = (url: string, docType: string, docId: number) => {
+    if (!url) return `${docType}_${docId}`;
+
     try {
       const urlObj = new URL(url);
       const pathname = urlObj.pathname;
@@ -195,6 +190,7 @@ const ApplicationDetailsPage: React.FC = () => {
               </S.DocumentSectionTitle>
               <S.DocumentList>
                 {passportDocuments.map((doc) => {
+                  if (!doc) return null;
                   const fileName = getFileNameFromUrl(
                     doc.file_url,
                     doc.doc_type,
@@ -253,6 +249,7 @@ const ApplicationDetailsPage: React.FC = () => {
               </S.DocumentSectionTitle>
               <S.DocumentList>
                 {otherDocuments.map((doc) => {
+                  if (!doc) return null;
                   const fileName = getFileNameFromUrl(
                     doc.file_url,
                     doc.doc_type,
@@ -309,6 +306,7 @@ const ApplicationDetailsPage: React.FC = () => {
               <S.DocumentSectionTitle>Visa Documents</S.DocumentSectionTitle>
               <S.DocumentList>
                 {visaDocuments.map((doc) => {
+                  if (!doc) return null;
                   const fileName = getFileNameFromUrl(
                     doc.file_url,
                     doc.doc_type,

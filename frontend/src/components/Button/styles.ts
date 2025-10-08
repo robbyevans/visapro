@@ -1,158 +1,157 @@
-import styled, { keyframes, css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
+import { STATIC_COLORS } from "../../styles";
 
-const spin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
+interface ButtonStyledProps {
+  variant: "primary" | "secondary" | "danger" | "success";
+  size: "sm" | "md" | "lg";
+  disabled?: boolean;
+  textColor?: string;
+  "data-loading"?: string;
+  "data-pulsating"?: string;
+}
 
-const pulsate = keyframes`
+const pulseAnimation = keyframes`
   0% {
-    /* transform: scale(1); */
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
   }
-  50% {
-    /* transform: scale(1.05); */
-    box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+  70% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
   }
   100% {
-    /* transform: scale(1); */
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
   }
 `;
 
-export const Button = styled.button<{
-  variant?: "primary" | "secondary" | "danger" | "success";
-  size?: "sm" | "md" | "lg";
-  loading?: boolean;
-  pulsating?: boolean;
-  textColor?: string; // <-- accept prop
-}>`
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  cursor: pointer;
-  transition: all 0.2s ease;
+export const Button = styled.button<ButtonStyledProps>`
+  /* Base styles */
   display: inline-flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  text-decoration: none;
   justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
   position: relative;
+  overflow: hidden;
 
-  // Size styles
-  ${({ size, theme }) => {
+  /* Size variants */
+  ${({ size }) => {
     switch (size) {
       case "sm":
         return css`
-          padding: ${theme.spacing.xs} ${theme.spacing.md};
-          font-size: ${theme.typography.fontSize.sm};
+          padding: 8px 16px;
+          font-size: 14px;
+          min-height: 36px;
         `;
       case "lg":
         return css`
-          padding: ${theme.spacing.md} ${theme.spacing.xl};
-          font-size: ${theme.typography.fontSize.lg};
+          padding: 12px 24px;
+          font-size: 16px;
+          min-height: 48px;
         `;
       default: // md
         return css`
-          padding: ${theme.spacing.sm} ${theme.spacing.lg};
-          font-size: ${theme.typography.fontSize.base};
+          padding: 10px 20px;
+          font-size: 14px;
+          min-height: 40px;
         `;
     }
   }}
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  /* Variant styles — color uses textColor prop when provided, otherwise theme.text.inverse */
-  ${({ variant, theme, textColor }) => {
-    const colorValue = textColor ?? theme.text.inverse;
+  /* Color variants */
+  ${({ variant, theme }) => {
     switch (variant) {
       case "secondary":
         return css`
-          background-color: ${theme.secondaryColors["500"]};
-          color: ${colorValue};
+          background: ${theme.background.primary};
+          color: ${theme.text.primary};
+          border: 1px solid ${theme.border.default};
 
           &:hover:not(:disabled) {
-            background-color: ${theme.secondaryColors["600"]};
-          }
-
-          &:active:not(:disabled) {
-            background-color: ${theme.secondaryColors["700"]};
+            background: ${theme.background.secondary};
+            border-color: ${theme.primaryColors["300"]};
           }
         `;
       case "danger":
         return css`
-          background-color: ${theme.errorColors["500"]};
-          color: ${colorValue};
+          background: ${theme.errorColors["500"]};
+          color: ${STATIC_COLORS.base.white};
 
           &:hover:not(:disabled) {
-            background-color: ${theme.errorColors["600"]};
-          }
-
-          &:active:not(:disabled) {
-            background-color: ${theme.errorColors["700"]};
+            background: ${theme.errorColors["600"]};
           }
         `;
       case "success":
         return css`
-          background-color: ${theme.successColors["500"]};
-          color: ${colorValue};
+          background: ${theme.successColors["500"]};
+          color: ${STATIC_COLORS.base.white};
 
           &:hover:not(:disabled) {
-            background-color: ${theme.successColors["600"]};
-          }
-
-          &:active:not(:disabled) {
-            background-color: ${theme.successColors["700"]};
+            background: ${theme.successColors["600"]};
           }
         `;
-      default:
+      default: // primary
         return css`
-          background-color: ${theme.primaryColors["500"]};
-          color: ${colorValue};
+          background: linear-gradient(
+            135deg,
+            ${theme.primaryColors["500"]},
+            ${theme.primaryColors["600"]}
+          );
+          color: ${STATIC_COLORS.base.white};
 
           &:hover:not(:disabled) {
-            background-color: ${theme.primaryColors["600"]};
-          }
-
-          &:active:not(:disabled) {
-            background-color: ${theme.primaryColors["700"]};
+            background: linear-gradient(
+              135deg,
+              ${theme.primaryColors["600"]},
+              ${theme.primaryColors["700"]}
+            );
+            transform: translateY(-1px);
           }
         `;
     }
   }}
 
-  ${({ loading, textColor, theme }) =>
-    loading &&
+  /* Text color override */
+  ${({ textColor }) =>
+    textColor &&
     css`
-      /* hide the label text (keeps layout) */
-      color: transparent;
-
-      &::after {
-        content: "";
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        border: 2px solid transparent;
-        /* spinner color uses textColor fallback to theme */
-        border-top: 2px solid ${textColor ?? theme.text.inverse};
-        border-radius: 50%;
-        animation: ${spin} 1s linear infinite;
-      }
+      color: ${textColor};
     `}
 
-  ${({ pulsating }) =>
-    pulsating &&
+  /* Disabled state */
+  ${({ disabled }) =>
+    disabled &&
     css`
-      animation: ${pulsate} 2s infinite;
-      position: relative;
-      z-index: 1;
-
-      &:hover {
-        animation: none;
-        transform: scale(1.05);
-      }
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
     `}
+
+  /* Loading state */
+  ${({ "data-loading": loading }) =>
+    loading === "true" &&
+    css`
+      cursor: wait;
+      opacity: 0.8;
+    `}
+
+  /* Pulsating animation */
+  ${({ "data-pulsating": pulsating }) =>
+    pulsating === "true" &&
+    css`
+      animation: ${pulseAnimation} 2s infinite;
+    `}
+
+  /* Focus state */
+  &:focus {
+    outline: 2px solid ${({ theme }) => theme.primaryColors["300"]};
+    outline-offset: 2px;
+  }
+
+  /* Active state */
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
 `;

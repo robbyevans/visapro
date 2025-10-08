@@ -1,5 +1,3 @@
-// File 5: /frontend/src/components/Navbar/Navbar.tsx
-
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../redux/hooks/useAuth";
@@ -45,7 +43,7 @@ const Navbar: React.FC = () => {
           <Link to="/" style={{ textDecoration: "none" }}>
             <S.BrandLink>
               <S.BrandLogo src="/logo.svg" alt="Logo" />
-              <S.BrandText>VisaPro</S.BrandText>
+              <S.BrandText>Track</S.BrandText>
             </S.BrandLink>
           </Link>
         </S.Brand>
