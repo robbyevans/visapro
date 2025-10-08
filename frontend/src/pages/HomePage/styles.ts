@@ -10,7 +10,6 @@ export const HomePageContainer = styled.div`
   transition: background-color 0.3s ease;
 `;
 
-// Hero Section
 export const HeroSection = styled.section`
   position: relative;
   min-height: 100vh;
@@ -18,6 +17,12 @@ export const HeroSection = styled.section`
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 80px 0 40px;
+
+  @media (min-width: 768px) {
+    padding: 0;
+    min-height: 100vh;
+  }
 `;
 
 export const HeroBackground = styled.div`
@@ -26,10 +31,24 @@ export const HeroBackground = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: url(${kenyanAthleteHero}) center/cover;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+
+  /* Show background image only on desktop */
+  @media (min-width: 768px) {
+    background: url(${kenyanAthleteHero}) center/cover;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  /* Mobile gradient background */
+  @media (max-width: 767px) {
+    background: linear-gradient(
+      135deg,
+      ${({ theme }) => theme.primaryColors["600"]} 0%,
+      ${({ theme }) => theme.primaryColors["400"]} 50%,
+      ${({ theme }) => theme.secondaryColors["500"]} 100%
+    );
+  }
 
   &::before {
     content: "";
@@ -38,8 +57,15 @@ export const HeroBackground = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(0px);
+
+    @media (min-width: 768px) {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(0px);
+    }
+
+    @media (max-width: 767px) {
+      background: rgba(0, 0, 0, 0.3);
+    }
   }
 `;
 
@@ -49,100 +75,183 @@ export const HeroOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.4) 0%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
+
+  /* Desktop overlay */
+  @media (min-width: 768px) {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  }
+
+  /* Mobile overlay - darker for better text contrast */
+  @media (max-width: 767px) {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
+  }
 `;
 
 export const HeroContent = styled.div`
   position: relative;
-  max-width: 800px;
+  max-width: 1200px;
   text-align: center;
-  padding: 0 24px;
+  padding: 0 20px;
   z-index: 2;
-  top: 140px;
-  left: 30px;
+  width: 100%;
+
+  top: 0;
+  left: 0;
+
+  @media (min-width: 768px) {
+    padding: 0 24px;
+    max-width: 800px;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 32px;
+  }
 `;
 
 export const HeroTitle = styled.h1`
-  font-size: 64px;
+  font-size: 2.5rem; /* 40px */
   font-weight: 800;
-  color: ${({ theme }) => theme.text.inverse};
-  margin-bottom: 24px;
+  color: ${STATIC_COLORS.base.white};
+  margin-bottom: 1.5rem; /* 24px */
   line-height: 1.1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 
-  /* Glass glossy background effect */
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-radius: 20px;
-  padding: 30px 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
-  @media (max-width: 768px) {
-    font-size: 48px;
-    padding: 25px 30px;
+  /* Glass effect only on desktop */
+  @media (min-width: 768px) {
+    font-size: 3.5rem; /* 56px */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 20px;
+    padding: 2rem 2.5rem; /* 32px 40px */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   }
 
-  @media (max-width: 480px) {
-    font-size: 36px;
-    padding: 20px 25px;
-    border-radius: 16px;
+  @media (min-width: 1024px) {
+    font-size: 4rem; /* 64px */
+    padding: 1.875rem 2.5rem; /* 30px 40px */
+  }
+
+  /* Small mobile devices */
+  @media (max-width: 360px) {
+    font-size: 2rem; /* 32px */
+    margin-bottom: 1rem; /* 16px */
   }
 `;
 
 export const HeroHighlight = styled.span`
   background: linear-gradient(
     135deg,
-    ${({ theme }) => theme.primaryColors["500"]},
-    ${({ theme }) => theme.primaryColors["400"]}
+    ${STATIC_COLORS.base.white} 0%,
+    ${({ theme }) => theme.primaryColors["200"]} 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-shadow: none;
+
+  @media (max-width: 767px) {
+    background: linear-gradient(
+      135deg,
+      ${STATIC_COLORS.base.white} 0%,
+      ${({ theme }) => theme.primaryColors["300"]} 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 `;
 
 export const HeroSubtitle = styled.p`
-  font-size: 20px;
+  font-size: 1.125rem; /* 18px */
   color: ${STATIC_COLORS.base.white};
   opacity: 0.95;
-  margin-bottom: 48px;
+  margin-bottom: 3rem; /* 48px */
   line-height: 1.6;
   font-weight: 500;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
 
-  @media (max-width: 768px) {
-    font-size: 18px;
+  @media (min-width: 768px) {
+    font-size: 1.25rem; /* 20px */
+    padding: 0;
+  }
+
+  @media (max-width: 360px) {
+    font-size: 1rem; /* 16px */
+    margin-bottom: 2rem; /* 32px */
+    padding: 0 0.5rem;
   }
 `;
 
 export const HeroButtons = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 1rem; /* 16px */
   justify-content: center;
-  margin-bottom: 80px;
+  margin-bottom: 4rem; /* 64px */
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
+  @media (min-width: 480px) {
+    flex-direction: row;
+    max-width: 400px;
+  }
+
+  @media (min-width: 768px) {
+    margin-bottom: 5rem; /* 80px */
+    max-width: none;
+  }
+
+  a {
+    width: 100%;
+
+    @media (min-width: 480px) {
+      width: auto;
+    }
+  }
+
+  button {
+    width: 100%;
+
+    @media (min-width: 480px) {
+      width: auto;
+      min-width: 180px;
+    }
   }
 `;
 
 export const HeroStats = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  max-width: 600px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem; /* 24px */
+  max-width: 400px;
   margin: 0 auto;
+  width: 100%;
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 600px;
+    gap: 2rem; /* 32px */
+  }
+
+  @media (min-width: 768px) {
+    gap: 2rem; /* 32px */
   }
 `;
 
@@ -151,24 +260,49 @@ export const StatItem = styled.div`
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 12px;
-  padding: 15px;
+  padding: 1.25rem 0.75rem; /* 20px 12px */
   border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (min-width: 480px) {
+    padding: 1rem; /* 16px */
+  }
+
+  @media (min-width: 768px) {
+    padding: 1.25rem 1rem; /* 20px 16px */
+  }
 `;
 
 export const StatNumber = styled.div`
-  font-size: 32px;
+  font-size: 1.5rem; /* 24px */
   font-weight: 700;
-  color: ${({ theme }) => theme.primaryColors["500"]};
-  margin-bottom: 8px;
+  color: ${STATIC_COLORS.base.white};
+  margin-bottom: 0.5rem; /* 8px */
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  @media (min-width: 480px) {
+    font-size: 1.75rem; /* 28px */
+  }
+
+  @media (min-width: 768px) {
+    font-size: 2rem; /* 32px */
+  }
 `;
 
 export const StatLabel = styled.div`
-  font-size: 14px;
+  font-size: 0.75rem; /* 12px */
   color: ${STATIC_COLORS.base.white};
   opacity: 0.9;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+  @media (min-width: 480px) {
+    font-size: 0.875rem; /* 14px */
+  }
 `;
 
 export const SectionContainer = styled.div`

@@ -7,15 +7,15 @@ const spin = keyframes`
 
 const pulsate = keyframes`
   0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    /* transform: scale(1); */
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
   }
   50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    /* transform: scale(1.05); */
+    box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
   }
   100% {
-    transform: scale(1);
+    /* transform: scale(1); */
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
   }
 `;

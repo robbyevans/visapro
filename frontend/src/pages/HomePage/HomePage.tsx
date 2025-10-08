@@ -84,7 +84,6 @@ const HomePage: React.FC = () => {
 
   return (
     <S.HomePageContainer>
-      {/* Hero Section with Kenyan Athletic Theme */}
       <S.HeroSection>
         <S.HeroBackground>
           <S.HeroOverlay />
@@ -131,7 +130,6 @@ const HomePage: React.FC = () => {
           </S.HeroContent>
         </S.HeroBackground>
       </S.HeroSection>
-
       {/* Features Section */}
       <S.FeaturesSection>
         <S.SectionContainer>
@@ -159,7 +157,6 @@ const HomePage: React.FC = () => {
           </S.FeaturesGrid>
         </S.SectionContainer>
       </S.FeaturesSection>
-
       {/* Process Section */}
       <S.ProcessSection>
         <S.SectionContainer>
@@ -182,7 +179,6 @@ const HomePage: React.FC = () => {
           </S.ProcessGrid>
         </S.SectionContainer>
       </S.ProcessSection>
-
       {/* CTA Section */}
       <S.CTASection>
         <S.SectionContainer>
@@ -213,7 +209,6 @@ const HomePage: React.FC = () => {
           </S.CTAContent>
         </S.SectionContainer>
       </S.CTASection>
-
       {/* Footer */}
       <Footer />
     </S.HomePageContainer>

@@ -16,5 +16,12 @@ User.create!(
   password_confirmation: "password123",
   role: :admin
 )
+User.create!(
+  name: "Admin User",
+  email: "user@admin.com",
+  password: "@admin001",
+  password_confirmation: "@admin001",
+  role: :admin
+)
 
 puts "✅ Admin user created (email: admin@visapro.com, password: password123) 🍀"
