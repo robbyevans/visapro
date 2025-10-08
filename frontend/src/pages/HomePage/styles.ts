@@ -99,7 +99,7 @@ export const HeroContent = styled.div`
   position: relative;
   max-width: 1200px;
   text-align: center;
-  padding: 0 20px;
+  padding: 50px 20px;
   z-index: 2;
   width: 100%;
 
@@ -109,6 +109,7 @@ export const HeroContent = styled.div`
   @media (min-width: 768px) {
     padding: 0 24px;
     max-width: 800px;
+    top: 70px;
   }
 
   @media (min-width: 1024px) {
