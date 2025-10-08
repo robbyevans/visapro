@@ -15,4 +15,5 @@ export interface ApplicationFilterProps {
   currentFilter: FilterState;
   onFilterChange: (filter: FilterState) => void;
   viewMode: "admin" | "user";
+  isFiltering: boolean;
 }

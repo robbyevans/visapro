@@ -1,13 +1,17 @@
 class ApplicationsController < ApplicationController
   before_action :set_application, only: [:show, :update]
 
-  def index
-    if current_user.admin?
-      applications = Application.includes(:user, :athlete, :documents).all
-    else
-      applications = current_user.applications.includes(:athlete, :documents)
-    end
-    
+      def index
+    applications = if current_user.admin?
+                    Application.includes(:user, :athlete, :documents)
+                  else
+                    current_user.applications.includes(:athlete, :documents)
+                  end
+
+    # Remove all filtering logic - just return all applications
+    # Apply basic sorting by creation date (newest first)
+    applications = applications.order(created_at: :desc)
+
     render json: applications.as_json(
       include: {
         athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
@@ -91,18 +95,18 @@ class ApplicationsController < ApplicationController
 
   private
 
-  def set_application
+   def set_application
     @application = Application.find(params[:id])
     
     # Ensure users can only access their own applications unless admin
     unless current_user.admin? || @application.user_id == current_user.id
       render json: { error: 'Not authorized' }, status: :forbidden
     end
-  rescue ActiveRecord::RecordNotFound
+    rescue ActiveRecord::RecordNotFound
     render json: { error: 'Application not found' }, status: :not_found
   end
 
-  def application_params
+    def application_params
     params.require(:application).permit(
       :country, 
       :remarks, 

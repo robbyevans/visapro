@@ -54,6 +54,16 @@ export interface IApplication {
   updated_at: string;
 }
 
+export interface IApplicationsResponse {
+  applications: IApplication[];
+  meta: {
+    total_count: number;
+    total_pages: number;
+    current_page: number;
+    per_page: number;
+  };
+}
+
 /* --- Redux slice states --- */
 export interface IAuthState {
   token: string | null;

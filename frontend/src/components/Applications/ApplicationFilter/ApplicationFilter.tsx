@@ -6,6 +6,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
   currentFilter,
   onFilterChange,
   viewMode,
+  isFiltering = false,
 }) => {
   const statusOptions: StatusOption[] =
     viewMode === "admin"
@@ -51,7 +52,6 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
   };
 
   const handleSortChange = (sortBy: string) => {
-    // Type assertion since we know these are valid values
     onFilterChange({
       ...currentFilter,
       sortBy: sortBy as "created_at" | "updated_at" | "status",
@@ -64,6 +64,20 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
       sortOrder: currentFilter.sortOrder === "asc" ? "desc" : "asc",
     });
   };
+
+  // Clear all filters function
+  const handleClearAll = () => {
+    onFilterChange({
+      status: [],
+      timeRange: "all_time",
+      sortBy: "created_at",
+      sortOrder: "desc",
+    });
+  };
+
+  // Check if there are any active filters to show the Clear All button
+  const hasActiveFilters =
+    currentFilter.status.length > 0 || currentFilter.timeRange !== "all_time";
 
   return (
     <S.FiltersContainer>
@@ -81,6 +95,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
               selected={currentFilter.status.includes(option.value)}
               color={option.color}
               onClick={() => handleStatusToggle(option.value)}
+              disabled={isFiltering}
             >
               <S.StatusIndicator color={option.color} />
               {option.label}
@@ -95,6 +110,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
           <S.TimeRangeSelect
             value={currentFilter.timeRange}
             onChange={(e) => handleTimeRangeChange(e.target.value)}
+            disabled={isFiltering}
           >
             {timeRangeOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -110,6 +126,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
             <S.SortSelect
               value={currentFilter.sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
+              disabled={isFiltering}
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -122,6 +139,7 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
               title={`Sort ${
                 currentFilter.sortOrder === "asc" ? "descending" : "ascending"
               }`}
+              disabled={isFiltering}
             >
               {currentFilter.sortOrder === "asc" ? "↑" : "↓"}
             </S.SortOrderButton>
@@ -129,38 +147,48 @@ export const ApplicationFilter: React.FC<ApplicationFilterProps> = ({
         </S.FilterGroup>
       </S.FilterRow>
 
-      <S.ActiveFilters>
-        <S.FilterLabel>Active Filters:</S.FilterLabel>
-        <S.ActiveFilterTags>
-          {currentFilter.status.map((status: string) => {
-            const option = statusOptions.find((opt) => opt.value === status);
-            return (
-              <S.ActiveFilterTag key={status} color={option?.color}>
-                {option?.label}
+      {/* Active Filters Section with Clear All Button */}
+      {hasActiveFilters && (
+        <S.ActiveFilters>
+          <S.ActiveFiltersHeader>
+            <S.FilterLabel>Active Filters:</S.FilterLabel>
+            <S.ClearAllButton onClick={handleClearAll} disabled={isFiltering}>
+              Clear All
+            </S.ClearAllButton>
+          </S.ActiveFiltersHeader>
+          <S.ActiveFilterTags>
+            {currentFilter.status.map((status: string) => {
+              const option = statusOptions.find((opt) => opt.value === status);
+              return (
+                <S.ActiveFilterTag key={status} color={option?.color}>
+                  {option?.label}
+                  <S.RemoveFilterButton
+                    onClick={() => handleStatusToggle(status)}
+                    disabled={isFiltering}
+                  >
+                    ×
+                  </S.RemoveFilterButton>
+                </S.ActiveFilterTag>
+              );
+            })}
+            {currentFilter.timeRange !== "all_time" && (
+              <S.ActiveFilterTag color="#6B7280">
+                {
+                  timeRangeOptions.find(
+                    (opt) => opt.value === currentFilter.timeRange
+                  )?.label
+                }
                 <S.RemoveFilterButton
-                  onClick={() => handleStatusToggle(status)}
+                  onClick={() => handleTimeRangeChange("all_time")}
+                  disabled={isFiltering}
                 >
                   ×
                 </S.RemoveFilterButton>
               </S.ActiveFilterTag>
-            );
-          })}
-          {currentFilter.timeRange !== "all_time" && (
-            <S.ActiveFilterTag color="#6B7280">
-              {
-                timeRangeOptions.find(
-                  (opt) => opt.value === currentFilter.timeRange
-                )?.label
-              }
-              <S.RemoveFilterButton
-                onClick={() => handleTimeRangeChange("all_time")}
-              >
-                ×
-              </S.RemoveFilterButton>
-            </S.ActiveFilterTag>
-          )}
-        </S.ActiveFilterTags>
-      </S.ActiveFilters>
+            )}
+          </S.ActiveFilterTags>
+        </S.ActiveFilters>
+      )}
     </S.FiltersContainer>
   );
 };

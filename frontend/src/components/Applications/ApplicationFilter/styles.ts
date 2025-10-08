@@ -143,6 +143,30 @@ export const ActiveFilters = styled.div`
   border-top: 1px solid ${({ theme }) => theme.border.light};
 `;
 
+export const ActiveFiltersHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+export const ClearAllButton = styled.button`
+  background: none;
+  border: 1px solid ${({ theme }) => theme.errorColors["300"]};
+  color: ${({ theme }) => theme.errorColors["600"]};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.errorColors["50"]};
+    border-color: ${({ theme }) => theme.errorColors["500"]};
+  }
+`;
+
 export const ActiveFilterTags = styled.div`
   display: flex;
   flex-wrap: wrap;

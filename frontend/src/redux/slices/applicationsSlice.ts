@@ -14,14 +14,17 @@ import { getErrorMessage } from "../../utils/error";
 const fetchApplications = createAsyncThunk(
   "applications/fetchAll",
   async (_, { rejectWithValue, getState }) => {
+    // Remove filters parameter
     try {
       const state = getState() as any;
       const token = state.auth.token;
       if (!token) throw new Error("Not authenticated");
 
       const api = axiosInstance(token);
+
+      // Remove all filter parameter building - just fetch all applications
       const res = await api.get<IApplication[]>("/applications");
-      return res.data;
+      return { applications: res.data }; // Return as object to match expected structure
     } catch (err: unknown) {
       return rejectWithValue(getErrorMessage(err));
     }
@@ -156,7 +159,12 @@ const applicationsSlice = createSlice({
       })
       .addCase(fetchApplications.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.applications = action.payload.map((app) => ({
+        // Handle both array and object responses
+        const applicationsArray = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload.applications;
+
+        state.applications = applicationsArray.map((app) => ({
           ...app,
           documents: app.documents || [],
         }));

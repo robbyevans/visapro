@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../redux/hooks/useUser";
 import { useApplications } from "../../redux/hooks/useApplications";
-import ApplicationList from "../../components/Applications/ApplicationList/ApplicationList";
+import { ApplicationsView } from "../../components/Applications/ApplicationsView/ApplicationsView";
 import Button from "../../components/Button/Button";
 import * as S from "./styles";
 
@@ -48,13 +48,13 @@ const Dashboard: React.FC = () => {
     currentUser?.role === "individual" || currentUser?.role === "corporate";
   const isAdmin = currentUser?.role === "admin";
 
-  const handleApplicationClick = (id: number) => {
-    if (isAdmin) {
-      navigate(`/admin/applications/${id}`);
-    } else {
-      navigate(`/applications/${id}`);
-    }
-  };
+  // const handleApplicationClick = (id: number) => {
+  //   if (isAdmin) {
+  //     navigate(`/admin/applications/${id}`);
+  //   } else {
+  //     navigate(`/applications/${id}`);
+  //   }
+  // };
 
   const getStatusColor = (status: string) => {
     const colors = {
@@ -308,28 +308,7 @@ const Dashboard: React.FC = () => {
             )}
           </S.EmptyState>
         ) : (
-          <ApplicationList
-            applications={userApplications}
-            onApplicationClick={handleApplicationClick}
-            showActions={isAdmin}
-            viewMode={isAdmin ? "admin" : "user"}
-            showFilters={true}
-            defaultFilter={
-              isAdmin
-                ? {
-                    status: ["pending", "invoiced"],
-                    timeRange: "all_time",
-                    sortBy: "created_at",
-                    sortOrder: "desc",
-                  }
-                : {
-                    status: ["pending", "invoiced", "approved", "rejected"],
-                    timeRange: "last_3_months",
-                    sortBy: "updated_at",
-                    sortOrder: "desc",
-                  }
-            }
-          />
+          <ApplicationsView showFilters />
         )}
       </S.ApplicationsSection>
 
