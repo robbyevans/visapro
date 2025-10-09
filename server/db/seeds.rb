@@ -20,4 +20,4 @@ User.create!(
   role: :admin
 )
 
-puts "✅ Admin user created (email: admin@visapro.com, password: password123) 🍀"
+puts "✅ Admin user created (email: user.admin@gmail.com, password: @admin001) 🍀"
