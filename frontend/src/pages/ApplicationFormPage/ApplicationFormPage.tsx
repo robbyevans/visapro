@@ -6,7 +6,10 @@ import Select from "../../components/Forms/Select";
 import FileDropzone from "../../components/Forms/FileDropzone";
 import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner";
-import type { ICreateApplicationPayload } from "../../redux/types";
+import type {
+  ICreateApplicationPayload,
+  IApplication,
+} from "../../redux/types";
 import EditDocument from "../../components/Documents/EditDocument";
 import { countries } from "../../utils/countries";
 import * as S from "./styles";
@@ -116,7 +119,7 @@ const ApplicationFormPage: React.FC = () => {
       }
 
       // The fulfilled action contains the application in the payload
-      const application = result.payload;
+      const application = result.payload as IApplication;
       console.log("Application created:", application);
 
       // Upload documents
@@ -127,11 +130,11 @@ const ApplicationFormPage: React.FC = () => {
           if (doc.file) {
             const uploadFormData = new FormData();
             uploadFormData.append("document", doc.file);
-            uploadFormData.append("application_id", application?.id.toString());
+            uploadFormData.append("application_id", application.id.toString());
             uploadFormData.append("doc_type", doc.type);
 
             console.log(`Uploading ${doc.type}:`, doc.file.name);
-            await uploadDocument(application?.id, uploadFormData);
+            await uploadDocument(application.id, uploadFormData);
           }
         }
       }

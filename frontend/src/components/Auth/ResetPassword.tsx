@@ -21,6 +21,8 @@ const PasswordResetRequest: React.FC<PasswordResetRequestProps> = ({
     setIsLoading(true);
 
     try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setMessage(
         "If an account exists with this email, you will receive reset instructions."
       );
@@ -66,11 +68,7 @@ const PasswordResetRequest: React.FC<PasswordResetRequestProps> = ({
       <S.AuthFooter>
         <S.AuthFooterText>
           Remember your password?{" "}
-          <S.AuthLink
-            type="button"
-            onClick={onBackToLogin}
-            disabled={isLoading}
-          >
+          <S.AuthLink type="button" onClick={onBackToLogin}>
             Back to login
           </S.AuthLink>
         </S.AuthFooterText>

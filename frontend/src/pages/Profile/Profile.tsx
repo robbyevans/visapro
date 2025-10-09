@@ -5,9 +5,10 @@ import Input from "../../components/Forms/Input";
 import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner";
 import * as S from "./styles";
+import type { IUser } from "../../redux/types";
 
 const Profile: React.FC = () => {
-  const { currentUser, isLoading, updateUserProfile } = useUser();
+  const { currentUser, updateUser } = useUser();
   const { applications } = useApplications();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -48,11 +49,11 @@ const Profile: React.FC = () => {
 
     setIsSaving(true);
     try {
-      await updateUserProfile({
+      await updateUser({
         id: currentUser.id,
         name: formData.name,
         email: formData.email,
-      });
+      } as Partial<IUser>);
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to update profile:", error);
