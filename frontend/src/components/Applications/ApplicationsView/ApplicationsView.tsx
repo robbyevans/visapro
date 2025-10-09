@@ -73,7 +73,7 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       return { ...baseFilter, ...defaultFilter };
     }
 
-    // Admin default: only show pending and invoiced applications
+    // Admin default filter: only show pending and invoiced applications
     if (viewMode === "admin") {
       return {
         ...baseFilter,
@@ -82,10 +82,10 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       };
     }
 
-    // User default: show all statuses, last 3 months
+    // User default filter: show all statuses, last 3 months
     return {
       ...baseFilter,
-      status: ["pending", "invoiced", "approved", "rejected", "completed"],
+      status: [],
       timeRange: "last_3_months",
       sortBy: "updated_at",
     };

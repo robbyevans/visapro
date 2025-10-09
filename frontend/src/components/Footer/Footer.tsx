@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as S from "./styles";
 import Logo from "../../assets/TrackPassLogo.png";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const [openMenus, setOpenMenus] = useState<Set<string>>(new Set());
 
   const footerLinks = {
     product: [
@@ -32,6 +33,128 @@ const Footer: React.FC = () => {
       { name: "GDPR", href: "/gdpr" },
     ],
   };
+
+  const toggleMenu = (menuName: string) => {
+    setOpenMenus((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(menuName)) {
+        newSet.delete(menuName);
+      } else {
+        newSet.add(menuName);
+      }
+      return newSet;
+    });
+  };
+
+  const isMenuOpen = (menuName: string) => openMenus.has(menuName);
+
+  const renderDesktopLinks = () => (
+    <S.FooterLinksGrid>
+      <S.FooterLinksColumn>
+        <S.LinksTitle>Product</S.LinksTitle>
+        {footerLinks.product.map((link) => (
+          <S.FooterLink key={link.name} href={link.href}>
+            {link.name}
+          </S.FooterLink>
+        ))}
+      </S.FooterLinksColumn>
+
+      <S.FooterLinksColumn>
+        <S.LinksTitle>Company</S.LinksTitle>
+        {footerLinks.company.map((link) => (
+          <S.FooterLink key={link.name} as={Link} to={link.href}>
+            {link.name}
+          </S.FooterLink>
+        ))}
+      </S.FooterLinksColumn>
+
+      <S.FooterLinksColumn>
+        <S.LinksTitle>Resources</S.LinksTitle>
+        {footerLinks.resources.map((link) => (
+          <S.FooterLink key={link.name} as={Link} to={link.href}>
+            {link.name}
+          </S.FooterLink>
+        ))}
+      </S.FooterLinksColumn>
+
+      <S.FooterLinksColumn>
+        <S.LinksTitle>Legal</S.LinksTitle>
+        {footerLinks.legal.map((link) => (
+          <S.FooterLink key={link.name} as={Link} to={link.href}>
+            {link.name}
+          </S.FooterLink>
+        ))}
+      </S.FooterLinksColumn>
+    </S.FooterLinksGrid>
+  );
+
+  const renderMobileLinks = () => (
+    <S.MobileLinksContainer>
+      <S.MobileMenuSection>
+        <S.MobileMenuHeader onClick={() => toggleMenu("product")}>
+          <S.LinksTitle>Product</S.LinksTitle>
+          <S.MobileMenuToggle $isOpen={isMenuOpen("product")}>
+            ▼
+          </S.MobileMenuToggle>
+        </S.MobileMenuHeader>
+        <S.MobileMenuContent $isOpen={isMenuOpen("product")}>
+          {footerLinks.product.map((link) => (
+            <S.FooterLink key={link.name} href={link.href}>
+              {link.name}
+            </S.FooterLink>
+          ))}
+        </S.MobileMenuContent>
+      </S.MobileMenuSection>
+
+      <S.MobileMenuSection>
+        <S.MobileMenuHeader onClick={() => toggleMenu("company")}>
+          <S.LinksTitle>Company</S.LinksTitle>
+          <S.MobileMenuToggle $isOpen={isMenuOpen("company")}>
+            ▼
+          </S.MobileMenuToggle>
+        </S.MobileMenuHeader>
+        <S.MobileMenuContent $isOpen={isMenuOpen("company")}>
+          {footerLinks.company.map((link) => (
+            <S.FooterLink key={link.name} as={Link} to={link.href}>
+              {link.name}
+            </S.FooterLink>
+          ))}
+        </S.MobileMenuContent>
+      </S.MobileMenuSection>
+
+      <S.MobileMenuSection>
+        <S.MobileMenuHeader onClick={() => toggleMenu("resources")}>
+          <S.LinksTitle>Resources</S.LinksTitle>
+          <S.MobileMenuToggle $isOpen={isMenuOpen("resources")}>
+            ▼
+          </S.MobileMenuToggle>
+        </S.MobileMenuHeader>
+        <S.MobileMenuContent $isOpen={isMenuOpen("resources")}>
+          {footerLinks.resources.map((link) => (
+            <S.FooterLink key={link.name} as={Link} to={link.href}>
+              {link.name}
+            </S.FooterLink>
+          ))}
+        </S.MobileMenuContent>
+      </S.MobileMenuSection>
+
+      <S.MobileMenuSection>
+        <S.MobileMenuHeader onClick={() => toggleMenu("legal")}>
+          <S.LinksTitle>Legal</S.LinksTitle>
+          <S.MobileMenuToggle $isOpen={isMenuOpen("legal")}>
+            ▼
+          </S.MobileMenuToggle>
+        </S.MobileMenuHeader>
+        <S.MobileMenuContent $isOpen={isMenuOpen("legal")}>
+          {footerLinks.legal.map((link) => (
+            <S.FooterLink key={link.name} as={Link} to={link.href}>
+              {link.name}
+            </S.FooterLink>
+          ))}
+        </S.MobileMenuContent>
+      </S.MobileMenuSection>
+    </S.MobileLinksContainer>
+  );
 
   return (
     <S.FooterContainer>
@@ -62,43 +185,9 @@ const Footer: React.FC = () => {
             </S.SocialLinks>
           </S.FooterBrand>
 
-          <S.FooterLinksGrid>
-            <S.FooterLinksColumn>
-              <S.LinksTitle>Product</S.LinksTitle>
-              {footerLinks.product.map((link) => (
-                <S.FooterLink key={link.name} href={link.href}>
-                  {link.name}
-                </S.FooterLink>
-              ))}
-            </S.FooterLinksColumn>
+          <S.DesktopOnly>{renderDesktopLinks()}</S.DesktopOnly>
 
-            <S.FooterLinksColumn>
-              <S.LinksTitle>Company</S.LinksTitle>
-              {footerLinks.company.map((link) => (
-                <S.FooterLink key={link.name} as={Link} to={link.href}>
-                  {link.name}
-                </S.FooterLink>
-              ))}
-            </S.FooterLinksColumn>
-
-            <S.FooterLinksColumn>
-              <S.LinksTitle>Resources</S.LinksTitle>
-              {footerLinks.resources.map((link) => (
-                <S.FooterLink key={link.name} as={Link} to={link.href}>
-                  {link.name}
-                </S.FooterLink>
-              ))}
-            </S.FooterLinksColumn>
-
-            <S.FooterLinksColumn>
-              <S.LinksTitle>Legal</S.LinksTitle>
-              {footerLinks.legal.map((link) => (
-                <S.FooterLink key={link.name} as={Link} to={link.href}>
-                  {link.name}
-                </S.FooterLink>
-              ))}
-            </S.FooterLinksColumn>
-          </S.FooterLinksGrid>
+          <S.MobileOnly>{renderMobileLinks()}</S.MobileOnly>
         </S.FooterMain>
 
         <S.FooterBottom>

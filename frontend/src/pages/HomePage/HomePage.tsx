@@ -23,6 +23,12 @@ const HomePage: React.FC = () => {
         "Seamlessly apply for visas to compete in international tournaments and championships worldwide.",
     },
     {
+      icon: "🔄",
+      title: "Real-Time Updates",
+      description:
+        "Instant notifications and status updates so you never miss important application milestones.",
+    },
+    {
       icon: "📱",
       title: "Mobile-First Design",
       description:
@@ -33,12 +39,6 @@ const HomePage: React.FC = () => {
       title: "Secure & Confidential",
       description:
         "Military-grade encryption ensures your personal and professional data remains completely secure.",
-    },
-    {
-      icon: "🔄",
-      title: "Real-Time Updates",
-      description:
-        "Instant notifications and status updates so you never miss important application milestones.",
     },
     {
       icon: "👥",
@@ -130,6 +130,7 @@ const HomePage: React.FC = () => {
           </S.HeroContent>
         </S.HeroBackground>
       </S.HeroSection>
+
       {/* Features Section */}
       <S.FeaturesSection>
         <S.SectionContainer>
@@ -144,7 +145,9 @@ const HomePage: React.FC = () => {
               requirements.
             </S.SectionSubtitle>
           </S.SectionHeader>
-          <S.FeaturesGrid>
+
+          {/* Desktop Features Grid - All 6 features */}
+          <S.DesktopFeaturesGrid>
             {features.map((feature, index) => (
               <S.FeatureCard key={index}>
                 <S.FeatureIcon>{feature.icon}</S.FeatureIcon>
@@ -154,9 +157,23 @@ const HomePage: React.FC = () => {
                 </S.FeatureDescription>
               </S.FeatureCard>
             ))}
-          </S.FeaturesGrid>
+          </S.DesktopFeaturesGrid>
+
+          {/* Mobile Features Grid - Only 3 features */}
+          <S.MobileFeaturesGrid>
+            {features.slice(0, 3).map((feature, index) => (
+              <S.FeatureCard key={index}>
+                <S.FeatureIcon>{feature.icon}</S.FeatureIcon>
+                <S.FeatureTitle>{feature.title}</S.FeatureTitle>
+                <S.FeatureDescription>
+                  {feature.description}
+                </S.FeatureDescription>
+              </S.FeatureCard>
+            ))}
+          </S.MobileFeaturesGrid>
         </S.SectionContainer>
       </S.FeaturesSection>
+
       {/* Process Section */}
       <S.ProcessSection>
         <S.SectionContainer>
@@ -179,6 +196,7 @@ const HomePage: React.FC = () => {
           </S.ProcessGrid>
         </S.SectionContainer>
       </S.ProcessSection>
+
       {/* CTA Section */}
       <S.CTASection>
         <S.SectionContainer>
@@ -209,6 +227,7 @@ const HomePage: React.FC = () => {
           </S.CTAContent>
         </S.SectionContainer>
       </S.CTASection>
+
       {/* Footer */}
       <Footer />
     </S.HomePageContainer>

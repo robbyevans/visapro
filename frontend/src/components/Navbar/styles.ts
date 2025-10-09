@@ -157,7 +157,7 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
     content: "";
     height: 1.375rem;
     width: 1.375rem;
-    left: ${({ $isDarkMode }) => ($isDarkMode ? "0.8rem" : "0.25rem")};
+    left: ${({ $isDarkMode }) => ($isDarkMode ? "0.7rem" : "0.25rem")};
     bottom: 0.25rem;
     background-color: white;
     transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55),

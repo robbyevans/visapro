@@ -127,11 +127,11 @@ const ApplicationFormPage: React.FC = () => {
           if (doc.file) {
             const uploadFormData = new FormData();
             uploadFormData.append("document", doc.file);
-            uploadFormData.append("application_id", application.id.toString());
+            uploadFormData.append("application_id", application?.id.toString());
             uploadFormData.append("doc_type", doc.type);
 
             console.log(`Uploading ${doc.type}:`, doc.file.name);
-            await uploadDocument(application.id, uploadFormData);
+            await uploadDocument(application?.id, uploadFormData);
           }
         }
       }

@@ -381,7 +381,8 @@ export const FeaturesSection = styled.section`
   transition: background-color 0.3s ease;
 `;
 
-export const FeaturesGrid = styled.div`
+// Desktop Features Grid - All 6 features
+export const DesktopFeaturesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
@@ -391,7 +392,19 @@ export const FeaturesGrid = styled.div`
     gap: 24px;
   }
 
+  /* Hide on mobile */
   @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+// Mobile Features Grid - Only 3 features
+export const MobileFeaturesGrid = styled.div`
+  display: none;
+
+  /* Show on mobile */
+  @media (max-width: 768px) {
+    display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
     max-width: 400px;
@@ -536,6 +549,13 @@ export const ProcessGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 32px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
 `;
 
 export const ProcessCard = styled.div`
@@ -552,11 +572,15 @@ export const ProcessCard = styled.div`
     box-shadow: ${({ theme }) => theme.shadows.lg};
     border-color: ${({ theme }) => theme.primaryColors["200"]};
   }
+
+  @media (max-width: 768px) {
+    padding: 32px 20px;
+  }
 `;
 
 export const ProcessStep = styled.div`
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   margin: 0 auto 20px;
   background: linear-gradient(
     135deg,
@@ -568,8 +592,15 @@ export const ProcessStep = styled.div`
   align-items: center;
   justify-content: center;
   color: ${({ theme }) => theme.text.inverse};
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
+  box-shadow: ${({ theme }) => theme.shadows.md};
+
+  @media (max-width: 768px) {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+  }
 `;
 
 export const ProcessTitle = styled.h3`
@@ -577,12 +608,21 @@ export const ProcessTitle = styled.h3`
   font-weight: 600;
   margin-bottom: 12px;
   color: ${({ theme }) => theme.text.primary};
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 export const ProcessDescription = styled.p`
   color: ${({ theme }) => theme.text.secondary};
   line-height: 1.6;
   font-size: 14px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    line-height: 1.5;
+  }
 `;
 
 // CTA Section
@@ -612,6 +652,10 @@ export const CTATitle = styled.h2`
   @media (max-width: 768px) {
     font-size: 36px;
   }
+
+  @media (max-width: 480px) {
+    font-size: 32px;
+  }
 `;
 
 export const CTADescription = styled.p`
@@ -620,6 +664,14 @@ export const CTADescription = styled.p`
   opacity: 0.8;
   margin-bottom: 40px;
   line-height: 1.6;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 `;
 
 export const CTAButtons = styled.div`
@@ -630,5 +682,19 @@ export const CTAButtons = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
+    gap: 12px;
+  }
+
+  a {
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
+
+  button {
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 `;

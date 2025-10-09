@@ -44,6 +44,9 @@ export const DocumentActions = styled.div`
 `;
 
 export const ReplaceButton = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
   background: ${({ theme }) => theme.primaryColors["500"]};
   color: ${({ theme }) => theme.text.inverse};

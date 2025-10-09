@@ -123,6 +123,11 @@ export const PhoneInputGroup = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.sm};
   align-items: stretch;
+  flex-direction: row;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+  }
 `;
 
 export const CountrySelect = styled.select`
@@ -136,6 +141,7 @@ export const CountrySelect = styled.select`
   color: ${({ theme }) => theme.text.primary};
   cursor: pointer;
   max-width: 160px;
+  max-height: 50px;
 
   &:focus {
     outline: none;

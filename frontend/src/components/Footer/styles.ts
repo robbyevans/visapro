@@ -105,6 +105,21 @@ export const SocialIcon = styled.span`
   color: ${({ theme }) => theme.text.inverse};
 `;
 
+// Responsive visibility helpers
+export const DesktopOnly = styled.div`
+  display: block;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const MobileOnly = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
 export const FooterLinksGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -144,6 +159,54 @@ export const FooterLink = styled.a`
   &:hover {
     color: ${({ theme }) => theme.primaryColors["500"]};
     opacity: 1;
+  }
+`;
+
+// Mobile-specific styles
+export const MobileLinksContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+`;
+
+export const MobileMenuSection = styled.div`
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+export const MobileMenuHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  cursor: pointer;
+  user-select: none;
+`;
+
+export const MobileMenuToggle = styled.span<{ $isOpen: boolean }>`
+  font-size: 12px;
+  color: ${STATIC_COLORS.base.white};
+  opacity: 0.7;
+  transition: transform 0.3s ease;
+  transform: ${({ $isOpen }) => ($isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+`;
+
+export const MobileMenuContent = styled.div<{ $isOpen: boolean }>`
+  display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 20px;
+  animation: ${({ $isOpen }) => ($isOpen ? "fadeIn 0.3s ease" : "none")};
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
