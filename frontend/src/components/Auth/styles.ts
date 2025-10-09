@@ -111,3 +111,74 @@ export const InputLabel = styled.label`
   color: ${({ theme }) => theme.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
+
+export const PhoneInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`;
+
+export const PhoneInputGroup = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  align-items: stretch;
+`;
+
+export const CountrySelect = styled.select`
+  flex: 0 0 180px;
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  transition: all 0.2s ease;
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
+  cursor: pointer;
+  max-width: 200px;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryColors["100"]};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.background.secondary};
+    color: ${({ theme }) => theme.text.tertiary};
+    cursor: not-allowed;
+  }
+`;
+
+export const PhoneNumberInput = styled.input<{ $hasDialCode: boolean }>`
+  flex: 1;
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  transition: all 0.2s ease;
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryColors["100"]};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.background.secondary};
+    color: ${({ theme }) => theme.text.tertiary};
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.text.tertiary};
+  }
+`;
+
+export const PhoneHelpText = styled.p`
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.text.secondary};
+  margin: ${({ theme }) => theme.spacing.xs} 0 0 0;
+`;

@@ -8,6 +8,7 @@ import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner";
 import type { ICreateApplicationPayload } from "../../redux/types";
 import EditDocument from "../../components/Documents/EditDocument";
+import { countries } from "../../utils/countries";
 import * as S from "./styles";
 
 interface DocumentUpload {
@@ -158,14 +159,11 @@ const ApplicationFormPage: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  const countryOptions = [
-    { value: "usa", label: "United States" },
-    { value: "uk", label: "United Kingdom" },
-    { value: "canada", label: "Canada" },
-    { value: "australia", label: "Australia" },
-    { value: "germany", label: "Germany" },
-    { value: "france", label: "France" },
-  ];
+  // Convert countries to select options with flags
+  const countryOptions = countries.map((country) => ({
+    value: country.code,
+    label: `${country.flag} ${country.name}`,
+  }));
 
   const isSubmitting = isLoading || uploading;
 
@@ -251,13 +249,19 @@ const ApplicationFormPage: React.FC = () => {
             error={formErrors.country}
           />
 
-          <Input
-            type="text"
-            label="Remarks (Optional)"
-            value={formData.remarks}
-            onChange={(value) => handleInputChange("remarks", value)}
-            placeholder="Any additional notes or remarks"
-          />
+          <S.TextAreaContainer>
+            <S.TextAreaLabel>Competition Description *</S.TextAreaLabel>
+            <S.TextArea
+              value={formData.remarks}
+              onChange={(e) => handleInputChange("remarks", e.target.value)}
+              placeholder="Describe the competition, event, or purpose of travel..."
+              rows={4}
+            />
+            <S.TextAreaHelp>
+              Please provide details about the competition, tournament, or event
+              you are attending
+            </S.TextAreaHelp>
+          </S.TextAreaContainer>
         </S.FormSection>
 
         {/* Documents Section */}

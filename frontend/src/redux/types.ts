@@ -26,6 +26,8 @@ export interface IUser {
   email: string;
   role: TUserRole;
   theme_preference: "light" | "dark";
+  phone_number?: string;
+  country_code?: string;
 }
 
 /* --- Application --- */
@@ -105,7 +107,9 @@ export interface ISignUpRequest {
   name: string;
   email: string;
   password: string;
-  role?: TUserRole; // optional since it might have a default on backend
+  role?: TUserRole;
+  phone_number?: string;
+  country_code?: string;
 }
 
 export type TUpdateApplicationPayload = Partial<

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../redux/hooks/useAuth";
 import Input from "../Forms/Input";
 import Button from "../Button/Button";
+import { countries } from "../../utils/countries";
 import * as S from "./styles";
 
 interface AuthFormProps {
@@ -23,6 +24,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
     password: "",
     passwordConfirmation: "",
     role: "individual" as "individual" | "corporate",
+    phone_number: "",
+    country_code: "KE",
   });
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -55,6 +58,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
         email: formData.email,
         password: formData.password,
         role: formData.role,
+        phone_number: formData.phone_number,
+        country_code: formData.country_code,
       };
 
       const result = await handleSignUp(signUpData);
@@ -71,6 +76,12 @@ const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   const displayError = localError || error;
+
+  // Get selected country
+  const selectedCountry = countries.find(
+    (country) => country.code === formData.country_code
+  );
+  const dialCode = selectedCountry ? selectedCountry.dialCode : "+254";
 
   return (
     <S.AuthFormContainer>
@@ -104,18 +115,49 @@ const AuthForm: React.FC<AuthFormProps> = ({
         />
 
         {mode === "signup" && (
-          <S.SelectContainer>
-            <S.InputLabel>Account Type *</S.InputLabel>
-            <S.NativeSelect
-              value={formData.role}
-              onChange={(e) => handleChange("role", e.target.value)}
-              required
-              disabled={isLoading}
-            >
-              <option value="individual">Individual</option>
-              <option value="corporate">Corporate</option>
-            </S.NativeSelect>
-          </S.SelectContainer>
+          <>
+            <S.SelectContainer>
+              <S.InputLabel>Account Type *</S.InputLabel>
+              <S.NativeSelect
+                value={formData.role}
+                onChange={(e) => handleChange("role", e.target.value)}
+                required
+                disabled={isLoading}
+              >
+                <option value="individual">Individual</option>
+                <option value="corporate">Corporate</option>
+              </S.NativeSelect>
+            </S.SelectContainer>
+
+            <S.PhoneInputContainer>
+              <S.InputLabel>Phone Number *</S.InputLabel>
+              <S.PhoneInputGroup>
+                <S.CountrySelect
+                  value={formData.country_code}
+                  onChange={(e) => handleChange("country_code", e.target.value)}
+                  disabled={isLoading}
+                >
+                  {countries.map((country) => (
+                    <option key={country.code} value={country.code}>
+                      {country.flag} {country.name} ({country.dialCode})
+                    </option>
+                  ))}
+                </S.CountrySelect>
+                <S.PhoneNumberInput
+                  type="tel"
+                  value={formData.phone_number}
+                  onChange={(e) => handleChange("phone_number", e.target.value)}
+                  placeholder="Enter phone number"
+                  required
+                  disabled={isLoading}
+                  $hasDialCode={!!dialCode}
+                />
+              </S.PhoneInputGroup>
+              <S.PhoneHelpText>
+                We'll use this for important updates about your applications
+              </S.PhoneHelpText>
+            </S.PhoneInputContainer>
+          </>
         )}
 
         <Input

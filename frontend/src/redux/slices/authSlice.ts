@@ -33,6 +33,8 @@ const signUpUser = createAsyncThunk(
           password: userData.password,
           password_confirmation: userData.password,
           role: userData.role,
+          phone_number: userData.phone_number,
+          country_code: userData.country_code,
         },
       };
       const res = await api.post<ILoginResponse>("/signup", requestData);

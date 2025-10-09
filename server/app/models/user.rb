@@ -28,4 +28,8 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true
   validates :password, length: { minimum: 6 }, allow_nil: true
+  
+  # Add phone number validation
+  validates :phone_number, presence: true, if: -> { role != "admin" }
+  validates :country_code, presence: true, if: -> { phone_number.present? }
 end

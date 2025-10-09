@@ -218,3 +218,52 @@ export const FormActions = styled.div`
   padding-top: ${({ theme }) => theme.spacing.lg};
   border-top: 1px solid ${({ theme }) => theme.border.light};
 `;
+
+export const TextAreaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
+`;
+
+export const TextAreaLabel = styled.label`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
+`;
+
+export const TextArea = styled.textarea`
+  width: 100%;
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.2s ease;
+  background-color: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.primaryColors["100"]};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.background.secondary};
+    color: ${({ theme }) => theme.text.tertiary};
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.text.tertiary};
+  }
+`;
+
+export const TextAreaHelp = styled.p`
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  color: ${({ theme }) => theme.text.secondary};
+  margin: 0;
+`;
