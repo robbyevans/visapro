@@ -30,4 +30,8 @@ Rails.application.routes.draw do
   post "/signup", to: "users#create"
   post "/login", to: "sessions#create"
   get "/me", to: "sessions#show"
+
+  # Health check endpoint for Fly.io
+  get '/up', to: ->(env) { [204, {}, ['']] }
+  
 end

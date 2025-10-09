@@ -30,7 +30,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :tigris
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -45,7 +45,10 @@ Rails.application.configure do
   config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+
+  # Update hosts configuration:
+  config.hosts << /.*\.fly\.dev/
 
   # Log to STDOUT by default
   config.logger = ActiveSupport::Logger.new(STDOUT)
@@ -81,7 +84,9 @@ Rails.application.configure do
     authentication: "plain",
     enable_starttls_auto: true
   }
-  config.action_mailer.default_url_options = { host: "visaproafrica.com" }
+ config.action_mailer.default_url_options = { 
+  host: ENV['FRONTEND_URL'] || 'trackPass.com' 
+}
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -106,7 +111,7 @@ Rails.application.configure do
   #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   config.require_master_key = true
   

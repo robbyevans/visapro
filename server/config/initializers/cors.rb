@@ -11,7 +11,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   # You can add more environments here
   if Rails.env.production?
     allow do
-      origins 'your-production-domain.com'  # Replace with your actual domain
+      origins ENV['FRONTEND_URL'] || 'https://visapro-dusky.vercel.app'
       resource '*',
         headers: :any,
         methods: [:get, :post, :put, :patch, :delete, :options, :head]
