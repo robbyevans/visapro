@@ -135,7 +135,7 @@ export const CountrySelect = styled.select`
   background-color: ${({ theme }) => theme.background.primary};
   color: ${({ theme }) => theme.text.primary};
   cursor: pointer;
-  max-width: 200px;
+  max-width: 160px;
 
   &:focus {
     outline: none;
@@ -159,6 +159,7 @@ export const PhoneNumberInput = styled.input<{ $hasDialCode: boolean }>`
   transition: all 0.2s ease;
   background-color: ${({ theme }) => theme.background.primary};
   color: ${({ theme }) => theme.text.primary};
+  width: 100%;
 
   &:focus {
     outline: none;

@@ -37,15 +37,16 @@ const Navbar: React.FC = () => {
     return location.pathname === path;
   };
 
-  // Common Theme Toggle Component
+  const isDarkMode = themeMode === "dark";
+
   const ThemeToggle = ({ mobile = false }: { mobile?: boolean }) => (
     <S.ThemeToggleContainer $mobile={mobile}>
       <S.ThemeToggleInput
         type="checkbox"
-        checked={themeMode === "dark"}
+        checked={isDarkMode}
         onChange={handleThemeToggle}
       />
-      <S.ThemeToggleSlider>
+      <S.ThemeToggleSlider $isDarkMode={isDarkMode}>
         <S.ThemeIcon className="sun">☀️</S.ThemeIcon>
         <S.ThemeIcon className="moon">🌙</S.ThemeIcon>
       </S.ThemeToggleSlider>

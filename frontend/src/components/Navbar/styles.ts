@@ -130,19 +130,11 @@ export const ThemeToggleInput = styled.input`
   &:checked + span:before {
     transform: translateX(1.5rem);
   }
-
-  &:checked + span .sun {
-    opacity: 0;
-    transform: translateX(-0.625rem);
-  }
-
-  &:checked + span .moon {
-    opacity: 1;
-    transform: translateX(0);
-  }
 `;
 
-export const ThemeToggleSlider = styled.span`
+// Styled Components
+// ThemeToggleSlider — use the prop ($isDarkMode) to control which icon shows
+export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -165,30 +157,46 @@ export const ThemeToggleSlider = styled.span`
     left: 0.25rem;
     bottom: 0.25rem;
     background-color: white;
-    transition: transform 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     border-radius: 50%;
     z-index: 2;
+    transform: ${({ $isDarkMode }) =>
+      $isDarkMode ? "translateX(1.5rem)" : "translateX(0)"};
+  }
+
+  /* Sun icon - visible when dark mode is ON (shows sun to indicate switching to light) */
+  .sun {
+    opacity: ${({ $isDarkMode }) => ($isDarkMode ? "1" : "0")};
+    display: ${({ $isDarkMode }) => ($isDarkMode ? "block" : "none")};
+    transform: ${({ $isDarkMode }) =>
+      $isDarkMode
+        ? "translateX(-0.025rem) scale(1.25)"
+        : "translateX(0) scale(1)"};
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1;
+  }
+
+  /* Moon icon - visible when dark mode is OFF (shows moon to indicate switching to dark) */
+  .moon {
+    opacity: ${({ $isDarkMode }) => ($isDarkMode ? "0" : "1")};
+    display: ${({ $isDarkMode }) => ($isDarkMode ? "none" : "block")};
+    transform: ${({ $isDarkMode }) =>
+      $isDarkMode
+        ? "translateX(0) scale(0)"
+        : "translateX(1.7rem) scale(1.25)"};
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1;
   }
 `;
 
 export const ThemeIcon = styled.span`
   font-size: 0.75rem;
-  transition: all 0.4s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 1rem;
   height: 1rem;
-
-  &.sun {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  &.moon {
-    opacity: 0;
-    transform: translateX(0.625rem);
-  }
+  z-index: 1;
 `;
 
 // User Menu Styles
