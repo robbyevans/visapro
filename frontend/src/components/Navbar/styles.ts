@@ -141,7 +141,7 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: ${({ theme }) => theme.neutralColors["300"]};
+  background-color: #1e293b;
   transition: background-color 0.4s ease, box-shadow 0.25s ease;
   border-radius: 2rem;
   display: flex;
@@ -157,7 +157,7 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
     content: "";
     height: 1.375rem;
     width: 1.375rem;
-    left: 0.25rem;
+    left: ${({ $isDarkMode }) => ($isDarkMode ? "0.8rem" : "0.25rem")};
     bottom: 0.25rem;
     background-color: white;
     transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55),
@@ -178,22 +178,28 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
     opacity: ${({ $isDarkMode }) => ($isDarkMode ? "1" : "0")};
     display: ${({ $isDarkMode }) => ($isDarkMode ? "block" : "none")};
     transform: ${({ $isDarkMode }) =>
-      $isDarkMode
-        ? "translateX(-0.025rem) scale(1.25)"
-        : "translateX(0) scale(1)"};
+      $isDarkMode ? "translateX(0.1rem) scale(1.5)" : "translateX(0) scale(1)"};
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 1;
   }
 
   /* Moon icon - visible when dark mode is OFF (shows moon to indicate switching to dark) */
   .moon {
+    /* keep it in the layout so we can animate opacity/transform */
+    display: block;
     opacity: ${({ $isDarkMode }) => ($isDarkMode ? "0" : "1")};
-    display: ${({ $isDarkMode }) => ($isDarkMode ? "none" : "block")};
+    visibility: ${({ $isDarkMode }) => ($isDarkMode ? "hidden" : "visible")};
+    pointer-events: ${({ $isDarkMode }) => ($isDarkMode ? "none" : "auto")};
+
+    /* combine translate + scale + rotate in the same transform */
     transform: ${({ $isDarkMode }) =>
       $isDarkMode
-        ? "translateX(0) scale(0)"
-        : "translateX(1.7rem) scale(1.25)"};
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.26none5, 1.55);
+        ? "translateX(0) scale(0) rotate(-14deg)"
+        : "translateX(1.7rem) scale(1.25) rotate(5deg)"};
+
+    transition: opacity 0.35s ease,
+      transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+      visibility 0.35s ease;
     z-index: 1;
   }
 `;
