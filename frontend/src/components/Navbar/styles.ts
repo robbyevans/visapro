@@ -142,12 +142,15 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
   right: 0;
   bottom: 0;
   background-color: ${({ theme }) => theme.neutralColors["300"]};
-  transition: all 0.4s ease;
+  transition: background-color 0.4s ease, box-shadow 0.25s ease;
   border-radius: 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 0.5rem;
+
+  /* subtle depth on the track so the knob reads as 'above' */
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.06);
 
   &:before {
     position: absolute;
@@ -157,11 +160,17 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
     left: 0.25rem;
     bottom: 0.25rem;
     background-color: white;
-    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+      box-shadow 0.25s ease;
     border-radius: 50%;
-    z-index: 2;
+    /* raise above icons */
+    z-index: 3;
     transform: ${({ $isDarkMode }) =>
       $isDarkMode ? "translateX(1.5rem)" : "translateX(0)"};
+
+    /* raised knob shadow */
+    box-shadow: 0 6px 14px rgba(16, 24, 40, 0.12),
+      /* soft ambient shadow */ 0 2px 4px rgba(16, 24, 40, 0.08); /* smaller contact shadow */
   }
 
   /* Sun icon - visible when dark mode is ON (shows sun to indicate switching to light) */
@@ -184,7 +193,7 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
       $isDarkMode
         ? "translateX(0) scale(0)"
         : "translateX(1.7rem) scale(1.25)"};
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.26none5, 1.55);
     z-index: 1;
   }
 `;
@@ -288,6 +297,8 @@ export const UserDropdownDivider = styled.div`
 export const MobileMenuToggle = styled.button<{ $isOpen: boolean }>`
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 0.25rem;
   background: none;
   border: none;
@@ -309,7 +320,7 @@ export const MobileMenuToggle = styled.button<{ $isOpen: boolean }>`
 
     &:nth-child(1) {
       transform: ${({ $isOpen }) =>
-        $isOpen ? "rotate(45deg) translate(6px, 6px)" : "none"};
+        $isOpen ? "rotate(45deg) translate(3px, 3px)" : "none"};
     }
 
     &:nth-child(2) {
