@@ -141,7 +141,7 @@ export const ThemeToggleSlider = styled.span<{ $isDarkMode: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #1e293b;
+  background-color: #283d5fff;
   transition: background-color 0.4s ease, box-shadow 0.25s ease;
   border-radius: 2rem;
   display: flex;
