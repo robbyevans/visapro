@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import kenyanAthleteHero from "../../assets/openart-53b2916a2c7642d5a7ec6bfdf7aff19e_00001__raw.jpg";
+import heroDesktop from "../../assets/hero-desktop.webp";
+import heroTablet from "../../assets/hero-tablet.webp";
+import heroMobile from "../../assets/hero-mobile.webp";
 import { STATIC_COLORS } from "../../styles";
 
 export const HomePageContainer = styled.div`
@@ -38,10 +40,18 @@ export const HeroBackground = styled.div`
 
   /* Show background image only on desktop */
   @media (min-width: 768px) {
-    background: url(${kenyanAthleteHero}) center/cover;
+    background: url(${heroMobile}) center/cover;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      background: url(${heroTablet}) center/cover;
+    }
+
+    @media (min-width: 1025px) {
+      background: url(${heroDesktop}) center/cover;
+    }
   }
 
   /* Mobile gradient background */
