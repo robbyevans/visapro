@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import * as S from "./styles";
+import Logo from "../../assets/TrackPassLogo.png";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -37,7 +38,10 @@ const Footer: React.FC = () => {
       <S.FooterContent>
         <S.FooterMain>
           <S.FooterBrand>
-            <S.Logo>🏃‍♂️ AthleteVisa Pro</S.Logo>
+            <S.Logo>
+              <img src={Logo} />
+              TrackPass
+            </S.Logo>
             <S.BrandDescription>
               Empowering Kenyan athletes to compete globally with streamlined
               visa solutions and dedicated support.
@@ -99,7 +103,7 @@ const Footer: React.FC = () => {
 
         <S.FooterBottom>
           <S.Copyright>
-            © {currentYear} AthleteVisa Pro. All rights reserved.
+            © {currentYear} TrackPass. All rights reserved.
           </S.Copyright>
           <S.BottomLinks>
             <S.BottomLink href="#">Privacy</S.BottomLink>
