@@ -39,6 +39,19 @@ export const Logo = styled.div`
   font-weight: 700;
   margin-bottom: 16px;
   color: ${({ theme }) => theme.primaryColors["500"]};
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+export const LogoImage = styled.img`
+  width: 300px;
+  height: 300px;
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 export const BrandDescription = styled.p`

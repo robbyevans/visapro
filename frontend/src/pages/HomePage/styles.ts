@@ -376,7 +376,7 @@ export const SectionSubtitle = styled.p`
 
 // Features Section
 export const FeaturesSection = styled.section`
-  padding: 120px 0;
+  padding: 100px 0;
   background: ${({ theme }) => theme.background.primary};
   transition: background-color 0.3s ease;
 `;

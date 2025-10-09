@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
         <S.FooterMain>
           <S.FooterBrand>
             <S.Logo>
-              <img src={Logo} />
+              <S.LogoImage src={Logo} />
               TrackPass
             </S.Logo>
             <S.BrandDescription>
