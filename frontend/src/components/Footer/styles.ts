@@ -10,6 +10,9 @@ export const FooterContainer = styled.footer`
   color: ${({ theme }) => theme.text.inverse};
   padding: 80px 0 0;
   transition: background 0.3s ease;
+  @media (max-width: 768px) {
+    padding: 10px 0 0;
+  }
 `;
 
 export const FooterContent = styled.div`
@@ -32,6 +35,13 @@ export const FooterMain = styled.div`
 
 export const FooterBrand = styled.div`
   max-width: 300px;
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 100%;
+  }
 `;
 
 export const Logo = styled.div`
@@ -42,6 +52,7 @@ export const Logo = styled.div`
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 `;
 
@@ -59,11 +70,17 @@ export const BrandDescription = styled.p`
   opacity: 0.7;
   line-height: 1.6;
   margin-bottom: 24px;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 export const SocialLinks = styled.div`
   display: flex;
   gap: 16px;
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 export const SocialLink = styled.a`
