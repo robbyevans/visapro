@@ -208,7 +208,7 @@ export const countries: Country[] = [
   { code: "AE", name: "United Arab Emirates", flag: "🇦🇪", dialCode: "+971" },
   { code: "GB", name: "United Kingdom", flag: "🇬🇧", dialCode: "+44" },
   { code: "US", name: "United States", flag: "🇺🇸", dialCode: "+1" },
-  { code: "UY", name: "Uruguay", flag: "� Uruguay", dialCode: "+598" },
+  { code: "UY", name: "Uruguay", flag: "🇺🇾", dialCode: "+598" },
   { code: "UZ", name: "Uzbekistan", flag: "🇺🇿", dialCode: "+998" },
   { code: "VU", name: "Vanuatu", flag: "🇻🇺", dialCode: "+678" },
   { code: "VE", name: "Venezuela", flag: "🇻🇪", dialCode: "+58" },
