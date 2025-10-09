@@ -1,5 +1,3 @@
-// File 2: /frontend/src/pages/AuthPage/styles.ts
-
 import styled from "styled-components";
 
 export const AuthPageContainer = styled.div`

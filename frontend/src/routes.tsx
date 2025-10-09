@@ -1,5 +1,3 @@
-// File 7: /frontend/src/routes.tsx
-
 import React from "react";
 import {
   BrowserRouter as Router,

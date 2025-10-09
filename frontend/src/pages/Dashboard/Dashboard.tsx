@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../../redux/hooks/useUser";
 import { useApplications } from "../../redux/hooks/useApplications";
 import { ApplicationsView } from "../../components/Applications/ApplicationsView/ApplicationsView";
 import Button from "../../components/Button/Button";
+import SuccessModal from "../../components/Modals/SucessModal/SucessModal";
 import * as S from "./styles";
 
 const Dashboard: React.FC = () => {
   const { currentUser } = useUser();
   const { applications, fetchApplications } = useApplications();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Check for success message in location state
+  useEffect(() => {
+    if (location.state?.message) {
+      setShowSuccessModal(true);
+      // Clear the location state to prevent showing modal on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     fetchApplications();
@@ -69,6 +81,15 @@ const Dashboard: React.FC = () => {
 
   return (
     <S.DashboardContainer>
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="Application Submitted!"
+        message="Your visa application has been submitted successfully and is now under review. You can track its progress below."
+        autoCloseDelay={4000}
+      />
+
       {/* Header Section */}
       <S.DashboardHeader>
         <S.WelcomeSection>
@@ -310,8 +331,8 @@ const Dashboard: React.FC = () => {
         ) : (
           <ApplicationsView
             showFilters
-            onApplicationClick={handleApplicationClick} 
-            viewMode={isAdmin ? "admin" : "user"} 
+            onApplicationClick={handleApplicationClick}
+            viewMode={isAdmin ? "admin" : "user"}
           />
         )}
       </S.ApplicationsSection>
