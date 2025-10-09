@@ -23,6 +23,10 @@ export const HeroSection = styled.section`
     padding: 0;
     min-height: 100vh;
   }
+  @media (max-width: 500px) {
+    padding: 0;
+    min-height: 800px;
+  }
 `;
 
 export const HeroBackground = styled.div`
