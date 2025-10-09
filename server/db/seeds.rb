@@ -21,3 +21,6 @@ User.create!(
 )
 
 puts "✅ Admin user created (email: user.admin@gmail.com, password: @admin001) 🍀"
+
+# in Production, run this command in console
+# fly ssh console --command "bin/rails db:seed"
