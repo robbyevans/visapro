@@ -14,7 +14,7 @@ User.where(role: :admin).destroy_all
 
 User.create!(
   name: "Admin User",
-  email: "user@admin.com",
+  email: "user.admin@gmail.com",
   password: "@admin001", 
   password_confirmation: "@admin001",
   role: :admin
