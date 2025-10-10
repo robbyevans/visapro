@@ -52,4 +52,20 @@ export const GlobalStyle = createGlobalStyle`
   ::-webkit-scrollbar-thumb:hover {
     background: ${({ theme }) => theme.neutralColors["500"]};
   }
+
+  /* Fix autofill background colors */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px ${({ theme }) =>
+      theme.background.primary} inset !important;
+    box-shadow: 0 0 0 1000px ${({ theme }) =>
+      theme.background.primary} inset !important;
+    -webkit-text-fill-color: ${({ theme }) => theme.text.primary} !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* Remove the @media prefers-color-scheme since we're using theme provider */
+  /* The theme prop will handle both light and dark modes */
 `;
