@@ -178,6 +178,13 @@ export const DocumentType = styled.span`
 `;
 
 export const DocumentName = styled.span`
+  display: inline-block;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.text.primary};
 `;
