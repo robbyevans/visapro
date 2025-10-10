@@ -34,6 +34,9 @@ Rails.application.configure do
 
   config.active_storage.routes_prefix = '/rails/active_storage'
 
+  config.active_storage.content_disposition_to_serve = :attachment
+
+
   
 # Set the host for URL generation
 Rails.application.routes.default_url_options = {
