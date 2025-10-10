@@ -4,10 +4,24 @@ export const ApplicationFormContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.md};
+    ${({ theme }) => theme.spacing.sm};
+    max-width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const FormHeader = styled.header`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+  }
 `;
 
 export const BackButton = styled.button`
@@ -26,6 +40,20 @@ export const BackButton = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.background.secondary};
   }
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.xs};
+    ${({ theme }) => theme.spacing.sm};
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.xs};
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
 export const FormTitle = styled.h1`
@@ -33,17 +61,44 @@ export const FormTitle = styled.h1`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+  word-break: break-word;
+
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  }
 `;
 
 export const FormSubtitle = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.lg};
   color: ${({ theme }) => theme.text.secondary};
+
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  }
 `;
 
 export const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    gap: ${({ theme }) => theme.spacing.lg};
+  }
+
+  @media (max-width: 480px) {
+    gap: ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const FormSection = styled.section`
@@ -52,6 +107,16 @@ export const FormSection = styled.section`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   box-shadow: ${({ theme }) => theme.shadows.sm};
   border: 1px solid ${({ theme }) => theme.border.light};
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.lg};
+    border-radius: ${({ theme }) => theme.borderRadius.md};
+  }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.md};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -59,6 +124,17 @@ export const SectionTitle = styled.h2`
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+  word-break: break-word;
+
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  }
 `;
 
 export const ToggleGroup = styled.div`
@@ -67,6 +143,10 @@ export const ToggleGroup = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   overflow: hidden;
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
 `;
 
 export const ToggleButton = styled.button<{ active: boolean }>`
@@ -85,6 +165,11 @@ export const ToggleButton = styled.button<{ active: boolean }>`
     background: ${({ active, theme }) =>
       active ? theme.primaryColors["600"] : theme.background.secondary};
   }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const NewAthleteForm = styled.div`
@@ -100,6 +185,7 @@ export const FormRow = styled.div`
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.sm};
   }
 `;
 
@@ -110,6 +196,7 @@ export const DocumentsInfo = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.text.secondary};
+  word-break: break-word;
 
   p {
     margin: ${({ theme }) => theme.spacing.xs} 0;
@@ -117,6 +204,17 @@ export const DocumentsInfo = styled.div`
 
   strong {
     color: ${({ theme }) => theme.text.primary};
+  }
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.xs};
+    ${({ theme }) => theme.spacing.sm};
   }
 `;
 
@@ -130,6 +228,16 @@ export const DocumentUploadSection = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    border-radius: ${({ theme }) => theme.borderRadius.md};
+  }
 `;
 
 export const DocumentUploadHeader = styled.div`
@@ -137,6 +245,14 @@ export const DocumentUploadHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.xs};
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.spacing.xs};
+  }
 `;
 
 export const DocumentTitle = styled.h3`
@@ -144,6 +260,11 @@ export const DocumentTitle = styled.h3`
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.text.primary};
   margin: 0;
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  }
 `;
 
 export const DocumentRequired = styled.span`
@@ -153,6 +274,14 @@ export const DocumentRequired = styled.span`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    padding: ${({ theme }) => theme.spacing.xs};
+    ${({ theme }) => theme.spacing.xs};
+    align-self: flex-start;
+  }
 `;
 
 export const DocumentOptional = styled.span`
@@ -162,12 +291,26 @@ export const DocumentOptional = styled.span`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    padding: ${({ theme }) => theme.spacing.xs};
+    ${({ theme }) => theme.spacing.xs};
+    align-self: flex-start;
+  }
 `;
 
 export const DocumentDescription = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.text.secondary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
+  }
 `;
 
 export const DocumentError = styled.div`
@@ -175,6 +318,12 @@ export const DocumentError = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   margin-top: ${({ theme }) => theme.spacing.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    margin-top: ${({ theme }) => theme.spacing.xs};
+  }
 `;
 
 export const UploadedFile = styled.div`
@@ -186,6 +335,12 @@ export const UploadedFile = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.successColors["700"]};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.xs};
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  }
 `;
 
 export const UploadedFiles = styled.div`
@@ -199,6 +354,11 @@ export const UploadedFiles = styled.div`
     margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
     color: ${({ theme }) => theme.successColors["700"]};
   }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    margin-top: ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const FileItem = styled.div`
@@ -209,6 +369,13 @@ export const FileItem = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.successColors["700"]};
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.xs};
+    ${({ theme }) => theme.spacing.sm};
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  }
 `;
 
 export const FormActions = styled.div`
@@ -217,6 +384,17 @@ export const FormActions = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
   padding-top: ${({ theme }) => theme.spacing.lg};
   border-top: 1px solid ${({ theme }) => theme.border.light};
+
+  @media (max-width: 768px) {
+    justify-content: stretch;
+    gap: ${({ theme }) => theme.spacing.sm};
+    padding-top: ${({ theme }) => theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.xs};
+  }
 `;
 
 export const TextAreaContainer = styled.div`
@@ -230,6 +408,10 @@ export const TextAreaLabel = styled.label`
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  }
 `;
 
 export const TextArea = styled.textarea`
@@ -260,10 +442,21 @@ export const TextArea = styled.textarea`
   &::placeholder {
     color: ${({ theme }) => theme.text.tertiary};
   }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    min-height: 100px;
+  }
 `;
 
 export const TextAreaHelp = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   color: ${({ theme }) => theme.text.secondary};
   margin: 0;
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  }
 `;

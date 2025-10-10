@@ -193,6 +193,30 @@ export const FileDropzoneContainer = styled.div`
   width: 100%;
 `;
 
+export const FileInput = styled.input`
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+export const DropzoneContent = styled.div`
+  pointer-events: none;
+`;
+
+export const DropzoneError = styled.div`
+  color: ${({ theme }) => theme.errorColors["500"]};
+  font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  text-align: center;
+`;
+
+// Add these mobile styles to File 4: /frontend/src/components/Forms/styles.ts
+
 export const DropzoneArea = styled.div<{
   isDragging?: boolean;
   disabled?: boolean;
@@ -228,21 +252,15 @@ export const DropzoneArea = styled.div<{
       opacity: 0.6;
       cursor: not-allowed;
     `}
-`;
 
-export const FileInput = styled.input`
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-
-  &:disabled {
-    cursor: not-allowed;
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.lg};
   }
-`;
 
-export const DropzoneContent = styled.div`
-  pointer-events: none;
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const DropzoneIcon = styled.svg`
@@ -254,23 +272,32 @@ export const DropzoneIcon = styled.svg`
   ${DropzoneArea}:hover &, ${DropzoneArea}[data-dragging="true"] & {
     color: ${({ theme }) => theme.primaryColors["500"]};
   }
+
+  @media (max-width: 480px) {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const DropzoneText = styled.p`
   color: ${({ theme }) => theme.text.secondary};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   margin: 0;
-`;
+  word-break: break-word;
 
-export const DropzoneError = styled.div`
-  color: ${({ theme }) => theme.errorColors["500"]};
-  font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  margin-top: ${({ theme }) => theme.spacing.sm};
-  text-align: center;
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  }
 `;
 
 export const DropzoneHint = styled.p`
   color: ${({ theme }) => theme.text.tertiary};
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   margin: ${({ theme }) => theme.spacing.xs} 0 0 0;
+  word-break: break-word;
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+  }
 `;

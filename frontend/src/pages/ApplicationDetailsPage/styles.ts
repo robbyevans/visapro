@@ -11,6 +11,10 @@ export const ApplicationDetailsContainer = styled.div`
     ${({ theme }) => theme.spacing.sm};
     max-width: 100%;
   }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
 export const Header = styled.header`
@@ -44,6 +48,13 @@ export const BackButton = styled.button`
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
     margin-bottom: ${({ theme }) => theme.spacing.md};
   }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.xs};
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
 export const PageTitle = styled.h1`
@@ -51,6 +62,7 @@ export const PageTitle = styled.h1`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.text.primary};
   margin: 0;
+  word-break: break-word;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xl};
@@ -59,6 +71,7 @@ export const PageTitle = styled.h1`
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.lg};
+    text-align: center;
   }
 `;
 
@@ -69,6 +82,10 @@ export const Content = styled.div`
 
   @media (max-width: 768px) {
     gap: ${({ theme }) => theme.spacing.lg};
+  }
+
+  @media (max-width: 480px) {
+    gap: ${({ theme }) => theme.spacing.md};
   }
 `;
 
@@ -81,13 +98,12 @@ export const Section = styled.section`
 
   @media (max-width: 768px) {
     padding: ${({ theme }) => theme.spacing.lg};
-    ${({ theme }) => theme.spacing.md};
     border-radius: ${({ theme }) => theme.borderRadius.md};
   }
 
   @media (max-width: 480px) {
     padding: ${({ theme }) => theme.spacing.md};
-    ${({ theme }) => theme.spacing.sm};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
   }
 `;
 
@@ -96,6 +112,7 @@ export const SectionTitle = styled.h2`
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+  word-break: break-word;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xl};
@@ -104,6 +121,7 @@ export const SectionTitle = styled.h2`
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.lg};
+    text-align: center;
   }
 `;
 
@@ -148,6 +166,7 @@ export const DetailValue = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
   color: ${({ theme }) => theme.text.primary};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  word-break: break-word;
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
@@ -207,6 +226,7 @@ export const Remarks = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.text.secondary};
+  word-break: break-word;
 
   strong {
     color: ${({ theme }) => theme.text.primary};
@@ -235,10 +255,16 @@ export const DocumentSectionTitle = styled.h3`
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  word-break: break-word;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.base};
     margin-bottom: ${({ theme }) => theme.spacing.sm};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.sm};
+    text-align: center;
   }
 `;
 
@@ -260,17 +286,18 @@ export const DocumentItem = styled.div`
   background-color: ${({ theme }) => theme.background.secondary};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.border.light};
+  gap: ${({ theme }) => theme.spacing.md};
 
   @media (max-width: 768px) {
     padding: ${({ theme }) => theme.spacing.sm};
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: ${({ theme }) => theme.spacing.sm};
   }
 
   @media (max-width: 480px) {
-    padding: ${({ theme }) => theme.spacing.xs};
-    ${({ theme }) => theme.spacing.sm};
+    padding: ${({ theme }) => theme.spacing.sm};
+    gap: ${({ theme }) => theme.spacing.xs};
   }
 `;
 
@@ -302,11 +329,13 @@ export const DocumentType = styled.span`
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   text-transform: capitalize;
   flex-shrink: 0;
+  white-space: nowrap;
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
     padding: ${({ theme }) => theme.spacing.xs};
     ${({ theme }) => theme.spacing.xs};
+    align-self: flex-start;
   }
 `;
 
@@ -316,16 +345,20 @@ export const DocumentName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 10px;
+  flex: 1;
+  min-width: 0; /* FIXED: Allow proper text truncation */
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
+    max-width: 200px; /* Reasonable max width for mobile */
   }
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
     white-space: normal;
     word-break: break-all;
+    max-width: 100%;
+    text-overflow: unset;
   }
 `;
 
@@ -339,6 +372,11 @@ export const NoDocuments = styled.div`
     padding: ${({ theme }) => theme.spacing.lg};
     ${({ theme }) => theme.spacing.md};
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  }
+
+  @media (max-width: 480px) {
+    padding: ${({ theme }) => theme.spacing.md};
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
   }
 `;
 
@@ -445,6 +483,7 @@ export const TimelineTitle = styled.h4`
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.text.primary};
   margin: 0 0 ${({ theme }) => theme.spacing.xs} 0;
+  word-break: break-word;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
@@ -459,6 +498,7 @@ export const TimelineDate = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.text.secondary};
   margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
+  word-break: break-word;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
@@ -475,6 +515,7 @@ export const TimelineRemarks = styled.p`
   color: ${({ theme }) => theme.errorColors["500"]};
   margin: 0;
   font-style: italic;
+  word-break: break-word;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
@@ -489,15 +530,16 @@ export const DocumentActions = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.sm};
   align-items: center;
+  flex-shrink: 0;
 
   @media (max-width: 768px) {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: space-between;
+    gap: ${({ theme }) => theme.spacing.xs};
   }
 
   @media (max-width: 480px) {
     gap: ${({ theme }) => theme.spacing.xs};
-    justify-content: space-between;
   }
 `;
 
@@ -512,6 +554,7 @@ export const PreviewButton = styled.button`
   text-decoration: none;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex: 1;
 
   &:hover {
     background-color: ${({ theme }) => theme.primaryColors["50"]};
@@ -521,14 +564,12 @@ export const PreviewButton = styled.button`
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
     padding: ${({ theme }) => theme.spacing.xs};
     ${({ theme }) => theme.spacing.sm};
-    flex: 1;
     text-align: center;
   }
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
     padding: ${({ theme }) => theme.spacing.xs};
-    ${({ theme }) => theme.spacing.xs};
   }
 `;
 
@@ -543,6 +584,7 @@ export const DownloadButton = styled.button`
   text-decoration: none;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex: 1;
 
   &:hover {
     background-color: ${({ theme }) => theme.successColors["50"]};
@@ -552,13 +594,11 @@ export const DownloadButton = styled.button`
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
     padding: ${({ theme }) => theme.spacing.xs};
     ${({ theme }) => theme.spacing.sm};
-    flex: 1;
     text-align: center;
   }
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
     padding: ${({ theme }) => theme.spacing.xs};
-    ${({ theme }) => theme.spacing.xs};
   }
 `;
