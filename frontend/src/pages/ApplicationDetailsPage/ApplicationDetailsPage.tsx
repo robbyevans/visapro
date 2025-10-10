@@ -138,10 +138,27 @@ const ApplicationDetailsPage: React.FC = () => {
       const urlObj = new URL(url);
       const pathname = urlObj.pathname;
       const fileName = pathname.split("/").pop() || `${docType}_${docId}`;
-      return fileName;
+
+      const decodedFileName = decodeURIComponent(fileName);
+      return decodedFileName;
     } catch {
       return `${docType}_${docId}`;
     }
+  };
+
+  const getDisplayFileName = (fileName: string, maxLength: number = 15) => {
+    if (!fileName) return "";
+
+    const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");
+
+    if (nameWithoutExtension.length <= maxLength) {
+      return fileName;
+    }
+
+    const truncatedName = nameWithoutExtension.substring(0, maxLength) + "...";
+    const extension = fileName.split(".").pop();
+
+    return `${truncatedName}.${extension}`;
   };
 
   const handleReplaceDocument = async (file: File, documentId: number) => {
@@ -245,11 +262,14 @@ const ApplicationDetailsPage: React.FC = () => {
                     doc.doc_type,
                     doc.id
                   );
+                  const displayFileName = getDisplayFileName(fileName, 15);
                   return (
                     <S.DocumentItem key={doc.id}>
                       <S.DocumentInfo>
                         <S.DocumentType>{doc.doc_type}</S.DocumentType>
-                        <S.DocumentName>{fileName}</S.DocumentName>
+                        <S.DocumentName title={fileName}>
+                          {displayFileName}
+                        </S.DocumentName>
                       </S.DocumentInfo>
                       {canEdit ? (
                         <EditDocument
@@ -304,11 +324,14 @@ const ApplicationDetailsPage: React.FC = () => {
                     doc.doc_type,
                     doc.id
                   );
+                  const displayFileName = getDisplayFileName(fileName, 15);
                   return (
                     <S.DocumentItem key={doc.id}>
                       <S.DocumentInfo>
                         <S.DocumentType>{doc.doc_type}</S.DocumentType>
-                        <S.DocumentName>{fileName}</S.DocumentName>
+                        <S.DocumentName title={fileName}>
+                          {displayFileName}
+                        </S.DocumentName>
                       </S.DocumentInfo>
                       {canEdit && doc.doc_type === "invitation_letter" ? (
                         <EditDocument
@@ -361,11 +384,14 @@ const ApplicationDetailsPage: React.FC = () => {
                     doc.doc_type,
                     doc.id
                   );
+                  const displayFileName = getDisplayFileName(fileName, 15);
                   return (
                     <S.DocumentItem key={doc.id}>
                       <S.DocumentInfo>
                         <S.DocumentType>visa</S.DocumentType>
-                        <S.DocumentName>{fileName}</S.DocumentName>
+                        <S.DocumentName title={fileName}>
+                          {displayFileName}
+                        </S.DocumentName>
                       </S.DocumentInfo>
                       <S.DocumentActions>
                         {isAdmin && (

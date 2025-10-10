@@ -347,18 +347,16 @@ export const DocumentName = styled.span`
   white-space: nowrap;
   flex: 1;
   min-width: 0; /* FIXED: Allow proper text truncation */
+  max-width: 150px; /* FIXED: Set a fixed max width for consistent truncation */
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
-    max-width: 200px; /* Reasonable max width for mobile */
+    max-width: 120px; /* Smaller max width for mobile */
   }
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
-    white-space: normal;
-    word-break: break-all;
-    max-width: 100%;
-    text-overflow: unset;
+    max-width: 100px; /* Even smaller for very small screens */
   }
 `;
 
