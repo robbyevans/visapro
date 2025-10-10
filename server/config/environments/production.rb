@@ -32,6 +32,21 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :tigris
 
+  config.active_storage.routes_prefix = '/rails/active_storage'
+
+  
+# Set the host for URL generation
+Rails.application.routes.default_url_options = {
+  host: ENV['FRONTEND_URL'] || 'visapro-rails-app.fly.dev',
+  protocol: 'https'
+}
+
+# For Action Mailer as well
+config.action_mailer.default_url_options = {
+  host: ENV['FRONTEND_URL'] || 'visapro-rails-app.fly.dev', 
+  protocol: 'https'
+}
+
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
   # config.action_cable.url = "wss://example.com/cable"
@@ -84,9 +99,6 @@ Rails.application.configure do
     authentication: "plain",
     enable_starttls_auto: true
   }
- config.action_mailer.default_url_options = { 
-  host: ENV['FRONTEND_URL'] || 'trackPass.com' 
-}
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
