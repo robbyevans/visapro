@@ -10,20 +10,6 @@ import * as S from "./styles";
 import type { IDocument as AppDocument } from "../../redux/types";
 import type { IDocument } from "../../redux/types";
 
-// FIX: Use a hardcoded API URL or window location for client-side
-const getApiBaseUrl = () => {
-  // For client-side, use window location or a hardcoded value
-  if (typeof window !== "undefined") {
-    // You can use the current window origin or a configured value
-    return window.location.origin.includes("localhost")
-      ? "http://localhost:3000"
-      : "https://your-production-api.com";
-  }
-  return "http://localhost:3000"; // Fallback
-};
-
-const API_BASE_URL = getApiBaseUrl();
-
 const ApplicationDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -82,27 +68,9 @@ const ApplicationDetailsPage: React.FC = () => {
     return { percentage, status };
   };
 
-  // FIXED: Use the constant instead of process.env directly
+  // FIXED: Simplified URL getter
   const getDocumentUrl = (document: AppDocument): string => {
-    if (!document) {
-      console.warn("Document is undefined or null");
-      return "";
-    }
-
-    if (document.file_url && typeof document.file_url === "string") {
-      if (document.file_url.startsWith("http")) {
-        return document.file_url;
-      }
-
-      if (document.file_url.startsWith("/")) {
-        return `${API_BASE_URL}${document.file_url}`;
-      }
-
-      return `${API_BASE_URL}/uploads/${document.file_url}`;
-    }
-
-    console.warn("Invalid document file_url:", document.file_url, document);
-    return "";
+    return document.file_url || "";
   };
 
   const handleDownloadDocument = async (
@@ -110,14 +78,15 @@ const ApplicationDetailsPage: React.FC = () => {
     fileName: string
   ) => {
     try {
-      const fileUrl = getDocumentUrl(document);
+      // Use download_url if available, otherwise fall back to file_url
+      const downloadUrl = document.download_url || document.file_url;
 
-      if (!fileUrl) {
-        console.error("No valid file URL for document:", document);
+      if (!downloadUrl) {
+        console.error("No valid download URL for document:", document);
         return;
       }
 
-      const response = await fetch(fileUrl, {
+      const response = await fetch(downloadUrl, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -138,14 +107,10 @@ const ApplicationDetailsPage: React.FC = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download error:", error);
-      const fileUrl = getDocumentUrl(document);
+      // Fallback: try to open the file_url in a new tab
+      const fileUrl = document.file_url;
       if (fileUrl) {
-        const link = globalThis.document.createElement("a");
-        link.href = fileUrl;
-        link.download = fileName || `document_${document.id}`;
-        globalThis.document.body.appendChild(link);
-        link.click();
-        globalThis.document.body.removeChild(link);
+        window.open(fileUrl, "_blank");
       }
     }
   };

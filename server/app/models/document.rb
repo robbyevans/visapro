@@ -7,7 +7,7 @@ class Document < ApplicationRecord
   def file_url
     return unless file.attached?
     
-    # Always generate full URL with explicit host
+    # Generate the standard Rails blob URL - let the frontend handle download vs preview
     Rails.application.routes.url_helpers.rails_blob_url(
       file, 
       host: ENV['SERVER_API_URL'] || 'visapro-rails-app.fly.dev',
@@ -16,6 +16,18 @@ class Document < ApplicationRecord
   rescue => e
     Rails.logger.error "Error generating file URL: #{e.message}"
     nil
+  end
+
+  # Use the custom download endpoint for forced downloads
+  def download_url
+    return unless file.attached?
+    
+    # Use the custom download route we created
+    Rails.application.routes.url_helpers.download_document_url(
+      self,
+      host: ENV['SERVER_API_URL'] || 'visapro-rails-app.fly.dev',
+      protocol: 'https'
+    )
   end
 
   # Alias for consistency

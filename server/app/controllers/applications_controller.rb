@@ -1,7 +1,7 @@
 class ApplicationsController < ApplicationController
   before_action :set_application, only: [:show, :update]
 
-      def index
+  def index
     applications = if current_user.admin?
                     Application.includes(:user, :athlete, :documents)
                   else
@@ -15,23 +15,26 @@ class ApplicationsController < ApplicationController
     render json: applications.as_json(
       include: {
         athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
-        documents: { only: [:id, :doc_type, :file_url, :created_at] }
+        documents: { 
+          only: [:id, :doc_type, :created_at],
+          methods: [:file_url, :download_url] # Include download_url in response
+        }
       }
     )
   end
 
   def show
-  render json: @application.as_json(
-    include: {
-      athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
-      documents: { 
-        only: [:id, :doc_type, :created_at],
-        methods: [:file_url] # Use only file_url method
-      },
-      user: { only: [:id, :name, :email] }
-    }
-  )
-end
+    render json: @application.as_json(
+      include: {
+        athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+        documents: { 
+          only: [:id, :doc_type, :created_at],
+          methods: [:file_url, :download_url] # Include download_url in response
+        },
+        user: { only: [:id, :name, :email] }
+      }
+    )
+  end
 
   def create
     application = nil
@@ -67,7 +70,10 @@ end
     render json: application.as_json(
       include: {
         athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
-        documents: { only: [:id, :doc_type, :file_url, :created_at] }
+        documents: { 
+          only: [:id, :doc_type, :created_at],
+          methods: [:file_url, :download_url] # Include download_url in response
+        }
       }
     ), status: :created
     
@@ -85,7 +91,10 @@ end
       render json: @application.as_json(
         include: {
           athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
-          documents: { only: [:id, :doc_type, :file_url, :created_at] }
+          documents: { 
+            only: [:id, :doc_type, :created_at],
+            methods: [:file_url, :download_url] # Include download_url in response
+          }
         }
       )
     else
@@ -95,7 +104,7 @@ end
 
   private
 
-   def set_application
+  def set_application
     @application = Application.find(params[:id])
     
     # Ensure users can only access their own applications unless admin
@@ -106,7 +115,7 @@ end
     render json: { error: 'Application not found' }, status: :not_found
   end
 
-    def application_params
+  def application_params
     params.require(:application).permit(
       :country, 
       :remarks, 

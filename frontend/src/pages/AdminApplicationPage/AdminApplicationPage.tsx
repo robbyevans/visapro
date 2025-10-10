@@ -4,6 +4,7 @@ import { useApplications } from "../../redux/hooks/useApplications";
 import { useUser } from "../../redux/hooks/useUser";
 import Spinner from "../../components/Spinner/Spinner";
 import * as S from "./styles";
+import type { IDocument } from "../../redux/types";
 
 const AdminApplicationPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,9 +54,13 @@ const AdminApplicationPage: React.FC = () => {
     fetchApplication(parseInt(id));
   };
 
-  const handleDownloadDocument = (fileUrl: string, fileName: string) => {
+  // FIXED: Use document object instead of just fileUrl
+  const handleDownloadDocument = (document: IDocument, fileName: string) => {
+    // Use download_url if available, otherwise fall back to file_url
+    const downloadUrl = document.download_url || document.file_url;
+
     const link = document.createElement("a");
-    link.href = fileUrl;
+    link.href = downloadUrl;
     link.download = fileName;
     document.body.appendChild(link);
     link.click();
@@ -165,7 +170,7 @@ const AdminApplicationPage: React.FC = () => {
                       <S.DownloadButton
                         onClick={() =>
                           handleDownloadDocument(
-                            doc.file_url,
+                            doc,
                             getFileNameFromUrl(
                               doc.file_url,
                               doc.doc_type,
@@ -224,7 +229,7 @@ const AdminApplicationPage: React.FC = () => {
                       <S.DownloadButton
                         onClick={() =>
                           handleDownloadDocument(
-                            doc.file_url,
+                            doc,
                             getFileNameFromUrl(
                               doc.file_url,
                               doc.doc_type,

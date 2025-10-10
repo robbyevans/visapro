@@ -4,9 +4,11 @@ export interface IDocument {
   application_id: number;
   doc_type: "passport" | "invitation_letter" | "visa";
   file_url: string;
+  download_url?: string; // ADDED: For forced downloads
   file_full_url?: string;
   created_at: string;
 }
+
 /* --- Athlete --- */
 export interface IAthlete {
   id: number;

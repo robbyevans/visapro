@@ -12,6 +12,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :documents do
+    get 'download', on: :member
+  end
+
   resources :sessions, only: [:create]
   resources :athletes, only: [:index, :create]
   resources :applications, only: [:index, :show, :create, :update]
