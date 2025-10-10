@@ -316,6 +316,7 @@ export const DocumentName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 10px;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
