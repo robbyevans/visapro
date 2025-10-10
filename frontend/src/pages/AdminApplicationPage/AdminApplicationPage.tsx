@@ -54,10 +54,10 @@ const AdminApplicationPage: React.FC = () => {
     fetchApplication(parseInt(id));
   };
 
-  // FIXED: Use document object instead of just fileUrl
-  const handleDownloadDocument = (document: IDocument, fileName: string) => {
+  // FIXED: Renamed parameter to avoid conflict with global document object
+  const handleDownloadDocument = (doc: IDocument, fileName: string) => {
     // Use download_url if available, otherwise fall back to file_url
-    const downloadUrl = document.download_url || document.file_url;
+    const downloadUrl = doc.download_url || doc.file_url;
 
     const link = document.createElement("a");
     link.href = downloadUrl;
@@ -170,7 +170,7 @@ const AdminApplicationPage: React.FC = () => {
                       <S.DownloadButton
                         onClick={() =>
                           handleDownloadDocument(
-                            doc,
+                            doc, // FIXED: Pass doc instead of document
                             getFileNameFromUrl(
                               doc.file_url,
                               doc.doc_type,
@@ -229,7 +229,7 @@ const AdminApplicationPage: React.FC = () => {
                       <S.DownloadButton
                         onClick={() =>
                           handleDownloadDocument(
-                            doc,
+                            doc, // FIXED: Pass doc instead of document
                             getFileNameFromUrl(
                               doc.file_url,
                               doc.doc_type,
