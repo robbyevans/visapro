@@ -7,22 +7,19 @@ class Document < ApplicationRecord
   def file_url
     return unless file.attached?
     
-    # For development, we can use the rails_blob_path which generates a relative URL
-    # This will be easier for the frontend to handle
-    Rails.application.routes.url_helpers.rails_blob_path(file, only_path: true)
+    # Always generate full URL with explicit host
+    Rails.application.routes.url_helpers.rails_blob_url(
+      file, 
+      host: ENV['SERVER_API_URL'] || 'visapro-rails-app.fly.dev',
+      protocol: 'https'
+    )
   rescue => e
     Rails.logger.error "Error generating file URL: #{e.message}"
     nil
   end
 
-  # Alternative method that returns full URL
+  # Alias for consistency
   def file_full_url
-    return unless file.attached?
-    
-    # This generates a full URL including the host
-    Rails.application.routes.url_helpers.rails_blob_url(file, only_path: false)
-  rescue => e
-    Rails.logger.error "Error generating full file URL: #{e.message}"
-    nil
+    file_url
   end
 end

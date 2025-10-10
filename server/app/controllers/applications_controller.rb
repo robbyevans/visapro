@@ -21,17 +21,17 @@ class ApplicationsController < ApplicationController
   end
 
   def show
-    render json: @application.as_json(
-      include: {
-        athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
-        documents: { 
-          only: [:id, :doc_type, :created_at],
-          methods: [:file_url, :file_full_url] # Include both URL methods
-        },
-        user: { only: [:id, :name, :email] }
-      }
-    )
-  end
+  render json: @application.as_json(
+    include: {
+      athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+      documents: { 
+        only: [:id, :doc_type, :created_at],
+        methods: [:file_url] # Use only file_url method
+      },
+      user: { only: [:id, :name, :email] }
+    }
+  )
+end
 
   def create
     application = nil
