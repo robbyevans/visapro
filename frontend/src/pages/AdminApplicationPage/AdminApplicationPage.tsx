@@ -55,16 +55,43 @@ const AdminApplicationPage: React.FC = () => {
   };
 
   // FIXED: Renamed parameter to avoid conflict with global document object
-  const handleDownloadDocument = (doc: IDocument, fileName: string) => {
-    // Use download_url if available, otherwise fall back to file_url
-    const downloadUrl = doc.download_url || doc.file_url;
+  const handleDownloadDocument = async (doc: IDocument, fileName: string) => {
+    try {
+      // Use download_url if available, otherwise fall back to file_url
+      const downloadUrl = doc.download_url || doc.file_url;
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      if (!downloadUrl) {
+        console.error("No valid download URL for document:", doc);
+        return;
+      }
+
+      const response = await fetch(downloadUrl, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Download failed: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = globalThis.document.createElement("a");
+      link.href = url;
+      link.download = fileName || `document_${doc.id}`;
+      globalThis.document.body.appendChild(link);
+      link.click();
+      globalThis.document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download error:", error);
+      // Fallback: try to open the file_url in a new tab
+      const fileUrl = doc.file_url;
+      if (fileUrl) {
+        window.open(fileUrl, "_blank");
+      }
+    }
   };
 
   const handlePreviewDocument = (fileUrl: string) => {
@@ -73,6 +100,8 @@ const AdminApplicationPage: React.FC = () => {
   };
 
   const getFileNameFromUrl = (url: string, docType: string, docId: number) => {
+    if (!url) return `${docType}_${docId}`;
+
     try {
       const urlObj = new URL(url);
       const pathname = urlObj.pathname;
@@ -108,7 +137,11 @@ const AdminApplicationPage: React.FC = () => {
         <S.BackButton onClick={() => navigate("/admin/dashboard")}>
           ← Back to Dashboard
         </S.BackButton>
-        <S.PageTitle>Application #{currentApplication.id}</S.PageTitle>
+        <S.PageTitle>
+          Application #{currentApplication.id} -{" "}
+          {currentApplication.athlete?.first_name}{" "}
+          {currentApplication.athlete?.last_name}
+        </S.PageTitle>
       </S.Header>
 
       <S.Content>
@@ -123,7 +156,13 @@ const AdminApplicationPage: React.FC = () => {
               </S.DetailValue>
             </S.DetailItem>
             <S.DetailItem>
-              <S.DetailLabel>Country</S.DetailLabel>
+              <S.DetailLabel>Passport Number</S.DetailLabel>
+              <S.DetailValue>
+                {currentApplication.athlete?.passport_number || "N/A"}
+              </S.DetailValue>
+            </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Destination Country</S.DetailLabel>
               <S.DetailValue>{currentApplication.country}</S.DetailValue>
             </S.DetailItem>
             <S.DetailItem>
@@ -133,16 +172,22 @@ const AdminApplicationPage: React.FC = () => {
               </S.StatusBadge>
             </S.DetailItem>
             <S.DetailItem>
-              <S.DetailLabel>Submitted</S.DetailLabel>
+              <S.DetailLabel>Submitted Date</S.DetailLabel>
               <S.DetailValue>
                 {new Date(currentApplication.created_at).toLocaleDateString()}
+              </S.DetailValue>
+            </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Last Updated</S.DetailLabel>
+              <S.DetailValue>
+                {new Date(currentApplication.updated_at).toLocaleDateString()}
               </S.DetailValue>
             </S.DetailItem>
           </S.DetailGrid>
 
           {currentApplication.remarks && (
             <S.Remarks>
-              <strong>Remarks:</strong> {currentApplication.remarks}
+              <strong>Admin Remarks:</strong> {currentApplication.remarks}
             </S.Remarks>
           )}
         </S.Section>
@@ -151,98 +196,108 @@ const AdminApplicationPage: React.FC = () => {
           <S.SectionTitle>Documents</S.SectionTitle>
           <S.DocumentsGrid>
             <S.DocumentSection>
-              <h3>Applicant Documents</h3>
+              <S.DocumentSectionTitle>
+                Applicant Documents
+              </S.DocumentSectionTitle>
               <S.DocumentList>
-                {userDocuments.map((doc) => (
-                  <S.DocumentItem key={doc.id}>
-                    <S.DocumentInfo>
-                      <S.DocumentType>{doc.doc_type}</S.DocumentType>
-                      <S.DocumentName>
-                        {getFileNameFromUrl(doc.file_url, doc.doc_type, doc.id)}
-                      </S.DocumentName>
-                    </S.DocumentInfo>
-                    <S.DocumentActions>
-                      <S.PreviewButton
-                        onClick={() => handlePreviewDocument(doc.file_url)}
-                      >
-                        Preview
-                      </S.PreviewButton>
-                      <S.DownloadButton
-                        onClick={() =>
-                          handleDownloadDocument(
-                            doc, // FIXED: Pass doc instead of document
-                            getFileNameFromUrl(
-                              doc.file_url,
-                              doc.doc_type,
-                              doc.id
+                {userDocuments.length > 0 ? (
+                  userDocuments.map((doc) => (
+                    <S.DocumentItem key={doc.id}>
+                      <S.DocumentInfo>
+                        <S.DocumentType>{doc.doc_type}</S.DocumentType>
+                        <S.DocumentName>
+                          {getFileNameFromUrl(
+                            doc.file_url,
+                            doc.doc_type,
+                            doc.id
+                          )}
+                        </S.DocumentName>
+                      </S.DocumentInfo>
+                      <S.DocumentActions>
+                        <S.PreviewButton
+                          onClick={() => handlePreviewDocument(doc.file_url)}
+                        >
+                          Preview
+                        </S.PreviewButton>
+                        <S.DownloadButton
+                          onClick={() =>
+                            handleDownloadDocument(
+                              doc,
+                              getFileNameFromUrl(
+                                doc.file_url,
+                                doc.doc_type,
+                                doc.id
+                              )
                             )
-                          )
-                        }
-                      >
-                        Download
-                      </S.DownloadButton>
-                    </S.DocumentActions>
-                  </S.DocumentItem>
-                ))}
+                          }
+                        >
+                          Download
+                        </S.DownloadButton>
+                      </S.DocumentActions>
+                    </S.DocumentItem>
+                  ))
+                ) : (
+                  <S.NoDocuments>No applicant documents uploaded</S.NoDocuments>
+                )}
               </S.DocumentList>
             </S.DocumentSection>
 
             <S.DocumentSection>
-              <h3>Visa Documents</h3>
+              <S.DocumentSectionTitle>Visa Documents</S.DocumentSectionTitle>
               <S.UploadControls>
-                <input
+                <S.FileInput
                   type="file"
                   onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
                   accept=".pdf,.jpg,.jpeg,.png"
                 />
-                <button
+                <S.UploadButton
                   onClick={handleVisaUpload}
                   disabled={!selectedFile}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: selectedFile ? "#3b82f6" : "#9ca3af",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: selectedFile ? "pointer" : "not-allowed",
-                  }}
                 >
                   Upload Visa
-                </button>
+                </S.UploadButton>
               </S.UploadControls>
 
               <S.DocumentList>
-                {visaDocuments.map((doc) => (
-                  <S.DocumentItem key={doc.id}>
-                    <S.DocumentInfo>
-                      <S.DocumentType>visa</S.DocumentType>
-                      <S.DocumentName>
-                        {getFileNameFromUrl(doc.file_url, doc.doc_type, doc.id)}
-                      </S.DocumentName>
-                    </S.DocumentInfo>
-                    <S.DocumentActions>
-                      <S.PreviewButton
-                        onClick={() => handlePreviewDocument(doc.file_url)}
-                      >
-                        Preview
-                      </S.PreviewButton>
-                      <S.DownloadButton
-                        onClick={() =>
-                          handleDownloadDocument(
-                            doc, // FIXED: Pass doc instead of document
-                            getFileNameFromUrl(
-                              doc.file_url,
-                              doc.doc_type,
-                              doc.id
+                {visaDocuments.length > 0 ? (
+                  visaDocuments.map((doc) => (
+                    <S.DocumentItem key={doc.id}>
+                      <S.DocumentInfo>
+                        <S.DocumentType>visa</S.DocumentType>
+                        <S.DocumentName>
+                          {getFileNameFromUrl(
+                            doc.file_url,
+                            doc.doc_type,
+                            doc.id
+                          )}
+                        </S.DocumentName>
+                      </S.DocumentInfo>
+                      <S.DocumentActions>
+                        <S.PreviewButton
+                          onClick={() => handlePreviewDocument(doc.file_url)}
+                        >
+                          Preview
+                        </S.PreviewButton>
+                        <S.DownloadButton
+                          onClick={() =>
+                            handleDownloadDocument(
+                              doc,
+                              getFileNameFromUrl(
+                                doc.file_url,
+                                doc.doc_type,
+                                doc.id
+                              )
                             )
-                          )
-                        }
-                      >
-                        Download
-                      </S.DownloadButton>
-                    </S.DocumentActions>
-                  </S.DocumentItem>
-                ))}
+                          }
+                        >
+                          Download
+                        </S.DownloadButton>
+                      </S.DocumentActions>
+                    </S.DocumentItem>
+                  ))
+                ) : (
+                  <S.NoDocuments>No visa documents uploaded yet</S.NoDocuments>
+                )}
               </S.DocumentList>
             </S.DocumentSection>
           </S.DocumentsGrid>
@@ -252,7 +307,7 @@ const AdminApplicationPage: React.FC = () => {
           <S.SectionTitle>Admin Actions</S.SectionTitle>
           <S.AdminActions>
             <S.RemarksInput>
-              <label>Remarks:</label>
+              <S.RemarksLabel>Remarks:</S.RemarksLabel>
               <S.TextArea
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
