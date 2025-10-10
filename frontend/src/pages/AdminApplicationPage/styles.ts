@@ -240,7 +240,6 @@ export const Remarks = styled.div`
 
 export const DocumentsGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.xl};
 
   @media (max-width: 768px) {
