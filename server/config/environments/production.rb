@@ -37,13 +37,13 @@ Rails.application.configure do
   
 # Set the host for URL generation
 Rails.application.routes.default_url_options = {
-  host: ENV['FRONTEND_URL'] || 'visapro-rails-app.fly.dev',
+  host: ENV['SERVER_API_URL'] || 'visapro-rails-app.fly.dev',
   protocol: 'https'
 }
 
 # For Action Mailer as well
 config.action_mailer.default_url_options = {
-  host: ENV['FRONTEND_URL'] || 'visapro-rails-app.fly.dev', 
+  host: ENV['SERVER_API_URL'] || 'visapro-rails-app.fly.dev', 
   protocol: 'https'
 }
 
