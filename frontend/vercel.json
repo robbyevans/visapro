@@ -1,16 +1,28 @@
 {
   "routes": [
     {
-      "src": "/applications/\\d+",
+      "src": "/applications/(\\d+)",
       "dest": "/index.html"
     },
     {
-      "src": "/admin/.*",
+      "src": "/admin/(.*)",
       "dest": "/index.html"
     },
     {
       "src": "/dashboard",
       "dest": "/index.html"
+    },
+    {
+      "src": "/static/(.*)",
+      "headers": {
+        "cache-control": "s-maxage=31536000,immutable"
+      }
+    },
+    {
+      "src": "/(.*\\.(js|css|wasm|json|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
+      "headers": {
+        "cache-control": "s-maxage=31536000,immutable"
+      }
     },
     {
       "src": "/(.*)",
