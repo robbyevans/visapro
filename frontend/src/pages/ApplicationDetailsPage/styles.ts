@@ -17,6 +17,23 @@ export const ApplicationDetailsContainer = styled.div`
   }
 `;
 
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  min-height: 400px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    min-height: 300px;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 200px;
+  }
+`;
+
 export const Header = styled.header`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
 

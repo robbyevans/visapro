@@ -7,7 +7,6 @@ import * as S from "./styles";
 import type { IDocument } from "../../redux/types";
 
 const AdminApplicationPage: React.FC = () => {
-  
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
@@ -120,7 +119,9 @@ const AdminApplicationPage: React.FC = () => {
   if (isLoading || !currentApplication) {
     return (
       <S.AdminApplicationContainer>
-        <Spinner size="lg" />
+        <S.LoadingContainer>
+          <Spinner size="lg" />
+        </S.LoadingContainer>
       </S.AdminApplicationContainer>
     );
   }

@@ -168,7 +168,9 @@ const ApplicationDetailsPage: React.FC = () => {
   if (isLoading || !currentApplication) {
     return (
       <S.ApplicationDetailsContainer>
-        <Spinner size="lg" />
+        <S.LoadingContainer>
+          <Spinner size="lg" />
+        </S.LoadingContainer>
       </S.ApplicationDetailsContainer>
     );
   }
