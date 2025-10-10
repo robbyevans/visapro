@@ -28,5 +28,26 @@ module Visapro
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # CORS configuration - Add this section
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        # Get allowed origins from environment variable or use defaults
+        origins_allowed = ENV['ALLOWED_ORIGINS']&.split(',') || [
+          'http://localhost:5173',
+          'http://127.0.0.1:5173',
+          'http://192.168.2.129:5173',
+          'https://visapro-dusky.vercel.app'
+        ]
+
+        origins origins_allowed
+
+        resource '*',
+          headers: :any,
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          credentials: false, # Set to true if using cookies/sessions
+          max_age: 600 # Cache preflight requests for 10 minutes
+      end
+    end
   end
 end
