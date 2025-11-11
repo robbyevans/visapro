@@ -215,6 +215,140 @@ export const DropzoneError = styled.div`
   text-align: center;
 `;
 
+export const CameraContainer = styled.div`
+  border: 2px dashed ${({ theme }) => theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+  background-color: ${({ theme }) => theme.background.primary};
+  position: relative;
+  overflow: hidden;
+`;
+
+export const CameraVideo = styled.video`
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  background-color: ${({ theme }) => theme.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  object-fit: cover;
+
+  @media (max-width: 480px) {
+    height: 250px;
+    max-width: 100%;
+  }
+`;
+
+export const CameraControls = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    width: 100%;
+  }
+`;
+
+export const CameraButtonContainer = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  justify-content: center;
+`;
+
+export const CameraButton = styled.button<{
+  $variant?: "primary" | "secondary";
+}>`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border: 1px solid
+    ${({ $variant, theme }) =>
+      $variant === "primary"
+        ? theme.primaryColors["500"]
+        : theme.border.default};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background-color: ${({ $variant, theme }) =>
+    $variant === "primary" ? theme.primaryColors["500"] : "transparent"};
+  color: ${({ $variant, theme }) =>
+    $variant === "primary" ? theme.text.primary : theme.text.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &:hover:not(:disabled) {
+    background-color: ${({ $variant, theme }) =>
+      $variant === "primary"
+        ? theme.primaryColors["600"]
+        : theme.background.secondary};
+    border-color: ${({ $variant, theme }) =>
+      $variant === "primary"
+        ? theme.primaryColors["600"]
+        : theme.secondaryColors["600"]};
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px
+      ${({ $variant, theme }) =>
+        $variant === "primary"
+          ? theme.primaryColors["100"]
+          : theme.border.default};
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    justify-content: center;
+    padding: ${({ theme }) => theme.spacing.md};
+  }
+`;
+
+export const CameraIcon = styled.span`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 480px) {
+    width: 18px;
+    height: 18px;
+  }
+`;
+
+export const CaptureIcon = styled.span`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 480px) {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
 // Add these mobile styles to File 4: /frontend/src/components/Forms/styles.ts
 
 export const DropzoneArea = styled.div<{

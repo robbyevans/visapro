@@ -4,7 +4,7 @@ import * as S from "./styles";
 interface FileDropzoneProps {
   onFileSelect: (file: File) => void;
   accept?: string;
-  maxSize?: number; // in bytes
+  maxSize?: number;
   label?: string;
   disabled?: boolean;
   className?: string;
@@ -20,7 +20,10 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
+  const [isCameraActive, setIsCameraActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const validateFile = (file: File): boolean => {
     if (file.size > maxSize) {
@@ -100,40 +103,157 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
     fileInputRef.current?.click();
   }, [disabled]);
 
+  const startCamera = async () => {
+    try {
+      setError("");
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "environment", // Prefer rear camera
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
+      });
+
+      streamRef.current = stream;
+      setIsCameraActive(true);
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      setError("Unable to access camera. Please check permissions.");
+      console.error("Camera error:", err);
+    }
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraActive(false);
+  };
+
+  const capturePhoto = () => {
+    if (!videoRef.current) return;
+
+    const canvas = document.createElement("canvas");
+    const video = videoRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const context = canvas.getContext("2d");
+    if (context) {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const file = new File([blob], `camera-capture-${Date.now()}.jpg`, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            handleFile(file);
+            stopCamera();
+          }
+        },
+        "image/jpeg",
+        0.9
+      );
+    }
+  };
+
   return (
     <S.FileDropzoneContainer className={className}>
-      <S.DropzoneArea
-        isDragging={isDragging}
-        disabled={disabled}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={handleClick}
-      >
-        <S.FileInput
-          ref={fileInputRef}
-          type="file"
-          accept={accept}
-          onChange={handleFileInput}
-          disabled={disabled}
-        />
-        <S.DropzoneContent>
-          <S.DropzoneIcon>
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
-          </S.DropzoneIcon>
-          <S.DropzoneText>{label}</S.DropzoneText>
-          <S.DropzoneHint>
-            Supports: PDF, JPG, JPEG, PNG (Max 5MB)
-          </S.DropzoneHint>
-        </S.DropzoneContent>
-      </S.DropzoneArea>
+      {!isCameraActive ? (
+        <>
+          <S.DropzoneArea
+            isDragging={isDragging}
+            disabled={disabled}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={handleClick}
+          >
+            <S.FileInput
+              ref={fileInputRef}
+              type="file"
+              accept={accept}
+              onChange={handleFileInput}
+              disabled={disabled}
+            />
+            <S.DropzoneContent>
+              <S.DropzoneIcon>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  />
+                </svg>
+              </S.DropzoneIcon>
+              <S.DropzoneText>{label}</S.DropzoneText>
+              <S.DropzoneHint>
+                Supports: PDF, JPG, JPEG, PNG (Max 5MB)
+              </S.DropzoneHint>
+            </S.DropzoneContent>
+          </S.DropzoneArea>
+
+          {/* Camera Upload Button - Separate from dropzone */}
+          <S.CameraButtonContainer>
+            <S.CameraButton
+              type="button"
+              onClick={startCamera}
+              disabled={disabled}
+            >
+              <S.CameraIcon>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </S.CameraIcon>
+              Take Photo
+            </S.CameraButton>
+          </S.CameraButtonContainer>
+        </>
+      ) : (
+        <S.CameraContainer>
+          <S.CameraVideo ref={videoRef} autoPlay playsInline muted />
+          <S.CameraControls>
+            <S.CameraButton
+              type="button"
+              onClick={capturePhoto}
+              $variant="primary"
+            >
+              <S.CaptureIcon>
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              </S.CaptureIcon>
+              Capture
+            </S.CameraButton>
+            <S.CameraButton
+              type="button"
+              onClick={stopCamera}
+              $variant="secondary"
+            >
+              Cancel
+            </S.CameraButton>
+          </S.CameraControls>
+        </S.CameraContainer>
+      )}
+
       {error && <S.DropzoneError>{error}</S.DropzoneError>}
     </S.FileDropzoneContainer>
   );
