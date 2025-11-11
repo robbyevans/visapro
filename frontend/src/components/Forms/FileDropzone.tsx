@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import * as S from "./styles";
 
 interface FileDropzoneProps {
@@ -21,6 +21,7 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [isCameraLoading, setIsCameraLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -106,9 +107,11 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
   const startCamera = async () => {
     try {
       setError("");
+      setIsCameraLoading(true);
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: "environment", // Prefer rear camera
+          facingMode: "environment",
           width: { ideal: 1920 },
           height: { ideal: 1080 },
         },
@@ -117,12 +120,20 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
       streamRef.current = stream;
       setIsCameraActive(true);
 
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
+      // Wait for the next render cycle to ensure video element is available
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current?.play().catch(console.error);
+            setIsCameraLoading(false);
+          };
+        }
+      }, 100);
     } catch (err) {
       setError("Unable to access camera. Please check permissions.");
       console.error("Camera error:", err);
+      setIsCameraLoading(false);
     }
   };
 
@@ -132,36 +143,69 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
       streamRef.current = null;
     }
     setIsCameraActive(false);
+    setIsCameraLoading(false);
   };
 
   const capturePhoto = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current || !streamRef.current) {
+      setError("Camera not ready. Please try again.");
+      return;
+    }
 
-    const canvas = document.createElement("canvas");
-    const video = videoRef.current;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    try {
+      const canvas = document.createElement("canvas");
+      const video = videoRef.current;
 
-    const context = canvas.getContext("2d");
-    if (context) {
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      // Ensure video has valid dimensions
+      if (video.videoWidth === 0 || video.videoHeight === 0) {
+        setError("Camera feed not available. Please try again.");
+        return;
+      }
 
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            const file = new File([blob], `camera-capture-${Date.now()}.jpg`, {
-              type: "image/jpeg",
-              lastModified: Date.now(),
-            });
-            handleFile(file);
-            stopCamera();
-          }
-        },
-        "image/jpeg",
-        0.9
-      );
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      const context = canvas.getContext("2d");
+      if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const file = new File(
+                [blob],
+                `camera-capture-${Date.now()}.jpg`,
+                {
+                  type: "image/jpeg",
+                  lastModified: Date.now(),
+                }
+              );
+
+              console.log("Captured photo:", file.name, file.size, file.type);
+              handleFile(file);
+              stopCamera();
+            } else {
+              setError("Failed to capture photo. Please try again.");
+            }
+          },
+          "image/jpeg",
+          0.9
+        );
+      }
+    } catch (error) {
+      console.error("Capture error:", error);
+      setError("Failed to capture photo. Please try again.");
     }
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, []);
 
   return (
     <S.FileDropzoneContainer className={className}>
@@ -205,7 +249,7 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
             <S.CameraButton
               type="button"
               onClick={startCamera}
-              disabled={disabled}
+              disabled={disabled || isCameraLoading}
             >
               <S.CameraIcon>
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,18 +267,28 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
                   />
                 </svg>
               </S.CameraIcon>
-              Take Photo
+              {isCameraLoading ? "Loading Camera..." : "Take Photo"}
             </S.CameraButton>
           </S.CameraButtonContainer>
         </>
       ) : (
         <S.CameraContainer>
-          <S.CameraVideo ref={videoRef} autoPlay playsInline muted />
+          {isCameraLoading && (
+            <S.CameraLoading>Initializing camera...</S.CameraLoading>
+          )}
+          <S.CameraVideo
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            onError={() => setError("Failed to load camera feed")}
+          />
           <S.CameraControls>
             <S.CameraButton
               type="button"
               onClick={capturePhoto}
               $variant="primary"
+              disabled={isCameraLoading}
             >
               <S.CaptureIcon>
                 <svg fill="currentColor" viewBox="0 0 24 24">
@@ -247,6 +301,7 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
               type="button"
               onClick={stopCamera}
               $variant="secondary"
+              disabled={isCameraLoading}
             >
               Cancel
             </S.CameraButton>
