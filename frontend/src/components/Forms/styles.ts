@@ -223,6 +223,11 @@ export const CameraContainer = styled.div`
   background-color: ${({ theme }) => theme.background.primary};
   position: relative;
   overflow: hidden;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const CameraVideo = styled.video`
@@ -233,6 +238,7 @@ export const CameraVideo = styled.video`
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   object-fit: cover;
+  display: block;
 
   @media (max-width: 480px) {
     height: 250px;
@@ -251,6 +257,18 @@ export const CameraControls = styled.div`
     flex-direction: column;
     width: 100%;
   }
+`;
+
+export const CameraLoading = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: ${({ theme }) => theme.text.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  background: ${({ theme }) => theme.background.primary};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
 `;
 
 export const CameraButtonContainer = styled.div`
@@ -287,9 +305,7 @@ export const CameraButton = styled.button<{
         ? theme.primaryColors["600"]
         : theme.background.secondary};
     border-color: ${({ $variant, theme }) =>
-      $variant === "primary"
-        ? theme.primaryColors["600"]
-        : theme.secondaryColors["600"]};
+      $variant === "primary" ? theme.primaryColors["600"] : theme.secondaryColors["500"]};
   }
 
   &:focus {
