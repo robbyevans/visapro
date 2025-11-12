@@ -19,6 +19,27 @@ class User < ApplicationRecord
   def reset_password!(password)
     update!(password: password, reset_password_token: nil)
   end
+
+  # Add these helper methods for the simplified grouping
+  def application_count
+    applications.count
+  end
+
+  def pending_applications_count
+    applications.pending.count
+  end
+
+  def invoiced_applications_count
+    applications.invoiced.count
+  end
+
+  def individual?
+    role == 'individual'
+  end
+
+  def corporate?
+    role == 'corporate'
+  end
   
   enum :role, { individual: 0, corporate: 1, admin: 2 }
   

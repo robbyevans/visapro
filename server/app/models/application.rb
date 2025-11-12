@@ -15,7 +15,7 @@ class Application < ApplicationRecord
 
   def single_application_for_individual_user
     return unless user&.individual?
-    if Application.exists?(user_id: user.id, status: [:pending, :approved, :invoiced, :completed])
+    if Application.where(user_id: user.id, status: [:pending, :approved, :invoiced, :completed]).exists?
       errors.add(:base, "Individual users may only have one active application")
     end
   end

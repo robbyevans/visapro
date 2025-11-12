@@ -1,8 +1,3 @@
-# fly.toml app configuration file generated for visapro-rails-app on 2025-10-09T18:25:48+03:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
 app = 'visapro-rails-app'
 primary_region = 'iad'
 console_command = '/rails/bin/rails console'
@@ -12,17 +7,18 @@ console_command = '/rails/bin/rails console'
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = false    # ← Changed from 'stop' to false
+  auto_stop_machines = false
   auto_start_machines = true
-  min_machines_running = 1      # ← Changed from 0 to 1
+  min_machines_running = 1
   processes = ['app']
 
 [[http_service.checks]]
-  grace_period = "5s"
-  interval = "15s"
+  grace_period = "10s"
+  interval = "30s"
   method = "get"
   path = "/up"
-  timeout = "2s"
+  timeout = "5s"
+  headers = { Content-Type = "application/json" }
 
 [[vm]]
   memory = '1gb'

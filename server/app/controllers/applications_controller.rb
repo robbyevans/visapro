@@ -2,25 +2,48 @@ class ApplicationsController < ApplicationController
   before_action :set_application, only: [:show, :update]
 
   def index
-    applications = if current_user.admin?
-                    Application.includes(:user, :athlete, :documents)
-                  else
-                    current_user.applications.includes(:athlete, :documents)
-                  end
-
-    # Remove all filtering logic - just return all applications
-    # Apply basic sorting by creation date (newest first)
-    applications = applications.order(created_at: :desc)
-
-    render json: applications.as_json(
-      include: {
-        athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
-        documents: { 
-          only: [:id, :doc_type, :created_at],
-          methods: [:file_url, :download_url] # Include download_url in response
+    group_by_client = params[:group_by_client] == 'true'
+    
+    if group_by_client && current_user.admin?
+      # Simple grouping by user - no groups table needed!
+      users_with_applications = User.includes(applications: [:athlete, :documents])
+                                    .where.not(applications: { id: nil })
+                                    .order(:name)
+      
+      render json: users_with_applications.as_json(
+        only: [:id, :name, :email, :role],
+        methods: [:application_count, :pending_applications_count, :invoiced_applications_count],
+        include: {
+          applications: {
+            only: [:id, :country, :status, :remarks, :created_at, :updated_at],
+            include: {
+              athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+              documents: { methods: [:file_url, :download_url] }
+            }
+          }
         }
-      }
-    )
+      )
+    else
+      # Return individual applications (existing behavior)
+      applications = if current_user.admin?
+                      Application.includes(:user, :athlete, :documents)
+                    else
+                      current_user.applications.includes(:athlete, :documents)
+                    end
+
+      applications = applications.order(created_at: :desc)
+
+      render json: applications.as_json(
+        include: {
+          athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+          documents: { 
+            only: [:id, :doc_type, :created_at],
+            methods: [:file_url, :download_url]
+          },
+          user: { only: [:id, :name, :email, :role] }  # Include user info
+        }
+      )
+    end
   end
 
   def show
@@ -73,7 +96,8 @@ class ApplicationsController < ApplicationController
         documents: { 
           only: [:id, :doc_type, :created_at],
           methods: [:file_url, :download_url] # Include download_url in response
-        }
+        },
+        user: { only: [:id, :name, :email, :role] }  # Include user info in response
       }
     ), status: :created
     
@@ -94,7 +118,8 @@ class ApplicationsController < ApplicationController
           documents: { 
             only: [:id, :doc_type, :created_at],
             methods: [:file_url, :download_url] # Include download_url in response
-          }
+          },
+          user: { only: [:id, :name, :email, :role] }  # Include user info in response
         }
       )
     else

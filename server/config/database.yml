@@ -1,4 +1,3 @@
-# config/database.yml - REPLACE ENTIRE FILE
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -8,10 +7,16 @@ default: &default
 development:
   <<: *default
   database: visapro_development
+  host: localhost
+  username: postgres
+  password: <%= ENV['DATABASE_PASSWORD'] %>
 
 test:
   <<: *default
   database: visapro_test
+  host: localhost
+  username: postgres
+  password: <%= ENV['DATABASE_PASSWORD'] %>
 
 production:
   <<: *default

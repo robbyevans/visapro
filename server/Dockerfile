@@ -73,8 +73,8 @@ USER 1000:1000
 RUN mkdir -p tmp/pids
 
 # Entrypoint prepares the database.
-COPY --chmod=755 .fly/scripts/entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+COPY --chmod=755 bin/docker-entrypoint /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
 # Start the server by default
 EXPOSE 3000

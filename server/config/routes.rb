@@ -36,6 +36,6 @@ Rails.application.routes.draw do
   get "/me", to: "sessions#show"
 
   # Health check endpoint for Fly.io
-  get '/up', to: ->(env) { [204, {}, ['']] }
+  get '/up', to: 'health#index'
   
 end
