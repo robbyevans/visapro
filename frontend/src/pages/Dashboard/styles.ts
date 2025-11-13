@@ -80,30 +80,15 @@ export const HeaderActions = styled.div`
 `;
 
 export const StatsOverview = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: ${({ theme }) => theme.spacing.lg};
   margin-bottom: ${({ theme }) => theme.spacing.xl};
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: ${({ theme }) => theme.spacing.md};
     margin-bottom: ${({ theme }) => theme.spacing.lg};
   }
 `;
 
-interface StatCardProps {
-  variant:
-    | "total"
-    | "pending"
-    | "approved"
-    | "rejected"
-    | "inReview"
-    | "completed";
-}
-
-// Mobile Stats Card Components
-export const MobileStatsCard = styled.div`
+// Unified Stats Card for both mobile and desktop
+export const StatsCard = styled.div`
   background: ${({ theme }) => theme.background.primary};
   padding: ${({ theme }) => theme.spacing.lg};
   border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
@@ -111,7 +96,7 @@ export const MobileStatsCard = styled.div`
   border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
-export const MobileStatsHeader = styled.div`
+export const StatsHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -120,14 +105,14 @@ export const MobileStatsHeader = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.border.light};
 `;
 
-export const MobileStatsTitle = styled.h3`
+export const StatsTitle = styled.h3`
   font-size: ${({ theme }) => theme.typography.fontSize.lg};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.text.primary};
   margin: 0;
 `;
 
-export const MobileStatsTotal = styled.div`
+export const StatsTotal = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.primaryColors["500"]};
@@ -136,32 +121,45 @@ export const MobileStatsTotal = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.md};
 `;
 
-export const MobileStatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+export const StatsGrid = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: ${({ theme }) => theme.spacing.lg};
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: ${({ theme }) => theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.sm};
+  }
 `;
 
-export const MobileStatsFooter = styled.div`
-  padding-top: ${({ theme }) => theme.spacing.md};
-  border-top: 1px solid ${({ theme }) => theme.border.light};
-`;
-
-export const MobileStatItem = styled.div`
+export const StatItem = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   transition: background-color 0.2s ease;
+  min-width: 120px;
 
   &:hover {
     background: ${({ theme }) => theme.background.secondary};
   }
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    min-width: auto;
+  }
 `;
 
-export const MobileStatIndicator = styled.div<{ color: string }>`
+export const StatIndicator = styled.div<{ color: string }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -169,97 +167,34 @@ export const MobileStatIndicator = styled.div<{ color: string }>`
   flex-shrink: 0;
 `;
 
-export const MobileStatInfo = styled.div`
+export const StatInfo = styled.div`
   flex: 1;
 `;
 
-export const MobileStatValue = styled.div`
+export const StatValue = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSize.lg};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.text.primary};
   line-height: 1;
+
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
+  }
 `;
 
-export const MobileStatLabel = styled.div`
+export const StatLabel = styled.div`
   font-size: ${({ theme }) => theme.typography.fontSize.xs};
   color: ${({ theme }) => theme.text.secondary};
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 2px;
-`;
 
-export const StatCard = styled.div<StatCardProps>`
-  background: ${({ theme }) => theme.background.primary};
-  padding: ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
-  box-shadow: ${({ theme }) => theme.shadows.md};
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 4px solid
-    ${({ variant, theme }) => {
-      switch (variant) {
-        case "total":
-          return theme.primaryColors["500"];
-        case "pending":
-          return theme.warningColors["500"];
-        case "approved":
-          return theme.successColors["500"];
-        case "rejected":
-          return theme.errorColors["500"];
-        case "inReview":
-          return theme.secondaryColors["500"];
-        case "completed":
-          return theme.primaryColors["400"];
-        default:
-          return theme.neutralColors["500"];
-      }
-    }};
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.lg};
+  @media (max-width: 768px) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xs};
   }
 `;
 
-export const StatIcon = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${({ theme }) => theme.background.secondary};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-`;
-
-export const StatContent = styled.div`
-  flex: 1;
-`;
-
-export const StatValue = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  color: ${({ theme }) => theme.text.primary};
-  line-height: 1;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-`;
-
-export const StatLabel = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.text.secondary};
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-`;
-
-export const StatTrend = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ theme }) => theme.text.tertiary};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-`;
-
+// Quick Actions Section
 export const QuickActionsSection = styled.section`
   background: ${({ theme }) => theme.background.primary};
   padding: ${({ theme }) => theme.spacing.xl};
@@ -313,73 +248,6 @@ export const QuickActionDescription = styled.p`
   color: ${({ theme }) => theme.text.secondary};
   margin: 0;
   line-height: 1.4;
-`;
-
-export const StatusDistribution = styled.section`
-  background: ${({ theme }) => theme.background.primary};
-  padding: ${({ theme }) => theme.spacing.xl};
-  border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
-  box-shadow: ${({ theme }) => theme.shadows.md};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`;
-
-export const DistributionGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-top: ${({ theme }) => theme.spacing.lg};
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: ${({ theme }) => theme.spacing.sm};
-  }
-`;
-
-export const StatusItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.md};
-  background: ${({ theme }) => theme.background.secondary};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.background.tertiary};
-  }
-`;
-
-interface StatusIndicatorProps {
-  color: string;
-}
-
-export const StatusIndicator = styled.div<StatusIndicatorProps>`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: ${({ color }) => color};
-`;
-
-export const StatusInfo = styled.div`
-  flex: 1;
-`;
-
-export const StatusName = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.text.primary};
-  text-transform: capitalize;
-`;
-
-export const StatusCount = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  color: ${({ theme }) => theme.text.secondary};
-`;
-
-export const StatusPercentage = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize.base};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  color: ${({ theme }) => theme.text.primary};
 `;
 
 export const ApplicationsSection = styled.section`
