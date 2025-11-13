@@ -8,7 +8,12 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user, onClick }) => {
-  const pendingApplicationsCount = user.applications?.length || 0;
+  // Calculate pending applications count
+  const pendingApplicationsCount =
+    user.applications?.filter((app) => app.status === "pending").length || 0;
+
+  // Check if there are any pending applications to show the badge
+  const hasPendingApplications = pendingApplicationsCount > 0;
 
   return (
     <S.UserCard onClick={onClick}>
@@ -22,10 +27,13 @@ const UserCard: React.FC<UserCardProps> = ({ user, onClick }) => {
           <S.UserEmail>{user.email}</S.UserEmail>
         </S.UserInfo>
 
-        <S.PendingBadge>
-          <S.BadgeNumber>{pendingApplicationsCount}</S.BadgeNumber>
-          <S.BadgeLabel>Pending</S.BadgeLabel>
-        </S.PendingBadge>
+        {/* Only show badge if there are pending applications */}
+        {hasPendingApplications && (
+          <S.PendingBadge>
+            <S.BadgeNumber>{pendingApplicationsCount}</S.BadgeNumber>
+            <S.BadgeLabel>Pending</S.BadgeLabel>
+          </S.PendingBadge>
+        )}
       </S.CardHeader>
     </S.UserCard>
   );
