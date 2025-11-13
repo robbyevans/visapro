@@ -322,15 +322,17 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
               <S.SectionTitle>
                 Corporate Clients ({corporateClients.length})
               </S.SectionTitle>
-              <S.ClientsGrid>
-                {corporateClients.map((user) => (
-                  <UserCard
-                    key={user.id}
-                    user={user}
-                    onClick={() => handleUserClick(user)}
-                  />
+              <S.ClientsList>
+                {corporateClients.map((user, index) => (
+                  <S.ListItem key={user.id}>
+                    <S.ItemNumber>{index + 1}</S.ItemNumber>
+                    <UserCard
+                      user={user}
+                      onClick={() => handleUserClick(user)}
+                    />
+                  </S.ListItem>
                 ))}
-              </S.ClientsGrid>
+              </S.ClientsList>
             </S.ClientSection>
           )}
 
@@ -340,15 +342,17 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
               <S.SectionTitle>
                 Individual Clients ({individualClients.length})
               </S.SectionTitle>
-              <S.ClientsGrid>
-                {individualClients.map((user) => (
-                  <UserCard
-                    key={user.id}
-                    user={user}
-                    onClick={() => handleUserClick(user)}
-                  />
+              <S.ClientsList>
+                {individualClients.map((user, index) => (
+                  <S.ListItem key={user.id}>
+                    <S.ItemNumber>{index + 1}</S.ItemNumber>
+                    <UserCard
+                      user={user}
+                      onClick={() => handleUserClick(user)}
+                    />
+                  </S.ListItem>
                 ))}
-              </S.ClientsGrid>
+              </S.ClientsList>
             </S.ClientSection>
           )}
         </S.AdminViewContainer>

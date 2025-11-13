@@ -1,4 +1,3 @@
-// File 2: /frontend/src/components/Applications/ApplicationsView/styles.ts
 import styled from "styled-components";
 
 export const ApplicationsViewContainer = styled.div`
@@ -150,10 +149,50 @@ export const SectionTitle = styled.h2`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
-export const ClientsGrid = styled.div`
+export const ClientsList = styled.ol`
   display: flex;
   flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  counter-reset: client-counter;
+`;
+
+export const ListItem = styled.li`
+  display: flex;
+  align-items: center;
   gap: ${({ theme }) => theme.spacing.lg};
+  counter-increment: client-counter;
+  position: relative;
+
+  @media (max-width: 768px) {
+    gap: ${({ theme }) => theme.spacing.md};
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+export const ItemNumber = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: ${({ theme }) => theme.primaryColors["500"]};
+  color: white;
+  border-radius: 50%;
+  font-size: ${({ theme }) => theme.typography.fontSize.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  flex-shrink: 0;
+  position: relative;
+
+  @media (max-width: 768px) {
+    width: 32px;
+    height: 32px;
+    font-size: ${({ theme }) => theme.typography.fontSize.base};
+    align-self: flex-start;
+  }
 `;
 
 // Loading and Error States for Admin View
