@@ -10,7 +10,7 @@ import * as S from "./styles";
 type AdminTab = "current" | "all";
 
 const Dashboard: React.FC = () => {
-  const { currentUser } = useUser();
+  const { currentUser, theme } = useUser();
   const { applications, fetchApplications } = useApplications();
   const navigate = useNavigate();
   const location = useLocation();
@@ -104,6 +104,7 @@ const Dashboard: React.FC = () => {
       return (
         <ApplicationsView
           showFilters={false}
+          theme={theme}
           onApplicationClick={handleApplicationClick}
           viewMode="admin"
           defaultFilter={{
@@ -119,6 +120,7 @@ const Dashboard: React.FC = () => {
     return (
       <ApplicationsView
         showFilters={!isAdmin}
+        theme={theme}
         onApplicationClick={handleApplicationClick}
         viewMode={isAdmin ? "admin" : "user"}
       />

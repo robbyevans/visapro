@@ -24,7 +24,8 @@ class UsersController < ApplicationController
   end
 
   def update_theme
-    if current_user.update(theme_preference: params[:theme])
+    # ✅ Change from params[:theme] to params[:theme_preference]
+    if current_user.update(theme_preference: params[:theme_preference])
       render json: { 
         user: current_user.as_json(except: [:password_digest]),
         message: "Theme preference updated successfully" 

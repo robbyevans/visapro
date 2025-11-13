@@ -1,13 +1,14 @@
 import React from "react";
 import * as S from "./styles";
 import type { IUserWithApplications } from "../../../redux/types";
-
+import type { TUserThemePreference } from "../../../redux/types";
 interface UserCardProps {
+  theme?: TUserThemePreference;
   user: IUserWithApplications;
   onClick: () => void;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, onClick }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, onClick, theme }) => {
   // Calculate pending applications count
   const pendingApplicationsCount =
     user.applications?.filter((app) => app.status === "pending").length || 0;
@@ -16,7 +17,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, onClick }) => {
   const hasPendingApplications = pendingApplicationsCount > 0;
 
   return (
-    <S.UserCard onClick={onClick}>
+    <S.UserCard onClick={onClick} $themeMode={theme}>
       <S.CardHeader>
         <S.UserAvatar $type={user.role}>
           {user.role === "corporate" ? "🏢" : "👤"}

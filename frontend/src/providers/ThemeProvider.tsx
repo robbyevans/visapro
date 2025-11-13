@@ -18,7 +18,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const initializeTheme = () => {
       try {
         if (isAuthenticated && currentUser) {
-          // Use user's saved theme preference from backend
+          // ✅ Use theme_preference from backend
           setThemeMode(currentUser.theme_preference || "light");
         } else {
           // For non-authenticated users, use saved preference or system preference
@@ -52,11 +52,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         setThemeMode(newTheme);
         updateThemeLocal(newTheme);
 
-        // Then persist to backend - THIS IS THE MISSING PART
+        // Then persist to backend with theme_preference parameter
         await updateTheme(newTheme);
-        console.log("Theme updated on backend:", newTheme);
+        console.log("Theme preference updated on backend:", newTheme);
       } catch (error) {
-        console.error("Failed to update theme on backend:", error);
+        console.error("Failed to update theme preference on backend:", error);
         // Revert on error
         setThemeMode(themeMode);
         updateThemeLocal(themeMode);
@@ -75,10 +75,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         setThemeMode(mode);
         updateThemeLocal(mode);
 
-        // Then persist to backend
+        // Then persist to backend with theme_preference parameter
         await updateTheme(mode);
       } catch (error) {
-        console.error("Failed to update theme:", error);
+        console.error("Failed to update theme preference:", error);
         // Revert on error
         setThemeMode(themeMode);
         updateThemeLocal(themeMode);

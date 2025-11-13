@@ -3,6 +3,8 @@ import { useApplications } from "../../../redux/hooks/useApplications";
 import { useUser } from "../../../redux/hooks/useUser";
 import ApplicationList from "../ApplicationList/ApplicationList";
 import UserCard from "../UserCard/UserCard";
+import type { TUserThemePreference } from "../../../redux/types";
+
 import UserApplicationsModal from "../../Modals/UserApplicationsModal/UserApplicationsModal";
 import { ApplicationFilter } from "../ApplicationFilter/ApplicationFilter";
 import type { FilterState } from "../types";
@@ -12,6 +14,7 @@ import * as S from "./styles";
 interface ApplicationsViewProps {
   onApplicationClick?: (applicationId: number) => void;
   showActions?: boolean;
+  theme?: TUserThemePreference;
   viewMode?: "admin" | "user";
   showFilters?: boolean;
   defaultFilter?: Partial<FilterState>;
@@ -56,6 +59,7 @@ const getSortValue = (
 
 export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
   onApplicationClick,
+  theme,
   showActions = false,
   viewMode = "user",
   showFilters = true,
@@ -183,14 +187,60 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
     // Otherwise, only show pending applications (Current Applications tab)
     const showAllApplications = defaultFilter?.status?.length === 0;
 
-    return groupedApplications
+    const processedUsers = groupedApplications
       .map((user) => ({
         ...user,
         applications: showAllApplications
           ? user.applications || [] // Show all applications
           : user.applications?.filter((app) => app.status === "pending") || [], // Show only pending
+        // Calculate pending count for sorting
+        pendingCount:
+          user.applications?.filter((app) => app.status === "pending").length ||
+          0,
+        // Get latest application date for secondary sorting
+        latestApplicationDate:
+          user.applications?.length > 0
+            ? new Date(
+                Math.max(
+                  ...user.applications.map((app) =>
+                    new Date(app.created_at).getTime()
+                  )
+                )
+              )
+            : new Date(0),
       }))
       .filter((user) => user.applications.length > 0); // Only show users with applications
+
+    // Sort users for better organization
+    if (showAllApplications) {
+      // For "All Applications" tab: prioritize users with pending applications, then by latest application date
+      processedUsers.sort((a, b) => {
+        // First, sort by pending count (descending) - users with pending applications come first
+        if (b.pendingCount !== a.pendingCount) {
+          return b.pendingCount - a.pendingCount;
+        }
+
+        // If same pending count, sort by latest application date (descending)
+        return (
+          b.latestApplicationDate.getTime() - a.latestApplicationDate.getTime()
+        );
+      });
+    } else {
+      // For "Current Applications" tab: sort by pending count, then by latest application date
+      processedUsers.sort((a, b) => {
+        // Sort by pending count (descending)
+        if (b.pendingCount !== a.pendingCount) {
+          return b.pendingCount - a.pendingCount;
+        }
+
+        // If same pending count, sort by latest application date (descending)
+        return (
+          b.latestApplicationDate.getTime() - a.latestApplicationDate.getTime()
+        );
+      });
+    }
+
+    return processedUsers;
   }, [groupedApplications, isAdmin, viewMode, defaultFilter]);
 
   // Client-side filtering and sorting for regular view
@@ -314,10 +364,25 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       );
     }
 
-    const corporateClients = filteredGroupedApplications.filter(
+    // Split users into priority groups for better organization
+    const usersWithPending = filteredGroupedApplications.filter(
+      (user) => user.pendingCount > 0
+    );
+    const usersWithoutPending = filteredGroupedApplications.filter(
+      (user) => user.pendingCount === 0
+    );
+
+    const corporateClientsWithPending = usersWithPending.filter(
       (user) => user.role === "corporate"
     );
-    const individualClients = filteredGroupedApplications.filter(
+    const individualClientsWithPending = usersWithPending.filter(
+      (user) => user.role === "individual"
+    );
+
+    const corporateClientsWithoutPending = usersWithoutPending.filter(
+      (user) => user.role === "corporate"
+    );
+    const individualClientsWithoutPending = usersWithoutPending.filter(
       (user) => user.role === "individual"
     );
 
@@ -332,17 +397,19 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
             <S.AdminTitle>{sectionTitle}</S.AdminTitle>
           </S.AdminHeader>
 
-          {/* Corporate Clients Section */}
-          {corporateClients.length > 0 && (
+          {/* Corporate Clients with Pending Applications */}
+          {corporateClientsWithPending.length > 0 && (
             <S.ClientSection>
               <S.SectionTitle>
-                Corporate Clients ({corporateClients.length})
+                Corporate Clients - Requires Attention (
+                {corporateClientsWithPending.length})
               </S.SectionTitle>
               <S.ClientsList>
-                {corporateClients.map((user, index) => (
+                {corporateClientsWithPending.map((user, index) => (
                   <S.ListItem key={user.id}>
                     <S.ItemNumber>{index + 1}</S.ItemNumber>
                     <UserCard
+                      theme={theme}
                       user={user}
                       onClick={() => handleUserClick(user)}
                     />
@@ -352,17 +419,19 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
             </S.ClientSection>
           )}
 
-          {/* Individual Clients Section */}
-          {individualClients.length > 0 && (
+          {/* Individual Clients with Pending Applications */}
+          {individualClientsWithPending.length > 0 && (
             <S.ClientSection>
               <S.SectionTitle>
-                Individual Clients ({individualClients.length})
+                Individual Clients - Requires Attention (
+                {individualClientsWithPending.length})
               </S.SectionTitle>
               <S.ClientsList>
-                {individualClients.map((user, index) => (
+                {individualClientsWithPending.map((user, index) => (
                   <S.ListItem key={user.id}>
                     <S.ItemNumber>{index + 1}</S.ItemNumber>
                     <UserCard
+                      theme={theme}
                       user={user}
                       onClick={() => handleUserClick(user)}
                     />
@@ -371,6 +440,51 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
               </S.ClientsList>
             </S.ClientSection>
           )}
+
+          {/* Corporate Clients without Pending Applications (only in All Applications view) */}
+          {showAllApplications && corporateClientsWithoutPending.length > 0 && (
+            <S.ClientSection>
+              <S.SectionTitle>
+                Corporate Clients - Completed (
+                {corporateClientsWithoutPending.length})
+              </S.SectionTitle>
+              <S.ClientsList>
+                {corporateClientsWithoutPending.map((user, index) => (
+                  <S.ListItem key={user.id}>
+                    <S.ItemNumber>{index + 1}</S.ItemNumber>
+                    <UserCard
+                      theme={theme}
+                      user={user}
+                      onClick={() => handleUserClick(user)}
+                    />
+                  </S.ListItem>
+                ))}
+              </S.ClientsList>
+            </S.ClientSection>
+          )}
+
+          {/* Individual Clients without Pending Applications (only in All Applications view) */}
+          {showAllApplications &&
+            individualClientsWithoutPending.length > 0 && (
+              <S.ClientSection>
+                <S.SectionTitle>
+                  Individual Clients - Completed (
+                  {individualClientsWithoutPending.length})
+                </S.SectionTitle>
+                <S.ClientsList>
+                  {individualClientsWithoutPending.map((user, index) => (
+                    <S.ListItem key={user.id}>
+                      <S.ItemNumber>{index + 1}</S.ItemNumber>
+                      <UserCard
+                        theme={theme}
+                        user={user}
+                        onClick={() => handleUserClick(user)}
+                      />
+                    </S.ListItem>
+                  ))}
+                </S.ClientsList>
+              </S.ClientSection>
+            )}
         </S.AdminViewContainer>
 
         {/* Modal for viewing user applications */}

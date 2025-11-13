@@ -16,3 +16,13 @@ export const selectIsCorporate = (state: RootState) =>
 
 export const selectAthleteById = (athleteId: number) => (state: RootState) =>
   state.user.athletes.find((athlete) => athlete.id === athleteId);
+
+// ✅ ADD THESE NEW THEME-RELATED SELECTORS
+export const selectUserTheme = (state: RootState) =>
+  state.user.currentUser?.theme_preference || "light";
+
+export const selectIsDarkMode = (state: RootState) =>
+  state.user.currentUser?.theme_preference === "dark";
+
+export const selectIsLightMode = (state: RootState) =>
+  state.user.currentUser?.theme_preference === "light";

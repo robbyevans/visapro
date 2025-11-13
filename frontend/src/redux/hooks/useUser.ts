@@ -14,6 +14,9 @@ import {
   selectAthletes,
   selectUserLoading,
   selectUserError,
+  selectUserTheme,
+  selectIsDarkMode,
+  selectIsLightMode,
 } from "../selectors/userSelectors";
 import type { AppDispatch } from "../store";
 
@@ -24,6 +27,10 @@ export const useUser = () => {
   const athletes = useSelector(selectAthletes);
   const isLoading = useSelector(selectUserLoading);
   const error = useSelector(selectUserError);
+
+  const theme = useSelector(selectUserTheme);
+  const isDarkMode = useSelector(selectIsDarkMode);
+  const isLightMode = useSelector(selectIsLightMode);
 
   const handleFetchUser = useCallback(() => {
     dispatch(fetchUser());
@@ -53,15 +60,15 @@ export const useUser = () => {
   );
 
   const handleUpdateTheme = useCallback(
-    (theme: "light" | "dark") => {
-      return dispatch(updateUserTheme(theme));
+    (theme_preference: "light" | "dark") => {
+      return dispatch(updateUserTheme(theme_preference));
     },
     [dispatch]
   );
 
   const handleUpdateThemeLocal = useCallback(
-    (theme: "light" | "dark") => {
-      dispatch(updateThemeLocal(theme));
+    (theme_preference: "light" | "dark") => {
+      dispatch(updateThemeLocal(theme_preference));
     },
     [dispatch]
   );
@@ -71,10 +78,16 @@ export const useUser = () => {
   }, [dispatch]);
 
   return {
+    // User data
     currentUser,
     athletes,
     isLoading,
     error,
+    theme,
+    isDarkMode,
+    isLightMode,
+
+    // Actions
     fetchUser: handleFetchUser,
     fetchAthletes: handleFetchAthletes,
     createAthlete: handleCreateAthlete,

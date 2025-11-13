@@ -1,7 +1,11 @@
 import styled from "styled-components";
+import type { TUserThemePreference } from "../../../redux/types";
 
-export const UserCard = styled.div`
-  background: ${({ theme }) => theme.background.primary};
+export const UserCard = styled.div<{ $themeMode: TUserThemePreference }>`
+  background: ${({ $themeMode, theme }) =>
+    $themeMode === "dark"
+      ? theme.neutralColors["800"]
+      : theme.neutralColors["50"]};
   border: 1px solid ${({ theme }) => theme.border.light};
   border-radius: ${({ theme }) => theme.borderRadius.xl};
   padding: ${({ theme }) => theme.spacing.lg};

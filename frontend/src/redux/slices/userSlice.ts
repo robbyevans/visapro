@@ -24,15 +24,17 @@ const fetchUser = createAsyncThunk(
 
 const updateUserTheme = createAsyncThunk(
   "user/updateTheme",
-  async (theme: "light" | "dark", { rejectWithValue, getState }) => {
+  // ✅ Change parameter name to theme_preference
+  async (theme_preference: "light" | "dark", { rejectWithValue, getState }) => {
     try {
       const state = getState() as any;
       const token = state.auth.token;
       if (!token) throw new Error("Not authenticated");
 
       const api = axiosInstance(token);
+      // ✅ Send theme_preference instead of theme
       const res = await api.patch<{ user: IUser }>("/users/update_theme", {
-        theme,
+        theme_preference,
       });
       return res.data.user;
     } catch (err: unknown) {
@@ -123,6 +125,7 @@ const userSlice = createSlice({
     },
     updateThemeLocal(state, action: PayloadAction<"light" | "dark">) {
       if (state.currentUser) {
+        // ✅ Use theme_preference consistently
         state.currentUser.theme_preference = action.payload;
       }
     },
