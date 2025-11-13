@@ -21,13 +21,14 @@ export interface IAthlete {
 
 /* --- User --- */
 export type TUserRole = "individual" | "corporate" | "admin";
+export type TUserThemePreference = "light" | "dark";
 
 export interface IUser {
   id: number;
   name: string;
   email: string;
   role: TUserRole;
-  theme_preference: "light" | "dark";
+  theme_preference: TUserThemePreference;
   phone_number?: string;
   country_code?: string;
 }
