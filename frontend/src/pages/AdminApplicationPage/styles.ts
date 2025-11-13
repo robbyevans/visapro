@@ -376,18 +376,16 @@ export const DocumentName = styled.span`
   white-space: nowrap;
   flex: 1;
   min-width: 0;
+  max-width: 150px;
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.typography.fontSize.sm};
-    max-width: 200px;
+    max-width: 120px;
   }
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
-    white-space: normal;
-    word-break: break-all;
-    max-width: 100%;
-    text-overflow: unset;
+    max-width: 100px;
   }
 `;
 

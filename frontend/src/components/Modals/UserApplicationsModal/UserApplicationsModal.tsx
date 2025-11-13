@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ApplicationCard from "../../Applications/ApplicationCard/ApplicationCard";
 import * as S from "./styles";
@@ -26,10 +26,51 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
     { label: "Invoiced", value: user.invoiced_applications_count },
   ];
 
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    const body = document.body;
+
+    const originalStyle = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+    };
+
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
+    return () => {
+      body.style.overflow = originalStyle.overflow || "";
+      body.style.position = originalStyle.position || "";
+      body.style.top = originalStyle.top || "";
+      body.style.width = originalStyle.width || "";
+
+      // Restore scroll position
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
   const handleApplicationClick = (applicationId: number) => {
     onClose();
     navigate(`/admin/applications/${applicationId}`);
   };
+
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [onClose]);
 
   return (
     <S.ModalOverlay onClick={onClose}>

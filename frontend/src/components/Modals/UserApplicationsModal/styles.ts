@@ -1,4 +1,3 @@
-// File 2: /frontend/src/components/Modals/UserApplicationsModal/styles.ts
 import styled from "styled-components";
 
 export const ModalOverlay = styled.div`
@@ -13,6 +12,11 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   z-index: 1000;
   padding: ${({ theme }) => theme.spacing.md};
+
+  pointer-events: auto;
+
+  width: 100vw;
+  height: 100vh;
 `;
 
 export const ModalContent = styled.div`
@@ -24,6 +28,21 @@ export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   box-shadow: ${({ theme }) => theme.shadows.xl};
+
+  pointer-events: auto;
+
+  animation: modalSlideIn 0.3s ease-out;
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 `;
 
 export const ModalHeader = styled.div`
@@ -32,6 +51,7 @@ export const ModalHeader = styled.div`
   align-items: center;
   padding: ${({ theme }) => theme.spacing.lg};
   border-bottom: 1px solid ${({ theme }) => theme.border.light};
+  flex-shrink: 0; /* Prevent header from shrinking */
 `;
 
 export const ModalTitle = styled.h2`
@@ -62,9 +82,17 @@ export const CloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  transition: all 0.2s ease;
 
   &:hover {
     color: ${({ theme }) => theme.text.primary};
+    background: ${({ theme }) => theme.background.secondary};
+  }
+
+  &:focus {
+    outline: 2px solid ${({ theme }) => theme.primaryColors["300"]};
+    outline-offset: 2px;
   }
 `;
 
@@ -72,6 +100,25 @@ export const ModalBody = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: ${({ theme }) => theme.spacing.lg};
+
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.background.secondary};
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.primaryColors["300"]};
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.primaryColors["400"]};
+  }
 `;
 
 export const ClientInfo = styled.div`
@@ -123,6 +170,7 @@ export const ModalFooter = styled.div`
   border-top: 1px solid ${({ theme }) => theme.border.light};
   display: flex;
   justify-content: flex-end;
+  flex-shrink: 0; /* Prevent footer from shrinking */
 `;
 
 export const CloseModalButton = styled.button`
@@ -134,8 +182,14 @@ export const CloseModalButton = styled.button`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover {
     background: ${({ theme }) => theme.primaryColors["600"]};
+  }
+
+  &:focus {
+    outline: 2px solid ${({ theme }) => theme.primaryColors["300"]};
+    outline-offset: 2px;
   }
 `;
