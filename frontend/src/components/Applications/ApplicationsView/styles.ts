@@ -139,36 +139,6 @@ export const AdminTitle = styled.h1`
   margin: 0;
 `;
 
-export const AdminStats = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.lg};
-
-  @media (max-width: 768px) {
-    width: 100%;
-    justify-content: space-between;
-  }
-`;
-
-export const StatItem = styled.div`
-  text-align: center;
-  padding: ${({ theme }) => theme.spacing.md};
-  background: ${({ theme }) => theme.background.secondary};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  min-width: 100px;
-`;
-
-export const StatValue = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  color: ${({ theme }) => theme.primaryColors["500"]};
-`;
-
-export const StatLabel = styled.div`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  color: ${({ theme }) => theme.text.secondary};
-  margin-top: ${({ theme }) => theme.spacing.xs};
-`;
-
 export const ClientSection = styled.section`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;

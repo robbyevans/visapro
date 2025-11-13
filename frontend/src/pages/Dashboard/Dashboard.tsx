@@ -337,32 +337,6 @@ const Dashboard: React.FC = () => {
           />
         )}
       </S.ApplicationsSection>
-
-      {/* Admin Quick Stats */}
-      {isAdmin && (
-        <S.AdminInsights>
-          <S.SectionTitle>System Overview</S.SectionTitle>
-          <S.InsightsGrid>
-            <S.InsightCard>
-              <S.InsightValue>{applications.length}</S.InsightValue>
-              <S.InsightLabel>Total Applications</S.InsightLabel>
-              <S.InsightTrend>Across all users</S.InsightTrend>
-            </S.InsightCard>
-            <S.InsightCard>
-              <S.InsightValue>{stats.pending}</S.InsightValue>
-              <S.InsightLabel>Require Attention</S.InsightLabel>
-              <S.InsightTrend>Pending review</S.InsightTrend>
-            </S.InsightCard>
-            <S.InsightCard>
-              <S.InsightValue>
-                {Math.round((stats.approved / applications.length) * 100) || 0}%
-              </S.InsightValue>
-              <S.InsightLabel>Approval Rate</S.InsightLabel>
-              <S.InsightTrend>Overall success rate</S.InsightTrend>
-            </S.InsightCard>
-          </S.InsightsGrid>
-        </S.AdminInsights>
-      )}
     </S.DashboardContainer>
   );
 };

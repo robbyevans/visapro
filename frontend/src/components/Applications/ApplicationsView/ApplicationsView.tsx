@@ -84,11 +84,10 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       return { ...baseFilter, ...defaultFilter };
     }
 
-    // Admin default filter: only show pending and invoiced applications
     if (viewMode === "admin") {
       return {
         ...baseFilter,
-        status: ["pending", "invoiced"],
+        status: ["pending"],
         sortBy: "created_at",
       };
     }
@@ -175,6 +174,20 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
     });
   }, [viewMode, defaultFilter]);
 
+  const filteredGroupedApplications = useMemo(() => {
+    if (!isAdmin || viewMode !== "admin") {
+      return [];
+    }
+
+    return groupedApplications
+      .map((user) => ({
+        ...user,
+        applications:
+          user.applications?.filter((app) => app.status === "pending") || [],
+      }))
+      .filter((user) => user.applications.length > 0);
+  }, [groupedApplications, isAdmin, viewMode]);
+
   // Client-side filtering and sorting for regular view
   const filteredApplications = useMemo(() => {
     if (isAdmin && viewMode === "admin") {
@@ -255,7 +268,7 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       return (
         <S.AdminViewContainer>
           <S.LoadingContainer>
-            <p>Loading client applications...</p>
+            <p>Loading pending client applications...</p>
           </S.LoadingContainer>
         </S.AdminViewContainer>
       );
@@ -274,25 +287,25 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       );
     }
 
-    if (groupedApplications.length === 0) {
+    if (filteredGroupedApplications.length === 0) {
       return (
         <S.AdminViewContainer>
           <S.EmptyState>
-            <S.EmptyStateIcon>📝</S.EmptyStateIcon>
-            <S.EmptyStateTitle>No Client Applications</S.EmptyStateTitle>
+            <S.EmptyStateIcon>✅</S.EmptyStateIcon>
+            <S.EmptyStateTitle>No Pending Applications</S.EmptyStateTitle>
             <S.EmptyStateDescription>
-              When users submit visa applications, they will appear here grouped
-              by client.
+              All applications have been processed. When new applications are
+              submitted, they will appear here.
             </S.EmptyStateDescription>
           </S.EmptyState>
         </S.AdminViewContainer>
       );
     }
 
-    const corporateClients = groupedApplications.filter(
+    const corporateClients = filteredGroupedApplications.filter(
       (user) => user.role === "corporate"
     );
-    const individualClients = groupedApplications.filter(
+    const individualClients = filteredGroupedApplications.filter(
       (user) => user.role === "individual"
     );
 
@@ -300,27 +313,15 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       <>
         <S.AdminViewContainer>
           <S.AdminHeader>
-            <S.AdminTitle>Client Applications</S.AdminTitle>
-            <S.AdminStats>
-              <S.StatItem>
-                <S.StatValue>{groupedApplications.length}</S.StatValue>
-                <S.StatLabel>Total Clients</S.StatLabel>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatValue>{corporateClients.length}</S.StatValue>
-                <S.StatLabel>Corporate</S.StatLabel>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatValue>{individualClients.length}</S.StatValue>
-                <S.StatLabel>Individual</S.StatLabel>
-              </S.StatItem>
-            </S.AdminStats>
+            <S.AdminTitle>Pending Applications</S.AdminTitle>
           </S.AdminHeader>
 
           {/* Corporate Clients Section */}
           {corporateClients.length > 0 && (
             <S.ClientSection>
-              <S.SectionTitle>Corporate Clients</S.SectionTitle>
+              <S.SectionTitle>
+                Corporate Clients ({corporateClients.length})
+              </S.SectionTitle>
               <S.ClientsGrid>
                 {corporateClients.map((user) => (
                   <UserCard
@@ -336,7 +337,9 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
           {/* Individual Clients Section */}
           {individualClients.length > 0 && (
             <S.ClientSection>
-              <S.SectionTitle>Individual Clients</S.SectionTitle>
+              <S.SectionTitle>
+                Individual Clients ({individualClients.length})
+              </S.SectionTitle>
               <S.ClientsGrid>
                 {individualClients.map((user) => (
                   <UserCard

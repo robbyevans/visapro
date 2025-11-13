@@ -14,13 +14,15 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
   onClose,
 }) => {
   const navigate = useNavigate();
-  const { applications = [] } = user;
-  const hasApplications = applications.length > 0;
+
+  const pendingApplications =
+    user.applications?.filter((app) => app.status === "pending") || [];
+  const hasPendingApplications = pendingApplications.length > 0;
 
   const infoItems = [
     { label: "Email", value: user.email },
     { label: "Total Applications", value: user.application_count },
-    { label: "Pending", value: user.pending_applications_count },
+    { label: "Pending Applications", value: user.pending_applications_count },
     { label: "Invoiced", value: user.invoiced_applications_count },
   ];
 
@@ -34,7 +36,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
       <S.ModalContent onClick={(e) => e.stopPropagation()}>
         <S.ModalHeader>
           <S.ModalTitle>
-            Applications for {user.name}
+            Pending Applications for {user.name}
             <S.UserType $type={user.role}>({user.role})</S.UserType>
           </S.ModalTitle>
           <S.CloseButton onClick={onClose}>×</S.CloseButton>
@@ -51,25 +53,23 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
 
           <S.ApplicationsSection>
             <S.SectionTitle>
-              Applications ({applications.length})
+              Pending Applications ({pendingApplications.length})
             </S.SectionTitle>
 
-            {hasApplications ? (
+            {hasPendingApplications ? (
               <S.ApplicationsWrapper>
-                {applications.map((application) => (
+                {pendingApplications.map((application) => (
                   <ApplicationCard
                     key={application.id}
                     application={application}
                     showActions={false}
-                    onClick={() => {
-                      handleApplicationClick(application.id);
-                    }}
+                    onClick={() => handleApplicationClick(application.id)}
                   />
                 ))}
               </S.ApplicationsWrapper>
             ) : (
               <S.NoApplications>
-                No applications found for this user.
+                No pending applications found for this user.
               </S.NoApplications>
             )}
           </S.ApplicationsSection>

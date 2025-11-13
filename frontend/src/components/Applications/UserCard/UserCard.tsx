@@ -8,34 +8,25 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user, onClick }) => {
-  const userTypeDisplay =
-    user.role === "corporate" ? "🏢 Corporate" : "👤 Individual";
+  const pendingApplicationsCount = user.applications?.length || 0;
 
   return (
     <S.UserCard onClick={onClick}>
-      <S.UserHeader>
-        <S.UserName>{user.name}</S.UserName>
-        <S.UserType $type={user.role}>{userTypeDisplay}</S.UserType>
-      </S.UserHeader>
+      <S.CardHeader>
+        <S.UserAvatar $type={user.role}>
+          {user.role === "corporate" ? "🏢" : "👤"}
+        </S.UserAvatar>
 
-      <S.UserEmail>{user.email}</S.UserEmail>
+        <S.UserInfo>
+          <S.UserName>{user.name}</S.UserName>
+          <S.UserEmail>{user.email}</S.UserEmail>
+        </S.UserInfo>
 
-      <S.ApplicationStats>
-        <S.Stat>
-          <S.StatNumber>{user.application_count}</S.StatNumber>
-          <S.StatLabel>Total</S.StatLabel>
-        </S.Stat>
-        {/* <S.Stat>
-          <S.StatNumber>{user.pending_applications_count}</S.StatNumber>
-          <S.StatLabel>Pending</S.StatLabel>
-        </S.Stat>
-        <S.Stat>
-          <S.StatNumber>{user.invoiced_applications_count}</S.StatNumber>
-          <S.StatLabel>Invoiced</S.StatLabel>
-        </S.Stat> */}
-      </S.ApplicationStats>
-
-      <S.ViewApplicationsButton>View Applications →</S.ViewApplicationsButton>
+        <S.PendingBadge>
+          <S.BadgeNumber>{pendingApplicationsCount}</S.BadgeNumber>
+          <S.BadgeLabel>Pending</S.BadgeLabel>
+        </S.PendingBadge>
+      </S.CardHeader>
     </S.UserCard>
   );
 };
