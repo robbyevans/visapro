@@ -25,9 +25,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
   ];
 
   const handleApplicationClick = (applicationId: number) => {
-    // Close the modal first
     onClose();
-    // Then navigate to the admin application page
     navigate(`/admin/applications/${applicationId}`);
   };
 
@@ -63,7 +61,9 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
                     key={application.id}
                     application={application}
                     showActions={false}
-                    onClick={() => handleApplicationClick(application.id)}
+                    onClick={() => {
+                      handleApplicationClick(application.id);
+                    }}
                   />
                 ))}
               </S.ApplicationsGrid>

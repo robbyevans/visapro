@@ -1,20 +1,30 @@
 import styled, { css } from "styled-components";
 
-export const ApplicationCardContainer = styled.div`
+export const ApplicationCardContainer = styled.div<{ $clickable?: boolean }>`
   background: ${({ theme }) => theme.background.primary};
   border: 1px solid ${({ theme }) => theme.border.light};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   padding: ${({ theme }) => theme.spacing.lg};
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  width: 100%;
 
-  &:hover {
-    border-color: ${({ theme }) => theme.primaryColors["500"]};
-    box-shadow: ${({ theme }) => theme.shadows.md};
-    transform: translateY(-2px);
-  }
+  ${({ $clickable }) =>
+    $clickable &&
+    css`
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+
+      &:hover {
+        border-color: ${({ theme }) => theme.primaryColors["500"]};
+        box-shadow: ${({ theme }) => theme.shadows.md};
+        transform: translateY(-2px);
+      }
+    `}
+
+  ${({ $clickable }) =>
+    !$clickable &&
+    css`
+      cursor: default;
+    `}
 
   @media (max-width: 768px) {
     padding: ${({ theme }) => theme.spacing.md};
@@ -24,9 +34,13 @@ export const ApplicationCardContainer = styled.div`
   @media (max-width: 480px) {
     padding: ${({ theme }) => theme.spacing.sm};
 
-    &:hover {
-      transform: none; /* Remove lift effect on very small screens */
-    }
+    ${({ $clickable }) =>
+      $clickable &&
+      css`
+        &:hover {
+          transform: none;
+        }
+      `}
   }
 `;
 
@@ -36,6 +50,7 @@ export const CardHeader = styled.div`
   align-items: flex-start;
   margin-bottom: ${({ theme }) => theme.spacing.md};
   gap: ${({ theme }) => theme.spacing.sm};
+  pointer-events: none;
 
   @media (max-width: 480px) {
     flex-direction: column;
@@ -51,6 +66,7 @@ export const CardTitle = styled.h3`
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.text.primary};
   line-height: 1.3;
+  pointer-events: none;
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.base};
@@ -58,13 +74,12 @@ export const CardTitle = styled.h3`
   }
 `;
 
-// ... (existing StatusBadge styles remain the same)
-
 export const CardContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  pointer-events: none;
 
   @media (max-width: 480px) {
     gap: ${({ theme }) => theme.spacing.xs};
@@ -77,6 +92,7 @@ export const CardDetail = styled.div`
   justify-content: space-between;
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   align-items: center;
+  pointer-events: none;
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
@@ -87,6 +103,7 @@ export const DetailLabel = styled.span`
   color: ${({ theme }) => theme.text.secondary};
   flex-shrink: 0;
   min-width: 80px;
+  pointer-events: none;
 `;
 
 export const DetailValue = styled.span`
@@ -96,6 +113,7 @@ export const DetailValue = styled.span`
   word-break: break-word;
   flex: 1;
   margin-left: ${({ theme }) => theme.spacing.sm};
+  pointer-events: none;
 `;
 
 export const CardRemarks = styled.div`
@@ -107,6 +125,7 @@ export const CardRemarks = styled.div`
   color: ${({ theme }) => theme.text.secondary};
   border-radius: 0 ${({ theme }) => theme.borderRadius.md}
     ${({ theme }) => theme.borderRadius.md} 0;
+  pointer-events: none;
 
   strong {
     color: ${({ theme }) => theme.text.primary};
@@ -125,6 +144,7 @@ export const CardActions = styled.div`
   gap: ${({ theme }) => theme.spacing.sm};
   margin-top: ${({ theme }) => theme.spacing.md};
   flex-wrap: wrap;
+  pointer-events: auto;
 
   @media (max-width: 480px) {
     gap: ${({ theme }) => theme.spacing.xs};
@@ -146,6 +166,7 @@ export const SmallButton = styled.button`
   transition: all 0.2s ease;
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   white-space: nowrap;
+  pointer-events: auto;
 
   @media (max-width: 480px) {
     padding: ${({ theme }) => theme.spacing.xs};

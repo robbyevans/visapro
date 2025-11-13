@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useApplications } from "../../redux/hooks/useApplications";
 import { useUser } from "../../redux/hooks/useUser";
 import Spinner from "../../components/Spinner/Spinner";
@@ -9,6 +9,7 @@ import type { IDocument } from "../../redux/types";
 const AdminApplicationPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     currentApplication,
     fetchApplication,
@@ -26,6 +27,14 @@ const AdminApplicationPage: React.FC = () => {
       fetchApplication(parseInt(id));
     }
   }, [id, fetchApplication]);
+
+  const handleBack = () => {
+    if (location.key !== "default") {
+      navigate(-1);
+    } else {
+      navigate("/dashboard");
+    }
+  };
 
   const handleStatusUpdate = async (status: string) => {
     if (!id) return;
@@ -54,7 +63,6 @@ const AdminApplicationPage: React.FC = () => {
     fetchApplication(parseInt(id));
   };
 
-  // FIXED: Renamed parameter to avoid conflict with global document object
   const handleDownloadDocument = async (doc: IDocument, fileName: string) => {
     try {
       // Use download_url if available, otherwise fall back to file_url
@@ -136,9 +144,7 @@ const AdminApplicationPage: React.FC = () => {
   return (
     <S.AdminApplicationContainer>
       <S.Header>
-        <S.BackButton onClick={() => navigate("/admin/dashboard")}>
-          ← Back to Dashboard
-        </S.BackButton>
+        <S.BackButton onClick={handleBack}>← Back</S.BackButton>
         <S.PageTitle>
           Application #{currentApplication.id} -{" "}
           {currentApplication.athlete?.first_name}{" "}

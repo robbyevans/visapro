@@ -20,8 +20,18 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
     ? new Date(application.created_at).toLocaleDateString()
     : "N/A";
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button")) {
+      return;
+    }
+    onClick?.();
+  };
+
   return (
-    <S.ApplicationCardContainer onClick={onClick}>
+    <S.ApplicationCardContainer
+      onClick={handleCardClick}
+      $clickable={!!onClick}
+    >
       <S.CardHeader>
         <S.CardTitle>
           {athleteFirstName} {athleteLastName}
@@ -56,11 +66,29 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
       {showActions && (
         <S.CardActions>
-          <S.SmallButton className="btn-secondary">View Details</S.SmallButton>
+          <S.SmallButton
+            className="btn-secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick?.();
+            }}
+          >
+            View Details
+          </S.SmallButton>
           {application.status === "pending" && (
             <>
-              <S.SmallButton className="btn-success">Approve</S.SmallButton>
-              <S.SmallButton className="btn-danger">Reject</S.SmallButton>
+              <S.SmallButton
+                className="btn-success"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Approve
+              </S.SmallButton>
+              <S.SmallButton
+                className="btn-danger"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Reject
+              </S.SmallButton>
             </>
           )}
         </S.CardActions>
