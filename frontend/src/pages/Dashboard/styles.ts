@@ -261,8 +261,13 @@ export const ApplicationsSection = styled.section`
 export const SectionHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -276,6 +281,48 @@ export const SectionSubtitle = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   color: ${({ theme }) => theme.text.secondary};
   margin: 0;
+`;
+
+export const AdminTabs = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.xs};
+  background: ${({ theme }) => theme.background.secondary};
+  padding: ${({ theme }) => theme.spacing.xs};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 1px solid ${({ theme }) => theme.border.light};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: stretch;
+  }
+`;
+
+export const TabButton = styled.button<{ active: boolean }>`
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  background: ${({ active, theme }) =>
+    active ? theme.primaryColors["500"] : "transparent"};
+  color: ${({ active, theme }) => (active ? "white" : theme.text.secondary)};
+
+  &:hover {
+    background: ${({ active, theme }) =>
+      active ? theme.primaryColors["600"] : theme.background.tertiary};
+    color: ${({ active, theme }) => (active ? "white" : theme.text.primary)};
+  }
+
+  @media (max-width: 768px) {
+    flex: 1;
+    text-align: center;
+    padding: ${({ theme }) => theme.spacing.sm};
+      ${({ theme }) => theme.spacing.md};
+  }
 `;
 
 export const EmptyState = styled.div`

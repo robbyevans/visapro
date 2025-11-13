@@ -7,12 +7,17 @@ import Button from "../../components/Button/Button";
 import SuccessModal from "../../components/Modals/SucessModal/SucessModal";
 import * as S from "./styles";
 
+type AdminTab = "current" | "all";
+
 const Dashboard: React.FC = () => {
   const { currentUser } = useUser();
   const { applications, fetchApplications } = useApplications();
   const navigate = useNavigate();
   const location = useLocation();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<AdminTab>("current");
+
+  console.log("activeTab", activeTab);
 
   // Check for success message in location state
   useEffect(() => {
@@ -66,6 +71,58 @@ const Dashboard: React.FC = () => {
       completed: "#8B5CF6",
     };
     return colors[status as keyof typeof colors] || "#6B7280";
+  };
+
+  const renderApplicationsContent = () => {
+    if (userApplications.length === 0) {
+      return (
+        <S.EmptyState>
+          <S.EmptyStateIcon>📝</S.EmptyStateIcon>
+          <S.EmptyStateTitle>
+            {isAdmin ? "No Client Applications" : "No Applications Yet"}
+          </S.EmptyStateTitle>
+          <S.EmptyStateDescription>
+            {isAdmin
+              ? "When users submit visa applications, they will appear here grouped by client."
+              : "Start your visa journey by creating your first application."}
+          </S.EmptyStateDescription>
+          {isRegularUser && (
+            <Button
+              onClick={() => navigate("/applications/new")}
+              variant="primary"
+              size="lg"
+            >
+              Start Your First Application
+            </Button>
+          )}
+        </S.EmptyState>
+      );
+    }
+
+    if (isAdmin && activeTab === "all") {
+      // All Applications view - show all applications grouped by user without filtering
+      return (
+        <ApplicationsView
+          showFilters={false}
+          onApplicationClick={handleApplicationClick}
+          viewMode="admin"
+          defaultFilter={{
+            status: [], // Show all statuses
+            timeRange: "all_time", // Show all time
+            sortBy: "created_at",
+            sortOrder: "desc",
+          }}
+        />
+      );
+    }
+
+    return (
+      <ApplicationsView
+        showFilters={!isAdmin}
+        onApplicationClick={handleApplicationClick}
+        viewMode={isAdmin ? "admin" : "user"}
+      />
+    );
   };
 
   return (
@@ -194,44 +251,38 @@ const Dashboard: React.FC = () => {
       {/* Applications List Section */}
       <S.ApplicationsSection>
         <S.SectionHeader>
-          <S.SectionTitle>
-            {isAdmin ? "Client Applications" : "Your Applications"}
-          </S.SectionTitle>
-          <S.SectionSubtitle>
-            {isAdmin
-              ? "Applications grouped by client for easy management"
-              : "Your recent and active applications"}
-          </S.SectionSubtitle>
+          <div>
+            <S.SectionTitle>
+              {isAdmin ? "Client Applications" : "Your Applications"}
+            </S.SectionTitle>
+            <S.SectionSubtitle>
+              {isAdmin
+                ? activeTab === "current"
+                  ? "Pending applications grouped by client for easy management"
+                  : "Complete application history grouped by client"
+                : "Your recent and active applications"}
+            </S.SectionSubtitle>
+          </div>
+
+          {isAdmin && (
+            <S.AdminTabs>
+              <S.TabButton
+                active={activeTab === "current"}
+                onClick={() => setActiveTab("current")}
+              >
+                Current Applications
+              </S.TabButton>
+              <S.TabButton
+                active={activeTab === "all"}
+                onClick={() => setActiveTab("all")}
+              >
+                All Applications
+              </S.TabButton>
+            </S.AdminTabs>
+          )}
         </S.SectionHeader>
 
-        {userApplications.length === 0 ? (
-          <S.EmptyState>
-            <S.EmptyStateIcon>📝</S.EmptyStateIcon>
-            <S.EmptyStateTitle>
-              {isAdmin ? "No Client Applications" : "No Applications Yet"}
-            </S.EmptyStateTitle>
-            <S.EmptyStateDescription>
-              {isAdmin
-                ? "When users submit visa applications, they will appear here grouped by client."
-                : "Start your visa journey by creating your first application."}
-            </S.EmptyStateDescription>
-            {isRegularUser && (
-              <Button
-                onClick={() => navigate("/applications/new")}
-                variant="primary"
-                size="lg"
-              >
-                Start Your First Application
-              </Button>
-            )}
-          </S.EmptyState>
-        ) : (
-          <ApplicationsView
-            showFilters={!isAdmin} // Hide filters for admin grouped view
-            onApplicationClick={handleApplicationClick}
-            viewMode={isAdmin ? "admin" : "user"}
-          />
-        )}
+        {renderApplicationsContent()}
       </S.ApplicationsSection>
     </S.DashboardContainer>
   );
