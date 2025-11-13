@@ -179,14 +179,19 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       return [];
     }
 
+    // If defaultFilter has empty status array, show all applications (All Applications tab)
+    // Otherwise, only show pending applications (Current Applications tab)
+    const showAllApplications = defaultFilter?.status?.length === 0;
+
     return groupedApplications
       .map((user) => ({
         ...user,
-        applications:
-          user.applications?.filter((app) => app.status === "pending") || [],
+        applications: showAllApplications
+          ? user.applications || [] // Show all applications
+          : user.applications?.filter((app) => app.status === "pending") || [], // Show only pending
       }))
-      .filter((user) => user.applications.length > 0);
-  }, [groupedApplications, isAdmin, viewMode]);
+      .filter((user) => user.applications.length > 0); // Only show users with applications
+  }, [groupedApplications, isAdmin, viewMode, defaultFilter]);
 
   // Client-side filtering and sorting for regular view
   const filteredApplications = useMemo(() => {
@@ -268,7 +273,7 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       return (
         <S.AdminViewContainer>
           <S.LoadingContainer>
-            <p>Loading pending client applications...</p>
+            <p>Loading client applications...</p>
           </S.LoadingContainer>
         </S.AdminViewContainer>
       );
@@ -287,15 +292,22 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       );
     }
 
+    const showAllApplications = defaultFilter?.status?.length === 0;
+    const emptyStateTitle = showAllApplications
+      ? "No Applications Found"
+      : "No Pending Applications";
+    const emptyStateDescription = showAllApplications
+      ? "When users submit visa applications, they will appear here grouped by client."
+      : "All applications have been processed. When new applications are submitted, they will appear here.";
+
     if (filteredGroupedApplications.length === 0) {
       return (
         <S.AdminViewContainer>
           <S.EmptyState>
             <S.EmptyStateIcon>✅</S.EmptyStateIcon>
-            <S.EmptyStateTitle>No Pending Applications</S.EmptyStateTitle>
+            <S.EmptyStateTitle>{emptyStateTitle}</S.EmptyStateTitle>
             <S.EmptyStateDescription>
-              All applications have been processed. When new applications are
-              submitted, they will appear here.
+              {emptyStateDescription}
             </S.EmptyStateDescription>
           </S.EmptyState>
         </S.AdminViewContainer>
@@ -309,11 +321,15 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       (user) => user.role === "individual"
     );
 
+    const sectionTitle = showAllApplications
+      ? "All Applications"
+      : "Pending Applications";
+
     return (
       <>
         <S.AdminViewContainer>
           <S.AdminHeader>
-            <S.AdminTitle>Pending Applications</S.AdminTitle>
+            <S.AdminTitle>{sectionTitle}</S.AdminTitle>
           </S.AdminHeader>
 
           {/* Corporate Clients Section */}
