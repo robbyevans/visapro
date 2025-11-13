@@ -19,6 +19,9 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
     user.applications?.filter((app) => app.status === "pending") || [];
   const hasPendingApplications = pendingApplications.length > 0;
 
+  const allApplications = user.applications || [];
+  const hasAnyApplications = allApplications.length > 0;
+
   const infoItems = [
     { label: "Email", value: user.email },
     { label: "Total Applications", value: user.application_count },
@@ -72,12 +75,23 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
     };
   }, [onClose]);
 
+  // Determine which applications to display and the section title
+  const displayApplications = hasPendingApplications
+    ? pendingApplications
+    : allApplications;
+  const sectionTitle = hasPendingApplications
+    ? `Pending Applications (${pendingApplications.length})`
+    : `All Applications (${allApplications.length})`;
+
   return (
     <S.ModalOverlay onClick={onClose}>
       <S.ModalContent onClick={(e) => e.stopPropagation()}>
         <S.ModalHeader>
           <S.ModalTitle>
-            Pending Applications for {user.name}
+            {hasPendingApplications
+              ? "Pending Applications"
+              : "All Applications"}{" "}
+            for {user.name}
             <S.UserType $type={user.role}>({user.role})</S.UserType>
           </S.ModalTitle>
           <S.CloseButton onClick={onClose}>×</S.CloseButton>
@@ -93,13 +107,11 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
           </S.ClientInfo>
 
           <S.ApplicationsSection>
-            <S.SectionTitle>
-              Pending Applications ({pendingApplications.length})
-            </S.SectionTitle>
+            <S.SectionTitle>{sectionTitle}</S.SectionTitle>
 
-            {hasPendingApplications ? (
+            {hasAnyApplications ? (
               <S.ApplicationsWrapper>
-                {pendingApplications.map((application) => (
+                {displayApplications.map((application) => (
                   <ApplicationCard
                     key={application.id}
                     application={application}
@@ -110,7 +122,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
               </S.ApplicationsWrapper>
             ) : (
               <S.NoApplications>
-                No pending applications found for this user.
+                No applications found for this user.
               </S.NoApplications>
             )}
           </S.ApplicationsSection>
