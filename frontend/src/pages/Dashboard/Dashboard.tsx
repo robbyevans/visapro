@@ -17,8 +17,6 @@ const Dashboard: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>("current");
 
-  console.log("activeTab", activeTab);
-
   // Check for success message in location state
   useEffect(() => {
     if (location.state?.message) {
