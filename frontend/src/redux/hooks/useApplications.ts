@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchApplications,
   fetchApplication,
+  fetchGroupedApplications,
   createApplication,
   updateApplication,
   uploadDocument,
@@ -18,6 +19,7 @@ import {
   selectApprovedApplications,
   selectCanCreateApplication,
   selectUploadProgress,
+  selectGroupedApplications,
 } from "../selectors/applicationSelectors";
 import type { AppDispatch } from "../store";
 import type {
@@ -29,6 +31,7 @@ export const useApplications = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const applications = useSelector(selectApplications);
+  const groupedApplications = useSelector(selectGroupedApplications);
   const currentApplication = useSelector(selectCurrentApplication);
   const isLoading = useSelector(selectApplicationsLoading);
   const error = useSelector(selectApplicationsError);
@@ -47,6 +50,10 @@ export const useApplications = () => {
     },
     [dispatch]
   );
+
+  const handleFetchGroupedApplications = useCallback(() => {
+    dispatch(fetchGroupedApplications());
+  }, [dispatch]);
 
   const handleCreateApplication = useCallback(
     (payload: ICreateApplicationPayload) => {
@@ -85,6 +92,7 @@ export const useApplications = () => {
 
   return {
     applications,
+    groupedApplications,
     currentApplication,
     isLoading,
     error,
@@ -94,6 +102,7 @@ export const useApplications = () => {
     uploadProgress,
 
     fetchApplications: handleFetchApplications,
+    fetchGroupedApplications: handleFetchGroupedApplications,
     fetchApplication: handleFetchApplication,
     createApplication: handleCreateApplication,
     updateApplication: handleUpdateApplication,

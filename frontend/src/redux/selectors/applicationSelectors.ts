@@ -2,6 +2,8 @@ import type { RootState } from "../store";
 
 export const selectApplications = (state: RootState) =>
   state.applications.applications;
+export const selectGroupedApplications = (state: RootState) =>
+  state.applications.groupedApplications;
 export const selectCurrentApplication = (state: RootState) =>
   state.applications.currentApplication;
 export const selectApplicationsLoading = (state: RootState) =>

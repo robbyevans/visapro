@@ -6,6 +6,7 @@ import type {
   IApplicationsState,
   ICreateApplicationPayload,
   TUpdateApplicationPayload,
+  IUserWithApplications,
 } from "../types";
 import { axiosInstance } from "../api";
 import { getErrorMessage } from "../../utils/error";
@@ -41,6 +42,25 @@ const fetchApplication = createAsyncThunk(
 
       const api = axiosInstance(token);
       const res = await api.get<IApplication>(`/applications/${id}`);
+      return res.data;
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err));
+    }
+  }
+);
+
+const fetchGroupedApplications = createAsyncThunk(
+  "applications/fetchGrouped",
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as any;
+      const token = state.auth.token;
+      if (!token) throw new Error("Not authenticated");
+
+      const api = axiosInstance(token);
+      const res = await api.get<IUserWithApplications[]>(
+        "/applications?group_by_client=true"
+      );
       return res.data;
     } catch (err: unknown) {
       return rejectWithValue(getErrorMessage(err));
@@ -127,6 +147,7 @@ const uploadDocument = createAsyncThunk(
 
 const initialState: IApplicationsState = {
   applications: [],
+  groupedApplications: [],
   currentApplication: null,
   isLoading: false,
   error: null,
@@ -186,6 +207,19 @@ const applicationsSlice = createSlice({
         };
       })
       .addCase(fetchApplication.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(fetchGroupedApplications.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchGroupedApplications.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.groupedApplications = action.payload;
+      })
+      .addCase(fetchGroupedApplications.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
@@ -253,6 +287,7 @@ const applicationsSlice = createSlice({
 
 export {
   fetchApplications,
+  fetchGroupedApplications,
   fetchApplication,
   createApplication,
   updateApplication,

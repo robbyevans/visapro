@@ -83,8 +83,20 @@ export interface IUserState {
   error: string | null;
 }
 
+export interface IUserWithApplications {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  application_count: number;
+  pending_applications_count: number;
+  invoiced_applications_count: number;
+  applications: IApplication[];
+}
+
 export interface IApplicationsState {
   applications: IApplication[];
+  groupedApplications: IUserWithApplications[]; // Add this
   currentApplication: IApplication | null;
   isLoading: boolean;
   error: string | null;

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useApplications } from "../../../redux/hooks/useApplications";
+import { useUser } from "../../../redux/hooks/useUser";
 import ApplicationList from "../ApplicationList/ApplicationList";
+import UserCard from "../UserCard/UserCard";
+import UserApplicationsModal from "../../Modals/UserApplicationsModal/UserApplicationsModal";
 import { ApplicationFilter } from "../ApplicationFilter/ApplicationFilter";
 import type { FilterState } from "../types";
-import type { IApplication } from "../../../redux/types";
+import type { IApplication, IUserWithApplications } from "../../../redux/types";
 import * as S from "./styles";
 
 interface ApplicationsViewProps {
@@ -14,7 +17,7 @@ interface ApplicationsViewProps {
   defaultFilter?: Partial<FilterState>;
 }
 
-// Helper functions - moved outside the component or at least before useMemo
+// Helper functions
 const getCutoffDate = (timeRange: string): Date => {
   const now = new Date();
   switch (timeRange) {
@@ -58,10 +61,18 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
   showFilters = true,
   defaultFilter,
 }) => {
-  const { applications, isLoading, error, fetchApplications } =
-    useApplications();
-
-  const getDefaultFilter = (): FilterState => {
+  const {
+    applications,
+    groupedApplications,
+    isLoading,
+    error,
+    fetchApplications,
+    fetchGroupedApplications,
+  } = useApplications();
+  const { currentUser } = useUser();
+  const [selectedUser, setSelectedUser] =
+    useState<IUserWithApplications | null>(null);
+  const [currentFilter, setCurrentFilter] = useState<FilterState>(() => {
     const baseFilter: FilterState = {
       status: [],
       timeRange: "all_time",
@@ -89,12 +100,10 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       timeRange: "last_3_months",
       sortBy: "updated_at",
     };
-  };
-
-  const [currentFilter, setCurrentFilter] = useState<FilterState>(
-    getDefaultFilter()
-  );
+  });
   const [showFilterPanel, setShowFilterPanel] = useState(false);
+
+  const isAdmin = currentUser?.role === "admin";
 
   // Load filters from URL on component mount
   useEffect(() => {
@@ -148,16 +157,30 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
 
   // Initial fetch when component mounts
   useEffect(() => {
-    fetchApplications();
-  }, [fetchApplications]);
+    if (isAdmin && viewMode === "admin") {
+      fetchGroupedApplications();
+    } else {
+      fetchApplications();
+    }
+  }, [fetchApplications, fetchGroupedApplications, isAdmin, viewMode]);
 
   // Reset filter when viewMode changes
   useEffect(() => {
-    setCurrentFilter(getDefaultFilter());
-  }, [viewMode]);
+    setCurrentFilter({
+      status: [],
+      timeRange: "all_time",
+      sortBy: "created_at",
+      sortOrder: "desc",
+      ...defaultFilter,
+    });
+  }, [viewMode, defaultFilter]);
 
-  // Client-side filtering and sorting
+  // Client-side filtering and sorting for regular view
   const filteredApplications = useMemo(() => {
+    if (isAdmin && viewMode === "admin") {
+      return []; // Don't filter for admin grouped view
+    }
+
     let filtered = [...applications];
 
     // Apply status filter
@@ -194,7 +217,7 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
     });
 
     return filtered;
-  }, [applications, currentFilter]);
+  }, [applications, currentFilter, isAdmin, viewMode]);
 
   // Get active filter count for badge
   const getActiveFilterCount = useCallback(() => {
@@ -216,8 +239,129 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
     setShowFilterPanel(false);
   };
 
+  const handleUserClick = (user: IUserWithApplications) => {
+    setSelectedUser(user);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedUser(null);
+  };
+
   const activeFilterCount = getActiveFilterCount();
 
+  // For admin view with grouped applications
+  if (isAdmin && viewMode === "admin") {
+    if (isLoading) {
+      return (
+        <S.AdminViewContainer>
+          <S.LoadingContainer>
+            <p>Loading client applications...</p>
+          </S.LoadingContainer>
+        </S.AdminViewContainer>
+      );
+    }
+
+    if (error) {
+      return (
+        <S.AdminViewContainer>
+          <S.ErrorContainer>
+            <p>Error loading applications: {error}</p>
+            <S.RetryButton onClick={fetchGroupedApplications}>
+              Try Again
+            </S.RetryButton>
+          </S.ErrorContainer>
+        </S.AdminViewContainer>
+      );
+    }
+
+    if (groupedApplications.length === 0) {
+      return (
+        <S.AdminViewContainer>
+          <S.EmptyState>
+            <S.EmptyStateIcon>📝</S.EmptyStateIcon>
+            <S.EmptyStateTitle>No Client Applications</S.EmptyStateTitle>
+            <S.EmptyStateDescription>
+              When users submit visa applications, they will appear here grouped
+              by client.
+            </S.EmptyStateDescription>
+          </S.EmptyState>
+        </S.AdminViewContainer>
+      );
+    }
+
+    const corporateClients = groupedApplications.filter(
+      (user) => user.role === "corporate"
+    );
+    const individualClients = groupedApplications.filter(
+      (user) => user.role === "individual"
+    );
+
+    return (
+      <>
+        <S.AdminViewContainer>
+          <S.AdminHeader>
+            <S.AdminTitle>Client Applications</S.AdminTitle>
+            <S.AdminStats>
+              <S.StatItem>
+                <S.StatValue>{groupedApplications.length}</S.StatValue>
+                <S.StatLabel>Total Clients</S.StatLabel>
+              </S.StatItem>
+              <S.StatItem>
+                <S.StatValue>{corporateClients.length}</S.StatValue>
+                <S.StatLabel>Corporate</S.StatLabel>
+              </S.StatItem>
+              <S.StatItem>
+                <S.StatValue>{individualClients.length}</S.StatValue>
+                <S.StatLabel>Individual</S.StatLabel>
+              </S.StatItem>
+            </S.AdminStats>
+          </S.AdminHeader>
+
+          {/* Corporate Clients Section */}
+          {corporateClients.length > 0 && (
+            <S.ClientSection>
+              <S.SectionTitle>Corporate Clients</S.SectionTitle>
+              <S.ClientsGrid>
+                {corporateClients.map((user) => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    onClick={() => handleUserClick(user)}
+                  />
+                ))}
+              </S.ClientsGrid>
+            </S.ClientSection>
+          )}
+
+          {/* Individual Clients Section */}
+          {individualClients.length > 0 && (
+            <S.ClientSection>
+              <S.SectionTitle>Individual Clients</S.SectionTitle>
+              <S.ClientsGrid>
+                {individualClients.map((user) => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    onClick={() => handleUserClick(user)}
+                  />
+                ))}
+              </S.ClientsGrid>
+            </S.ClientSection>
+          )}
+        </S.AdminViewContainer>
+
+        {/* Modal for viewing user applications */}
+        {selectedUser && (
+          <UserApplicationsModal
+            user={selectedUser}
+            onClose={handleCloseModal}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Original logic for regular users and admin viewing individual applications
   return (
     <S.ApplicationsViewContainer>
       <S.ViewHeader>
@@ -243,7 +387,7 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
             currentFilter={currentFilter}
             onFilterChange={handleFilterChange}
             viewMode={viewMode}
-            isFiltering={false} // No server filtering, so no loading state needed
+            isFiltering={false}
           />
           <S.FilterActions>
             <S.CloseFiltersButton onClick={handleApplyFilters}>

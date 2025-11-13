@@ -1,3 +1,4 @@
+// File 3: /frontend/src/pages/Dashboard/Dashboard.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../../redux/hooks/useUser";
@@ -298,11 +299,11 @@ const Dashboard: React.FC = () => {
       <S.ApplicationsSection>
         <S.SectionHeader>
           <S.SectionTitle>
-            {isAdmin ? "All Applications" : "Your Applications"}
+            {isAdmin ? "Client Applications" : "Your Applications"}
           </S.SectionTitle>
           <S.SectionSubtitle>
             {isAdmin
-              ? "Focus on pending and in-review applications"
+              ? "Applications grouped by client for easy management"
               : "Your recent and active applications"}
           </S.SectionSubtitle>
         </S.SectionHeader>
@@ -311,11 +312,11 @@ const Dashboard: React.FC = () => {
           <S.EmptyState>
             <S.EmptyStateIcon>📝</S.EmptyStateIcon>
             <S.EmptyStateTitle>
-              {isAdmin ? "No Applications Yet" : "No Applications Yet"}
+              {isAdmin ? "No Client Applications" : "No Applications Yet"}
             </S.EmptyStateTitle>
             <S.EmptyStateDescription>
               {isAdmin
-                ? "When users submit visa applications, they will appear here for review."
+                ? "When users submit visa applications, they will appear here grouped by client."
                 : "Start your visa journey by creating your first application."}
             </S.EmptyStateDescription>
             {isRegularUser && (
@@ -330,7 +331,7 @@ const Dashboard: React.FC = () => {
           </S.EmptyState>
         ) : (
           <ApplicationsView
-            showFilters
+            showFilters={!isAdmin} // Hide filters for admin grouped view
             onApplicationClick={handleApplicationClick}
             viewMode={isAdmin ? "admin" : "user"}
           />

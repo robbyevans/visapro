@@ -1,3 +1,4 @@
+// File 2: /frontend/src/components/Applications/ApplicationsView/styles.ts
 import styled from "styled-components";
 
 export const ApplicationsViewContainer = styled.div`
@@ -109,4 +110,148 @@ export const CloseFiltersButton = styled.button`
   &:hover {
     background: ${({ theme }) => theme.primaryColors["600"]};
   }
+`;
+
+// Admin View Styles
+export const AdminViewContainer = styled.div`
+  padding: ${({ theme }) => theme.spacing.xl};
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+export const AdminHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.md};
+    align-items: flex-start;
+  }
+`;
+
+export const AdminTitle = styled.h1`
+  font-size: ${({ theme }) => theme.typography.fontSize["3xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.text.primary};
+  margin: 0;
+`;
+
+export const AdminStats = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
+`;
+
+export const StatItem = styled.div`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  min-width: 100px;
+`;
+
+export const StatValue = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize["2xl"]};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.primaryColors["500"]};
+`;
+
+export const StatLabel = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  color: ${({ theme }) => theme.text.secondary};
+  margin-top: ${({ theme }) => theme.spacing.xs};
+`;
+
+export const ClientSection = styled.section`
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+`;
+
+export const SectionTitle = styled.h2`
+  font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`;
+
+export const ClientsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: ${({ theme }) => theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+// Loading and Error States for Admin View
+export const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: ${({ theme }) => theme.spacing["3xl"]};
+  color: ${({ theme }) => theme.text.secondary};
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
+export const ErrorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: ${({ theme }) => theme.spacing.xl};
+  background: ${({ theme }) => theme.errorColors["50"]};
+  border: 1px solid ${({ theme }) => theme.errorColors["200"]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  color: ${({ theme }) => theme.errorColors["700"]};
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
+export const RetryButton = styled.button`
+  background: ${({ theme }) => theme.errorColors["500"]};
+  color: white;
+  border: none;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  cursor: pointer;
+
+  &:hover {
+    background: ${({ theme }) => theme.errorColors["600"]};
+  }
+`;
+
+export const EmptyState = styled.div`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing["3xl"]};
+  ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.text.secondary};
+`;
+
+export const EmptyStateIcon = styled.div`
+  font-size: ${({ theme }) => theme.typography.fontSize["5xl"]};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  opacity: 0.5;
+`;
+
+export const EmptyStateTitle = styled.h3`
+  font-size: ${({ theme }) => theme.typography.fontSize.xl};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.text.primary};
+  margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
+`;
+
+export const EmptyStateDescription = styled.p`
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  margin: 0 0 ${({ theme }) => theme.spacing.xl} 0;
+  line-height: 1.5;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 `;
