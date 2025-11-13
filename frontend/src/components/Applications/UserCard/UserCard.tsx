@@ -25,14 +25,14 @@ const UserCard: React.FC<UserCardProps> = ({ user, onClick }) => {
           <S.StatNumber>{user.application_count}</S.StatNumber>
           <S.StatLabel>Total</S.StatLabel>
         </S.Stat>
-        <S.Stat>
+        {/* <S.Stat>
           <S.StatNumber>{user.pending_applications_count}</S.StatNumber>
           <S.StatLabel>Pending</S.StatLabel>
         </S.Stat>
         <S.Stat>
           <S.StatNumber>{user.invoiced_applications_count}</S.StatNumber>
           <S.StatLabel>Invoiced</S.StatLabel>
-        </S.Stat>
+        </S.Stat> */}
       </S.ApplicationStats>
 
       <S.ViewApplicationsButton>View Applications →</S.ViewApplicationsButton>

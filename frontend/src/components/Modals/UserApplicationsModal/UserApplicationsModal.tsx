@@ -55,7 +55,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
             </S.SectionTitle>
 
             {hasApplications ? (
-              <S.ApplicationsGrid>
+              <S.ApplicationsWrapper>
                 {applications.map((application) => (
                   <ApplicationCard
                     key={application.id}
@@ -66,7 +66,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
                     }}
                   />
                 ))}
-              </S.ApplicationsGrid>
+              </S.ApplicationsWrapper>
             ) : (
               <S.NoApplications>
                 No applications found for this user.

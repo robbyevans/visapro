@@ -100,9 +100,9 @@ export const SectionTitle = styled.h3`
   margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
-export const ApplicationsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+export const ApplicationsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: ${({ theme }) => theme.spacing.md};
 
   @media (max-width: 768px) {
