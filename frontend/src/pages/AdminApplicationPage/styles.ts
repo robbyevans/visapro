@@ -169,19 +169,32 @@ export const DetailItem = styled.div`
   }
 `;
 
-export const DetailLabel = styled.span`
+export const TravelDateItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: fit-content;
+  padding: ${({ theme }) => theme.spacing.xs};
+  background: ${({ theme }) => theme.errorColors["50"]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  color: ${({ theme }) => theme.errorColors["700"]};
+`;
+
+export const DetailLabel = styled.span<{ $noColor?: boolean }>`
   font-size: ${({ theme }) => theme.typography.fontSize.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.text.secondary};
+  color: ${({ theme, $noColor }) =>
+    $noColor ? "inherit" : theme.text.secondary};
 
   @media (max-width: 480px) {
     font-size: ${({ theme }) => theme.typography.fontSize.xs};
   }
 `;
 
-export const DetailValue = styled.span`
+export const DetailValue = styled.span<{ $noColor?: boolean }>`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
-  color: ${({ theme }) => theme.text.primary};
+  color: ${({ theme, $noColor }) =>
+    $noColor ? "inherit" : theme.text.primary};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   word-break: break-word;
 

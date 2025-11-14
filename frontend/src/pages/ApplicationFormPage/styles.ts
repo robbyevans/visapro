@@ -401,6 +401,7 @@ export const TextAreaContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 10px;
 `;
 
 export const TextAreaLabel = styled.label`

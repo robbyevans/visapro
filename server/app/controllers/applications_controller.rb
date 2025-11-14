@@ -20,7 +20,7 @@ class ApplicationsController < ApplicationController
       include: {
         applications: {
           only: [
-            :id, :country, :status, :remarks,
+            :id, :country, :proposed_travel_date, :status, :remarks,
             :created_at, :updated_at,
             :invoice_id, :unit_price
           ],
@@ -150,6 +150,7 @@ class ApplicationsController < ApplicationController
 
       application = current_user.applications.build(
         country: application_params[:country],
+        proposed_travel_date: application_params[:proposed_travel_date],
         remarks: application_params[:remarks],
         athlete: athlete
       )
@@ -239,6 +240,7 @@ class ApplicationsController < ApplicationController
   def application_params
   params.require(:application).permit(
     :country,
+    :proposed_travel_date,
     :remarks,
     :status,
     athlete_attributes: [

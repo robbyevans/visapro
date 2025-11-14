@@ -35,6 +35,7 @@ const ApplicationFormPage: React.FC = () => {
     phone_number: "",
     email: "",
     country: "",
+    proposed_travel_date: "",
     remarks: "",
   });
 
@@ -111,6 +112,7 @@ const ApplicationFormPage: React.FC = () => {
           },
 
           country: formData.country,
+          proposed_travel_date: formData.proposed_travel_date,
           remarks: formData.remarks,
         },
       };
@@ -126,7 +128,6 @@ const ApplicationFormPage: React.FC = () => {
 
       // The fulfilled action contains the application in the payload
       const application = result.payload as IApplication;
-      console.log("Application created:", application);
 
       // Upload documents
       if (application?.id) {
@@ -276,17 +277,26 @@ const ApplicationFormPage: React.FC = () => {
 
           <S.TextAreaContainer>
             <S.TextAreaLabel>Competition Description *</S.TextAreaLabel>
+            <S.TextAreaHelp>
+              Please provide details about the competition, tournament, or event
+              you are attending
+            </S.TextAreaHelp>
             <S.TextArea
               value={formData.remarks}
               onChange={(e) => handleInputChange("remarks", e.target.value)}
               placeholder="Describe the competition, event, or purpose of travel..."
               rows={4}
             />
-            <S.TextAreaHelp>
-              Please provide details about the competition, tournament, or event
-              you are attending
-            </S.TextAreaHelp>
           </S.TextAreaContainer>
+
+          <Input
+            type="date"
+            label="Proposed Date Of Travel"
+            value={formData.proposed_travel_date}
+            onChange={(value) => handleInputChange("date_of_travel", value)}
+            required
+            placeholder="Select date of travel"
+          />
         </S.FormSection>
 
         {/* Documents Section */}

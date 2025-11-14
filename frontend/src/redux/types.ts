@@ -83,6 +83,7 @@ export interface IApplication {
   };
 
   country: string;
+  proposed_travel_date?: string;
   status: TApplicationStatus;
   remarks?: string;
   documents: IDocument[];
@@ -150,6 +151,7 @@ export interface ICreateApplicationPayload {
     };
 
     country: string;
+    proposed_travel_date: string;
     remarks?: string;
   };
 }

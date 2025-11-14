@@ -9,6 +9,7 @@ class Application < ApplicationRecord
   validates :country, presence: true
   validates :user, presence: true
   validates :athlete, presence: true
+  validates :proposed_travel_date, presence: true
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
 end

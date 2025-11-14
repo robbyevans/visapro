@@ -233,6 +233,18 @@ const ApplicationDetailsPage: React.FC = () => {
               <S.DetailLabel>Destination Country</S.DetailLabel>
               <S.DetailValue>{currentApplication.country}</S.DetailValue>
             </S.DetailItem>
+            <S.TravelDateItem>
+              <S.DetailLabel $noColor={true}>
+                Proposed Travel Date
+              </S.DetailLabel>
+              <S.DetailValue $noColor={true}>
+                {currentApplication.proposed_travel_date
+                  ? new Date(
+                      currentApplication.proposed_travel_date
+                    ).toLocaleDateString()
+                  : "N/A"}
+              </S.DetailValue>
+            </S.TravelDateItem>
             <S.DetailItem>
               <S.DetailLabel>Status</S.DetailLabel>
               <S.StatusBadge status={currentApplication.status}>
