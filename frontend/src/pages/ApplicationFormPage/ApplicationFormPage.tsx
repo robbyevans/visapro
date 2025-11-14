@@ -293,7 +293,9 @@ const ApplicationFormPage: React.FC = () => {
             type="date"
             label="Proposed Date Of Travel"
             value={formData.proposed_travel_date}
-            onChange={(value) => handleInputChange("date_of_travel", value)}
+            onChange={(value) =>
+              handleInputChange("proposed_travel_date", value)
+            }
             required
             placeholder="Select date of travel"
           />
