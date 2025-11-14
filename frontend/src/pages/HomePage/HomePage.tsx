@@ -89,9 +89,10 @@ const HomePage: React.FC = () => {
           <S.HeroOverlay />
           <S.HeroContent>
             <S.HeroTitle>
-              Empowering <S.HeroHighlight>Kenyan Athletes</S.HeroHighlight>{" "}
-              Worldwide
+              Fueling <S.HeroHighlight>Athletes</S.HeroHighlight> Across the
+              Globe
             </S.HeroTitle>
+
             <S.HeroSubtitle>
               Streamline your international visa applications with our dedicated
               platform designed specifically for athletes, coaches, and sports

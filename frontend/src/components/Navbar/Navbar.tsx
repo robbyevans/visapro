@@ -5,7 +5,7 @@ import { useUser } from "../../redux/hooks/useUser";
 import { useTheme } from "../../hooks/useTheme";
 import Button from "../Button/Button";
 import * as S from "./styles";
-import TrackPassLogo from "../../assets/TrackPassLogo.png";
+import VisaLinkLogo from "../../assets/VisaLinkLogo.png";
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, handleLogOut } = useAuth();
@@ -60,8 +60,8 @@ const Navbar: React.FC = () => {
         <S.Brand>
           <Link to="/" style={{ textDecoration: "none" }}>
             <S.BrandLink>
-              <S.BrandLogo src={TrackPassLogo} alt="Logo" />
-              <S.BrandText>TrackPass</S.BrandText>
+              <S.BrandLogo src={VisaLinkLogo} alt="Logo" />
+              <S.BrandText>VisaLink</S.BrandText>
             </S.BrandLink>
           </Link>
         </S.Brand>
