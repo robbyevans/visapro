@@ -33,7 +33,15 @@ class ApplicationsController < ApplicationController
               ]
             },
             athlete: {
-              only: [:first_name, :last_name, :date_of_birth, :passport_number]
+            only: [
+              :first_name,
+              :last_name,
+              :date_of_birth,
+              :passport_number,
+              :phone_number,
+              :email
+            ]
+
             },
             documents: {
               methods: [:file_url, :download_url]
@@ -61,7 +69,15 @@ class ApplicationsController < ApplicationController
             only: [:id, :invoice_number, :total_amount, :issue_date, :status]
           },
           athlete: {
-            only: [:first_name, :last_name, :date_of_birth, :passport_number]
+          only: [
+            :first_name,
+            :last_name,
+            :date_of_birth,
+            :passport_number,
+            :phone_number,
+            :email
+          ]
+
           },
           documents: {
             only: [:id, :doc_type, :created_at],
@@ -85,7 +101,15 @@ class ApplicationsController < ApplicationController
           only: [:id, :invoice_number, :total_amount, :issue_date, :status]
         },
         athlete: {
-          only: [:first_name, :last_name, :date_of_birth, :passport_number]
+        only: [
+          :first_name,
+          :last_name,
+          :date_of_birth,
+          :passport_number,
+          :phone_number,
+          :email
+        ]
+
         },
         documents: {
           only: [:id, :doc_type, :created_at],
@@ -141,7 +165,17 @@ class ApplicationsController < ApplicationController
     render json: application.as_json(
       include: {
         invoice: { only: [:id, :invoice_number, :total_amount, :status] },
-        athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+        athlete: {
+            only: [
+              :first_name,
+              :last_name,
+              :date_of_birth,
+              :passport_number,
+              :phone_number,
+              :email
+            ]
+
+           },
         documents: { methods: [:file_url, :download_url] },
         user: { only: [:id, :name, :email, :role] }
       }
@@ -164,7 +198,16 @@ class ApplicationsController < ApplicationController
       render json: @application.as_json(
         include: {
           invoice: { only: [:id, :invoice_number, :total_amount, :status] },
-          athlete: { only: [:first_name, :last_name, :date_of_birth, :passport_number] },
+          athlete: { 
+          only: [
+            :first_name,
+            :last_name,
+            :date_of_birth,
+            :passport_number,
+            :phone_number,
+            :email
+          ]
+          },
           documents: {
             only: [:id, :doc_type, :created_at],
             methods: [:file_url, :download_url]
@@ -194,13 +237,18 @@ class ApplicationsController < ApplicationController
   end
 
   def application_params
-    params.require(:application).permit(
-      :country,
-      :remarks,
-      :status,
-      athlete_attributes: [
-        :first_name, :last_name, :passport_number, :date_of_birth
-      ]
-    )
-  end
+  params.require(:application).permit(
+    :country,
+    :remarks,
+    :status,
+    athlete_attributes: [
+      :first_name,
+      :last_name,
+      :passport_number,
+      :date_of_birth,
+      :phone_number,
+      :email   
+    ]
+  )
+end
 end

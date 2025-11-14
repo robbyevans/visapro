@@ -32,6 +32,8 @@ const ApplicationFormPage: React.FC = () => {
     last_name: "",
     passport_number: "",
     date_of_birth: "",
+    phone_number: "",
+    email: "",
     country: "",
     remarks: "",
   });
@@ -104,7 +106,10 @@ const ApplicationFormPage: React.FC = () => {
             last_name: formData.last_name,
             passport_number: formData.passport_number,
             date_of_birth: formData.date_of_birth || undefined,
+            phone_number: formData.phone_number || undefined, // NEW
+            email: formData.email || undefined, // NEW
           },
+
           country: formData.country,
           remarks: formData.remarks,
         },
@@ -237,6 +242,21 @@ const ApplicationFormPage: React.FC = () => {
                 />
               </>
             )}
+            <Input
+              type="text"
+              label="Phone Number"
+              value={formData.phone_number}
+              onChange={(value) => handleInputChange("phone_number", value)}
+              placeholder="Enter phone number (optional)"
+            />
+
+            <Input
+              type="email"
+              label="Email Address"
+              value={formData.email}
+              onChange={(value) => handleInputChange("email", value)}
+              placeholder="Enter email (optional)"
+            />
           </S.FormRow>
         </S.FormSection>
 

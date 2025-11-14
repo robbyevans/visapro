@@ -10,7 +10,7 @@ class AthletesController < ApplicationController
 
   def create
     # support both nested and flat payloads
-    attrs = params[:athlete].presence || params.permit(:first_name, :last_name, :date_of_birth, :passport_number)
+    attrs = params[:athlete].presence || params.permit(:first_name, :last_name, :date_of_birth, :passport_number, :phone_number, :email)
     athlete = current_user.athletes.new(attrs)
     if athlete.save
       render json: athlete, status: :created
@@ -22,6 +22,13 @@ class AthletesController < ApplicationController
   private
 
   def athlete_params
-    params.require(:athlete).permit(:first_name, :last_name, :date_of_birth, :passport_number)
-  end
+  params.require(:athlete).permit(
+    :first_name,
+    :last_name,
+    :passport_number,
+    :date_of_birth,
+    :phone_number,
+    :email        
+  )
+end
 end

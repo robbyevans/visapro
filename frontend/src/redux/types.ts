@@ -16,6 +16,8 @@ export interface IAthlete {
   last_name: string;
   date_of_birth?: string;
   passport_number?: string;
+  phone_number?: string; // NEW
+  email?: string; // NEW
   user_id: number;
 }
 
@@ -76,7 +78,10 @@ export interface IApplication {
     last_name: string;
     date_of_birth?: string;
     passport_number?: string;
+    phone_number?: string;
+    email?: string;
   };
+
   country: string;
   status: TApplicationStatus;
   remarks?: string;
@@ -140,7 +145,10 @@ export interface ICreateApplicationPayload {
       last_name: string;
       passport_number?: string;
       date_of_birth?: string;
+      phone_number?: string;
+      email?: string;
     };
+
     country: string;
     remarks?: string;
   };

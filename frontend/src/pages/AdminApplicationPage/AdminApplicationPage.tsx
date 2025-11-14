@@ -170,6 +170,20 @@ const AdminApplicationPage: React.FC = () => {
               </S.DetailValue>
             </S.DetailItem>
             <S.DetailItem>
+              <S.DetailLabel>Phone Number</S.DetailLabel>
+              <S.DetailValue>
+                {currentApplication.athlete?.phone_number || "N/A"}
+              </S.DetailValue>
+            </S.DetailItem>
+
+            <S.DetailItem>
+              <S.DetailLabel>Email</S.DetailLabel>
+              <S.DetailValue>
+                {currentApplication.athlete?.email || "N/A"}
+              </S.DetailValue>
+            </S.DetailItem>
+
+            <S.DetailItem>
               <S.DetailLabel>Destination Country</S.DetailLabel>
               <S.DetailValue>{currentApplication.country}</S.DetailValue>
             </S.DetailItem>

@@ -15,7 +15,7 @@ const ApplicationDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { currentApplication, fetchApplication, isLoading } = useApplications();
   const { currentUser } = useUser();
-
+  console.log("currentApplication", currentApplication);
   const [previewDocument, setPreviewDocument] = useState<{
     fileUrl: string;
     fileName: string;
@@ -215,6 +215,20 @@ const ApplicationDetailsPage: React.FC = () => {
                 {currentApplication.athlete?.passport_number || "N/A"}
               </S.DetailValue>
             </S.DetailItem>
+            <S.DetailItem>
+              <S.DetailLabel>Phone Number</S.DetailLabel>
+              <S.DetailValue>
+                {currentApplication.athlete?.phone_number || "N/A"}
+              </S.DetailValue>
+            </S.DetailItem>
+
+            <S.DetailItem>
+              <S.DetailLabel>Email</S.DetailLabel>
+              <S.DetailValue>
+                {currentApplication.athlete?.email || "N/A"}
+              </S.DetailValue>
+            </S.DetailItem>
+
             <S.DetailItem>
               <S.DetailLabel>Destination Country</S.DetailLabel>
               <S.DetailValue>{currentApplication.country}</S.DetailValue>
