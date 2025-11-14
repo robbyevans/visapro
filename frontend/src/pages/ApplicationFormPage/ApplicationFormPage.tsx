@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApplications } from "../../redux/hooks/useApplications";
 import Input from "../../components/Forms/Input";
-import Select from "../../components/Forms/Select";
 import FileDropzone from "../../components/Forms/FileDropzone";
 import Button from "../../components/Button/Button";
 import Spinner from "../../components/Spinner/Spinner";
+import { useUser } from "../../redux/hooks/useUser";
 import type {
   ICreateApplicationPayload,
   IApplication,
 } from "../../redux/types";
 import EditDocument from "../../components/Documents/EditDocument";
-import { countries } from "../../utils/countries";
 import * as S from "./styles";
 
 interface DocumentUpload {
@@ -23,6 +22,10 @@ interface DocumentUpload {
 const ApplicationFormPage: React.FC = () => {
   const navigate = useNavigate();
   const { createApplication, uploadDocument, isLoading } = useApplications();
+  const { currentUser } = useUser();
+
+  const isCorporateUser = currentUser?.role === "corporate";
+  const isIndividualUser = currentUser?.role === "individual";
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -68,9 +71,7 @@ const ApplicationFormPage: React.FC = () => {
     if (!formData.last_name.trim()) {
       errors.last_name = "Last name is required";
     }
-    if (!formData.passport_number.trim()) {
-      errors.passport_number = "Passport number is required";
-    }
+
     if (!formData.country) {
       errors.country = "Destination country is required";
     }
@@ -162,12 +163,6 @@ const ApplicationFormPage: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  // Convert countries to select options with flags
-  const countryOptions = countries.map((country) => ({
-    value: country.code,
-    label: `${country.flag} ${country.name}`,
-  }));
-
   const isSubmitting = isLoading || uploading;
 
   // Get document references with proper null checking
@@ -219,22 +214,29 @@ const ApplicationFormPage: React.FC = () => {
             />
           </S.FormRow>
           <S.FormRow>
-            <Input
-              type="text"
-              label="Passport Number"
-              value={formData.passport_number}
-              onChange={(value) => handleInputChange("passport_number", value)}
-              placeholder="Enter passport number"
-              required
-              error={formErrors.passport_number}
-            />
-            <Input
-              type="date"
-              label="Date of Birth"
-              value={formData.date_of_birth}
-              onChange={(value) => handleInputChange("date_of_birth", value)}
-              placeholder="Select date of birth"
-            />
+            {isIndividualUser && (
+              <>
+                <Input
+                  type="text"
+                  label="Passport Number"
+                  value={formData.passport_number}
+                  onChange={(value) =>
+                    handleInputChange("passport_number", value)
+                  }
+                  placeholder="Enter passport number"
+                  error={formErrors.passport_number}
+                />
+                <Input
+                  type="date"
+                  label="Date of Birth"
+                  value={formData.date_of_birth}
+                  onChange={(value) =>
+                    handleInputChange("date_of_birth", value)
+                  }
+                  placeholder="Select date of birth"
+                />
+              </>
+            )}
           </S.FormRow>
         </S.FormSection>
 
@@ -242,12 +244,12 @@ const ApplicationFormPage: React.FC = () => {
         <S.FormSection>
           <S.SectionTitle>Application Details</S.SectionTitle>
 
-          <Select
+          <Input
+            type="text"
             label="Destination Country"
             value={formData.country}
             onChange={(value) => handleInputChange("country", value)}
-            options={countryOptions}
-            placeholder="Select destination country"
+            placeholder="Enter destination country"
             required
             error={formErrors.country}
           />

@@ -91,7 +91,7 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
     if (viewMode === "admin") {
       return {
         ...baseFilter,
-        status: ["pending"],
+        status: ["pending", "invoiced"],
         sortBy: "created_at",
       };
     }
@@ -191,13 +191,15 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
       .map((user) => ({
         ...user,
         applications: showAllApplications
-          ? user.applications || [] // Show all applications
-          : user.applications?.filter((app) => app.status === "pending") || [], // Show only pending
-        // Calculate pending count for sorting
+          ? user.applications || []
+          : user.applications?.filter(
+              (app) => app.status === "pending" || app.status === "invoiced"
+            ) || [],
         pendingCount:
-          user.applications?.filter((app) => app.status === "pending").length ||
-          0,
-        // Get latest application date for secondary sorting
+          user.applications?.filter(
+            (app) => app.status === "pending" || app.status === "invoiced"
+          ).length || 0,
+
         latestApplicationDate:
           user.applications?.length > 0
             ? new Date(
@@ -209,7 +211,7 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({
               )
             : new Date(0),
       }))
-      .filter((user) => user.applications.length > 0); // Only show users with applications
+      .filter((user) => user.applications.length > 0);
 
     // Sort users for better organization
     if (showAllApplications) {

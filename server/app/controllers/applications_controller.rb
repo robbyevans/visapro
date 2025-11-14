@@ -108,13 +108,21 @@ class ApplicationsController < ApplicationController
     Application.transaction do
       # Create or update athlete
       if application_params[:athlete_attributes]
-        athlete = Athlete.find_or_initialize_by(
-          passport_number: application_params[:athlete_attributes][:passport_number]
-        )
-        athlete.assign_attributes(application_params[:athlete_attributes])
+        attrs = application_params[:athlete_attributes]
+
+        # If passport number provided → try to find existing athlete
+        if attrs[:passport_number].present?
+          athlete = Athlete.find_or_initialize_by(passport_number: attrs[:passport_number])
+        else
+          # If no passport → always create new athlete
+          athlete = Athlete.new
+        end
+
+        athlete.assign_attributes(attrs)
         athlete.user = current_user
         athlete.save!
       end
+
 
       application = current_user.applications.build(
         country: application_params[:country],

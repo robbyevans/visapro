@@ -15,7 +15,7 @@ export interface IAthlete {
   first_name: string;
   last_name: string;
   date_of_birth?: string;
-  passport_number: string;
+  passport_number?: string;
   user_id: number;
 }
 
@@ -138,7 +138,7 @@ export interface ICreateApplicationPayload {
     athlete_attributes: {
       first_name: string;
       last_name: string;
-      passport_number: string;
+      passport_number?: string;
       date_of_birth?: string;
     };
     country: string;
