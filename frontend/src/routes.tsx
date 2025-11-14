@@ -24,6 +24,7 @@ import Settings from "./pages/Settings/Settings";
 import ApplicationFormPage from "./pages/ApplicationFormPage/ApplicationFormPage";
 import ApplicationDetailsPage from "./pages/ApplicationDetailsPage/ApplicationDetailsPage";
 import AdminApplicationPage from "./pages/AdminApplicationPage/AdminApplicationPage";
+import InvoiceGenerator from "./components/Invoices/InvoiceGenerator/InvoiceGenerator";
 
 // Main App component with routing
 const AppContent: React.FC = () => {
@@ -95,6 +96,15 @@ const AppContent: React.FC = () => {
                   element={
                     <ProtectedRoute allowedRoles={["admin"]}>
                       <AdminApplicationPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/invoices/new"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                      <InvoiceGenerator />
                     </ProtectedRoute>
                   }
                 />

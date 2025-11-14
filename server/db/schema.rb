@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_09_110051) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_14_051201) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,7 +50,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_09_110051) do
     t.text "remarks"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "invoice_id"
+    t.decimal "unit_price", precision: 10, scale: 2
     t.index ["athlete_id"], name: "index_applications_on_athlete_id"
+    t.index ["invoice_id"], name: "index_applications_on_invoice_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
@@ -74,6 +77,21 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_09_110051) do
     t.index ["application_id"], name: "index_documents_on_application_id"
   end
 
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "invoice_number", null: false
+    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.date "issue_date", null: false
+    t.date "due_date"
+    t.integer "status", default: 0, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_number"], name: "index_invoices_on_invoice_number", unique: true
+    t.index ["status"], name: "index_invoices_on_status"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -93,7 +111,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_09_110051) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "applications", "athletes"
+  add_foreign_key "applications", "invoices"
   add_foreign_key "applications", "users"
   add_foreign_key "athletes", "users"
   add_foreign_key "documents", "applications"
+  add_foreign_key "invoices", "users"
 end

@@ -116,6 +116,10 @@ export const AdminViewContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.xl};
   max-width: 1200px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `;
 
 export const AdminHeader = styled.div`
@@ -162,6 +166,7 @@ export const ClientsList = styled.ol`
 export const ListItem = styled.li`
   display: flex;
   align-items: center;
+  flex-direction: row;
   gap: ${({ theme }) => theme.spacing.lg};
   counter-increment: client-counter;
   position: relative;
@@ -188,10 +193,7 @@ export const ItemNumber = styled.div`
   position: relative;
 
   @media (max-width: 768px) {
-    width: 32px;
-    height: 32px;
-    font-size: ${({ theme }) => theme.typography.fontSize.base};
-    align-self: flex-start;
+    display: none;
   }
 `;
 

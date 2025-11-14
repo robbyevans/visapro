@@ -128,12 +128,6 @@ export const StatsGrid = styled.div`
   gap: ${({ theme }) => theme.spacing.lg};
   flex-wrap: wrap;
 
-  @media (max-width: 768px) {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: ${({ theme }) => theme.spacing.md};
-  }
-
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: ${({ theme }) => theme.spacing.sm};
@@ -255,7 +249,6 @@ export const ApplicationsSection = styled.section`
   padding: ${({ theme }) => theme.spacing.xl};
   border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
   box-shadow: ${({ theme }) => theme.shadows.md};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const SectionHeader = styled.div`
@@ -321,7 +314,7 @@ export const TabButton = styled.button<{ active: boolean }>`
     flex: 1;
     text-align: center;
     padding: ${({ theme }) => theme.spacing.sm};
-      ${({ theme }) => theme.spacing.md};
+    ${({ theme }) => theme.spacing.md};
   }
 `;
 

@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import ApplicationCard from "../../Applications/ApplicationCard/ApplicationCard";
+import GenerateInvoiceButton from "../../Invoices/GenerateInvoiceButton/GenerateInvoiceButton";
+
 import * as S from "./styles";
 import type { IUserWithApplications } from "../../../redux/types";
 
@@ -29,6 +32,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
     { label: "Invoiced", value: user.invoiced_applications_count },
   ];
 
+  /* Lock scroll */
   useEffect(() => {
     const scrollY = window.scrollY;
     const body = document.body;
@@ -51,7 +55,6 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
       body.style.top = originalStyle.top || "";
       body.style.width = originalStyle.width || "";
 
-      // Restore scroll position
       window.scrollTo(0, scrollY);
     };
   }, []);
@@ -61,6 +64,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
     navigate(`/admin/applications/${applicationId}`);
   };
 
+  /* Close on ESC */
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -69,16 +73,14 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
     };
 
     document.addEventListener("keydown", handleEscapeKey);
-
-    return () => {
-      document.removeEventListener("keydown", handleEscapeKey);
-    };
+    return () => document.removeEventListener("keydown", handleEscapeKey);
   }, [onClose]);
 
-  // Determine which applications to display and the section title
+  /* Which apps to show */
   const displayApplications = hasPendingApplications
     ? pendingApplications
     : allApplications;
+
   const sectionTitle = hasPendingApplications
     ? `Pending Applications (${pendingApplications.length})`
     : `All Applications (${allApplications.length})`;
@@ -86,17 +88,32 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
   return (
     <S.ModalOverlay onClick={onClose}>
       <S.ModalContent onClick={(e) => e.stopPropagation()}>
+        {/* --------------------------------------------------
+                HEADER WITH GENERATE INVOICE BUTTON
+        -------------------------------------------------- */}
         <S.ModalHeader>
-          <S.ModalTitle>
-            {hasPendingApplications
-              ? "Pending Applications"
-              : "All Applications"}{" "}
-            for {user.name}
-            <S.UserType $type={user.role}>({user.role})</S.UserType>
-          </S.ModalTitle>
-          <S.CloseButton onClick={onClose}>×</S.CloseButton>
+          <div style={{ flex: 1 }}>
+            <S.ModalTitle>
+              {hasPendingApplications
+                ? "Pending Applications"
+                : "All Applications"}{" "}
+              for {user.name}
+              <S.UserType $type={user.role}>({user.role})</S.UserType>
+            </S.ModalTitle>
+          </div>
+
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            {/* Generate Invoice Button */}
+            {user.role === "corporate" && <GenerateInvoiceButton user={user} />}
+
+            {/* Close Button */}
+            <S.CloseButton onClick={onClose}>×</S.CloseButton>
+          </div>
         </S.ModalHeader>
 
+        {/* --------------------------------------------------
+                BODY
+        -------------------------------------------------- */}
         <S.ModalBody>
           <S.ClientInfo>
             {infoItems.map((item, index) => (
@@ -128,6 +145,7 @@ const UserApplicationsModal: React.FC<UserApplicationsModalProps> = ({
           </S.ApplicationsSection>
         </S.ModalBody>
 
+        {/* FOOTER */}
         <S.ModalFooter>
           <S.CloseModalButton onClick={onClose}>Close</S.CloseModalButton>
         </S.ModalFooter>

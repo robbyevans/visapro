@@ -45,6 +45,7 @@ class User < ApplicationRecord
   
   has_many :athletes, dependent: :destroy
   has_many :applications, dependent: :destroy
+  has_many :invoices, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true

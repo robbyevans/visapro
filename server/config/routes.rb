@@ -19,7 +19,13 @@ Rails.application.routes.draw do
   resources :sessions, only: [:create]
   resources :athletes, only: [:index, :create]
   resources :applications, only: [:index, :show, :create, :update]
+
+  resources :invoices, only: [:index, :show, :create] do
+  patch :update_status, on: :member
+  end
   resources :documents, only: [:create]
+
+
 
   # Fix password reset routes - use token as param instead of id
   resources :password_resets, only: [:create]

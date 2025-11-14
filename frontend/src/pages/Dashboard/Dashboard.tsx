@@ -11,11 +11,14 @@ type AdminTab = "current" | "all";
 
 const Dashboard: React.FC = () => {
   const { currentUser, theme } = useUser();
-  const { applications, fetchApplications } = useApplications();
+  const { applications, groupedApplications, fetchApplications } =
+    useApplications();
   const navigate = useNavigate();
   const location = useLocation();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>("current");
+
+  console.log("groupedApplications:", groupedApplications);
 
   // Check for success message in location state
   useEffect(() => {
