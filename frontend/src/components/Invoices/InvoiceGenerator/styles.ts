@@ -1,4 +1,3 @@
-// frontend/src/pages/Invoices/styles.ts
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -17,7 +16,7 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.h2`
-  margin: 0;
+  margin: 0 0 4px 0;
 `;
 
 export const Subtitle = styled.div`
@@ -35,9 +34,19 @@ export const Section = styled.div`
   margin-top: 16px;
 `;
 
+export const SectionTitle = styled.h3`
+  margin: 0 0 8px 0;
+`;
+
+export const HelpText = styled.div`
+  color: ${({ theme }) => theme.text.secondary};
+  font-size: 13px;
+  margin-bottom: 12px;
+`;
+
 export const Table = styled.table`
   width: 100%;
-  margin-top: 16px;
+  margin-top: 8px;
   border-collapse: collapse;
 `;
 
@@ -47,7 +56,7 @@ export const Th = styled.th`
   border-bottom: 1px solid ${({ theme }) => theme.border.light};
 `;
 
-export const Td = styled.td`
+export const Td = styled.td<{ colSpan?: number }>`
   padding: 8px;
   border-bottom: 1px solid ${({ theme }) => theme.border.light};
 `;
@@ -56,14 +65,7 @@ export const Input = styled.input`
   padding: 8px;
   border-radius: 6px;
   border: 1px solid ${({ theme }) => theme.border.light};
-`;
-
-export const TextArea = styled.textarea`
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid ${({ theme }) => theme.border.light};
-  min-height: 80px;
+  min-width: 120px;
 `;
 
 export const PrimaryButton = styled.button`
@@ -73,6 +75,11 @@ export const PrimaryButton = styled.button`
   padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
 
 export const SecondaryButton = styled.button`
@@ -81,4 +88,53 @@ export const SecondaryButton = styled.button`
   padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
+`;
+
+export const StepPill = styled.div`
+  background: ${({ theme }) => theme.neutralColors["200"]};
+  color: ${({ theme }) => theme.text.primary};
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+`;
+
+export const TitleSmall = styled.div`
+  font-size: 14px;
+  color: ${({ theme }) => theme.text.secondary};
+`;
+
+export const SectionFooter = styled.div`
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const SectionSub = styled.div`
+  color: ${({ theme }) => theme.text.secondary};
+  font-size: 13px;
+`;
+
+export const Row = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+`;
+
+export const BulkPriceWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const PreviewBox = styled.div`
+  border: 1px solid ${({ theme }) => theme.border.light};
+  border-radius: 8px;
+  padding: 12px;
+  background: ${({ theme }) => theme.background.secondary};
+`;
+
+export const ThSmall = styled(Th)`
+  width: 120px;
 `;

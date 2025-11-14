@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// /frontend/src/components/Invoices/SendInvoiceModal/SendInvoiceModal.tsx
+import React, { useMemo, useState } from "react";
 import type { IInvoice, IUserWithApplications } from "../../../redux/types";
 import InvoicePDF from "../InvoicePDF/InvoicePDF";
 import * as S from "./styles";
@@ -12,35 +13,70 @@ interface Props {
 const SendInvoiceModal: React.FC<Props> = ({ invoice, user, onClose }) => {
   const [email, setEmail] = useState(user.email || "");
   const [sendWhatsapp, setSendWhatsapp] = useState(false);
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(user.application_count ? "" : "");
+  const [sending, setSending] = useState(false);
 
-  const handleSend = () => {
-    // TODO: backend integration for email + WhatsApp
-    alert("Invoice sent successfully!");
-    onClose();
+  const isEmailValid = useMemo(() => {
+    return !!email && /\S+@\S+\.\S+/.test(email);
+  }, [email]);
+
+  const isPhoneValid = useMemo(() => {
+    if (!sendWhatsapp) return true;
+    return !!phone && /^[0-9+ ]{6,20}$/.test(phone);
+  }, [phone, sendWhatsapp]);
+
+  const handleSend = async () => {
+    if (!isEmailValid) {
+      alert("Please provide a valid email address.");
+      return;
+    }
+    if (!isPhoneValid) {
+      alert("Please provide a valid phone number for WhatsApp.");
+      return;
+    }
+
+    setSending(true);
+    try {
+      // TODO: wire up to backend endpoint that sends invoice (email/whatsapp)
+      // For now, simulate:
+      await new Promise((r) => setTimeout(r, 700));
+      alert("Invoice sent successfully!");
+      onClose();
+    } catch (e) {
+      console.error(e);
+      alert("Failed to send invoice.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
-    <S.Overlay>
-      <S.Modal>
+    <S.Overlay onMouseDown={onClose}>
+      <S.Modal onMouseDown={(e) => e.stopPropagation()}>
         <S.Header>
-          <h2>Send Invoice</h2>
+          <h3>Send Invoice</h3>
           <S.CloseButton onClick={onClose}>×</S.CloseButton>
         </S.Header>
 
         <S.Body>
-          {/* LEFT SIDE: Email / WhatsApp inputs */}
           <S.LeftPanel>
-            <S.Label>Email</S.Label>
-            <S.Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            <S.Label>Send to Email</S.Label>
+            <S.Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="recipient@email.com"
+            />
+            <S.HelpText small>
+              Recipient email. By default we use the client's email.
+            </S.HelpText>
 
             <S.CheckRow>
               <input
                 type="checkbox"
                 checked={sendWhatsapp}
-                onChange={() => setSendWhatsapp(!sendWhatsapp)}
+                onChange={() => setSendWhatsapp((s) => !s)}
               />
-              <span>Send via WhatsApp</span>
+              <span>Also send via WhatsApp</span>
             </S.CheckRow>
 
             {sendWhatsapp && (
@@ -49,19 +85,28 @@ const SendInvoiceModal: React.FC<Props> = ({ invoice, user, onClose }) => {
                 <S.Input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+2547..."
                 />
               </>
             )}
 
-            <S.PrimaryButton onClick={handleSend}>Send Invoice</S.PrimaryButton>
+            <S.ButtonRow>
+              <S.SecondaryButton onClick={onClose} disabled={sending}>
+                Cancel
+              </S.SecondaryButton>
+              <S.PrimaryButton
+                onClick={handleSend}
+                disabled={!isEmailValid || !isPhoneValid || sending}
+              >
+                {sending ? "Sending..." : "Send Invoice"}
+              </S.PrimaryButton>
+            </S.ButtonRow>
           </S.LeftPanel>
 
-          {/* RIGHT SIDE: Invoice PDF Preview */}
           <S.RightPanel>
             <S.PreviewTitle>Invoice Preview</S.PreviewTitle>
-
             <S.PreviewBox>
-              <InvoicePDF invoice={invoice} user={user} /> {/* <-- FIXED */}
+              <InvoicePDF invoice={invoice} user={user} />
             </S.PreviewBox>
           </S.RightPanel>
         </S.Body>
