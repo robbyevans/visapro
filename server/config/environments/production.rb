@@ -1,18 +1,6 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  # --- CORS FIX (must be near the top) ---
-  config.middleware.insert_before 0, Rack::Cors do
-    allow do
-      origins ENV['ALLOWED_ORIGINS']&.split(',').map(&:strip)
-
-      resource '*',
-        headers: :any,
-        methods: [:get, :post, :put, :patch, :delete, :options, :head],
-        credentials: false
-    end
-  end
-  # --- END CORS FIX ---
 
   # Basics
   config.enable_reloading = false
