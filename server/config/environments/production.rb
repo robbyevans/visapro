@@ -24,9 +24,9 @@ Rails.application.configure do
   config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Host allowance
-  config.hosts << /.*\.fly\.dev/
-  config.hosts << /.*\.railway\.app/ if ENV['RAILWAY'] == 'true'
-  config.hosts << (ENV['HOSTNAME'] if ENV['HOSTNAME'].present?)
+  config.hosts.clear
+  config.hosts << /.*\.railway\.app/
+  config.hosts << /.*\.up\.railway\.app/
 
   # Logging
   config.logger = ActiveSupport::Logger.new(STDOUT)
