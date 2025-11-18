@@ -24,7 +24,6 @@ const ApplicationFormPage: React.FC = () => {
   const { createApplication, uploadDocument, isLoading } = useApplications();
   const { currentUser } = useUser();
 
-  const isCorporateUser = currentUser?.role === "corporate";
   const isIndividualUser = currentUser?.role === "individual";
 
   const [formData, setFormData] = useState({

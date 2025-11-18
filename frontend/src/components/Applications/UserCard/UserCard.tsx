@@ -17,7 +17,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, onClick, theme }) => {
   const hasPendingApplications = pendingApplicationsCount > 0;
 
   return (
-    <S.UserCard onClick={onClick} $themeMode={theme}>
+    <S.UserCard onClick={onClick} $themeMode={theme ?? "light"}>
       <S.CardHeader>
         <S.UserAvatar $type={user.role}>
           {user.role === "corporate" ? "🏢" : "👤"}

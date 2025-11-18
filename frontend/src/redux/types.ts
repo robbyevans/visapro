@@ -89,6 +89,7 @@ export interface IApplication {
   documents: IDocument[];
   created_at: string;
   updated_at: string;
+  unit_price?: string | null;
   invoice_id?: number | null;
   invoice?: IInvoice | null;
 }
