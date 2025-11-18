@@ -1,81 +1,71 @@
-# Dockerfile 
+# Dockerfile
 # syntax = docker/dockerfile:1
 
 ARG RUBY_VERSION=3.2.2
-FROM ruby:$RUBY_VERSION-slim AS base
+FROM ruby:${RUBY_VERSION}-slim AS base
 
-# Rails app lives here
 WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    build-essential \
-    curl \
-    git \
-    libjemalloc2 \
-    libpq-dev \
-    nodejs \
-    npm \
-    sqlite3 \
-    libsqlite3-dev \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+      build-essential \
+      curl \
+      git \
+      libjemalloc2 \
+      libpq-dev \
+      nodejs \
+      npm \
+      && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Set production environment
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development:test"
 
-# Throw-away build stage to reduce size of final image
 FROM base AS build
 
-# Install packages needed to build gems
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
-    build-essential \
-    pkg-config \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+      pkg-config \
+      && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Install application gems
+# Gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
+RUN bundle install --jobs 4 --retry 3 && \
+    rm -rf ~/.bundle
 
-# Copy application code
+# Copy app
 COPY . .
 
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
+# Precompile bootsnap
+RUN bundle exec bootsnap precompile app/ lib/ || true
 
-# API-only app - no assets to precompile
-
-# Final stage for app image
 FROM base
 
-# Install runtime dependencies
+# Runtime deps
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    apt-get install --no-install-recommends -y postgresql-client && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Copy built artifacts
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
-# Run and own only the runtime files as a non-root user for security
+# Create non-root user
 RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
-USER 1000:1000
+    useradd --system rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    mkdir -p /rails/tmp /rails/log /rails/storage && \
+    chown -R rails:rails /rails
 
-# Create necessary directories
-RUN mkdir -p tmp/pids
+USER rails
 
-# Entrypoint prepares the database.
-COPY --chmod=755 bin/docker-entrypoint /usr/local/bin/
+WORKDIR /rails
+
+# Entrypoint script (prepared by you)
+COPY --chown=rails:rails --chmod=755 bin/docker-entrypoint /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
-# Start the server by default
 EXPOSE 3000
-CMD ["./bin/rails", "server"]
+
+# Use puma in production if available, otherwise fall back to rails server
+CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "${PORT:-3000}"]

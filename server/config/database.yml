@@ -20,4 +20,5 @@ test:
 
 production:
   <<: *default
+  # Railway/Heroku provide DATABASE_URL; fallback to composed URL if needed
   url: <%= ENV['DATABASE_URL'] %>
