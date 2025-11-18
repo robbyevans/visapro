@@ -1,17 +1,26 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  # --- CORS FIX (must be near the top) ---
+  config.middleware.insert_before 0, Rack::Cors do
+    allow do
+      origins ENV['ALLOWED_ORIGINS']&.split(',').map(&:strip)
+
+      resource '*',
+        headers: :any,
+        methods: [:get, :post, :put, :patch, :delete, :options, :head],
+        credentials: false
+    end
+  end
+  # --- END CORS FIX ---
+
   # Basics
   config.enable_reloading = false
   config.eager_load = true
   config.consider_all_requests_local = false
 
-  # Active Storage service - allow switching via ENV
-  # Default is 'tigris' (to preserve current behavior). Set ACTIVE_STORAGE_SERVICE=amazon on Railway to use AWS S3.
+  # Active Storage (AWS S3)
   config.active_storage.service = (ENV.fetch("ACTIVE_STORAGE_SERVICE", "amazon")).to_sym
-
-
-  # keep routes prefix if you rely on it
   config.active_storage.routes_prefix = '/rails/active_storage'
 
   # URL helpers
@@ -35,10 +44,11 @@ Rails.application.configure do
   config.logger = ActiveSupport::Logger.new(STDOUT)
                     .tap { |l| l.formatter = ::Logger::Formatter.new }
                     .then { |l| ActiveSupport::TaggedLogging.new(l) }
+
   config.log_tags = [:request_id]
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info").to_sym
 
-  # Action Mailer (controlled via env)
+  # Mailer
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
@@ -50,7 +60,7 @@ Rails.application.configure do
     authentication: "plain",
     enable_starttls_auto: true
   }
-  # Enable/disable actually sending emails via ENV
+
   config.action_mailer.perform_deliveries = ENV.fetch("ACTION_MAILER_PERFORM_DELIVERIES", "false") == "true"
   config.action_mailer.raise_delivery_errors = ENV.fetch("ACTION_MAILER_RAISE_ERRORS", "false") == "true"
 
@@ -58,13 +68,13 @@ Rails.application.configure do
   config.i18n.fallbacks = true
   config.active_support.report_deprecations = false
 
-  # db, schema
+  # DB schema
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [:id]
 
-  # Skip host_authorization check only for /up
+  # Host authorization exception for health checks
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  # Require master key in production (recommended)
+  # Require Rails master key
   config.require_master_key = true
 end
