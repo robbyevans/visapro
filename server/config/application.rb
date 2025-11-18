@@ -26,10 +26,13 @@ module Visapro
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :options, :head],
           credentials: false,
-          max_age: 600
+          max_age: 600,
+          expose: ['Authorization', 'Content-Type', 'X-Request-Id']
       end
     end
     # ===============================
 
+    # Handle preflight requests
+    config.middleware.insert_before Rack::Cors, Rack::Head
   end
 end
