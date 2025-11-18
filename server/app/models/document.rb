@@ -10,7 +10,7 @@ class Document < ApplicationRecord
     # Generate the standard Rails blob URL - let the frontend handle download vs preview
     Rails.application.routes.url_helpers.rails_blob_url(
       file, 
-      host: ENV['SERVER_API_URL'] || 'visapro-rails-app.fly.dev',
+      host: ENV['SERVER_API_URL'] || 'visapro-production.up.railway.app',
       protocol: 'https'
     )
   rescue => e
@@ -25,7 +25,7 @@ class Document < ApplicationRecord
     # Use the custom download route we created
     Rails.application.routes.url_helpers.download_document_url(
       self,
-      host: ENV['SERVER_API_URL'] || 'visapro-rails-app.fly.dev',
+      host: ENV['SERVER_API_URL'] || 'visapro-production.up.railway.app',
       protocol: 'https'
     )
   end
