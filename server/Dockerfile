@@ -67,5 +67,5 @@ ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
 EXPOSE 3000
 
-# Use puma in production if available, otherwise fall back to rails server
-CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "${PORT:-3000}"]
+# Force port 3000 regardless of PORT environment variable
+CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]

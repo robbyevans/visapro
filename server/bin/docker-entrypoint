@@ -1,4 +1,6 @@
-#!/bin/bash -e
+# Debug: Show environment
+echo "PORT environment variable: $PORT"
+echo "RAILS_ENV: $RAILS_ENV"
 
 # Enable jemalloc if present
 if [ -z "${LD_PRELOAD+x}" ] && ls /usr/lib/*/libjemalloc.so.2 >/dev/null 2>&1; then
