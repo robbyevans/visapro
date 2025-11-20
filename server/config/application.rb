@@ -11,23 +11,16 @@ module Visapro
     # ===============================
     # CORS CONFIGURATION (GLOBAL)
     # ===============================
-    config.middleware.insert_before 0, Rack::Cors do
+        config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins_allowed =
-          (ENV['ALLOWED_ORIGINS']&.split(',')&.map(&:strip) || [
-            "http://localhost:5173",
-            "http://127.0.0.1:5173",
-            "https://visapro-dusky.vercel.app"
-          ])
-
-        origins(*origins_allowed)
+        # TEMPORARILY ALLOW ALL ORIGINS
+        origins '*'
 
         resource "*",
           headers: :any,
           methods: [:get, :post, :put, :patch, :delete, :options, :head],
           credentials: false,
-          max_age: 600,
-          expose: ['Authorization', 'Content-Type', 'X-Request-Id']
+          max_age: 600
       end
     end
     # ===============================
