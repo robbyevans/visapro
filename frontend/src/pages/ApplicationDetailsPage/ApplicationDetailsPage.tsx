@@ -15,7 +15,7 @@ const ApplicationDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { currentApplication, fetchApplication, isLoading } = useApplications();
   const { currentUser } = useUser();
-  console.log("currentApplication", currentApplication);
+  console.info("currentApplication", currentApplication);
   const [previewDocument, setPreviewDocument] = useState<{
     fileUrl: string;
     fileName: string;
@@ -162,7 +162,7 @@ const ApplicationDetailsPage: React.FC = () => {
   };
 
   const handleReplaceDocument = async (file: File, documentId: number) => {
-    console.log("Replace document:", documentId, file);
+    console.info("Replace document:", documentId, file);
   };
 
   if (isLoading || !currentApplication) {

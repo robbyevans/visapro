@@ -116,7 +116,7 @@ const ApplicationFormPage: React.FC = () => {
         },
       };
 
-      console.log("Submitting application:", applicationData);
+      console.info("Submitting application:", applicationData);
 
       // Create application - the action returns a promise that resolves with the action object
       const result = await createApplication(applicationData);
@@ -130,7 +130,7 @@ const ApplicationFormPage: React.FC = () => {
 
       // Upload documents
       if (application?.id) {
-        console.log("Uploading documents...");
+        console.info("Uploading documents...");
 
         for (const doc of documents) {
           if (doc.file) {
@@ -139,7 +139,7 @@ const ApplicationFormPage: React.FC = () => {
             uploadFormData.append("application_id", application.id.toString());
             uploadFormData.append("doc_type", doc.type);
 
-            console.log(`Uploading ${doc.type}:`, doc.file.name);
+            console.info(`Uploading ${doc.type}:`, doc.file.name);
             await uploadDocument(application.id, uploadFormData);
           }
         }

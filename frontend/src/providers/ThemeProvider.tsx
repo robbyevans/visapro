@@ -54,7 +54,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
         // Then persist to backend with theme_preference parameter
         await updateTheme(newTheme);
-        console.log("Theme preference updated on backend:", newTheme);
+        console.info("Theme preference updated on backend:", newTheme);
       } catch (error) {
         console.error("Failed to update theme preference on backend:", error);
         // Revert on error

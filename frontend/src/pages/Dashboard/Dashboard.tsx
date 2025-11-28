@@ -18,7 +18,7 @@ const Dashboard: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>("current");
 
-  console.log("groupedApplications:", groupedApplications);
+  console.info("groupedApplications:", groupedApplications);
 
   // Check for success message in location state
   useEffect(() => {
