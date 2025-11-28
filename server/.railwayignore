@@ -1,0 +1,9 @@
+.git
+node_modules
+log
+tmp
+storage
+public/assets
+coverage
+vendor/bundle
+.bundle
