@@ -1,8 +1,6 @@
-
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # TEMPORARILY ALLOW ALL ORIGINS
-    origins '*'
+    origins ENV.fetch('ALLOWED_ORIGINS', '').split(',').map(&:strip)
 
     resource '*',
       headers: :any,
