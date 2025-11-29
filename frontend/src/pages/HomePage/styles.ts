@@ -128,7 +128,6 @@ export const HeroContent = styled.div`
 
   @media (min-width: 1024px) {
     padding: 0 32px;
-    backdrop-filter: blur(8px) !important;
   }
 `;
 
@@ -199,6 +198,12 @@ export const HeroSubtitle = styled.p`
   margin-left: auto;
   margin-right: auto;
   padding: 0 1rem;
+
+  @media (min-width: 1024px) {
+    backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+  }
 
   @media (min-width: 768px) {
     font-size: 1.25rem; /* 20px */
