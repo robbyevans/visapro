@@ -9,45 +9,6 @@ import { STATIC_COLORS } from "../../styles";
 const HomePage: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
-  // const features = [
-  //   {
-  //     icon: "⚡",
-  //     title: "Lightning-Fast Processing",
-  //     description:
-  //       "Accelerated visa processing designed for athletes and sports professionals with urgent travel needs.",
-  //   },
-  //   {
-  //     icon: "🌍",
-  //     title: "Global Competition Ready",
-  //     description:
-  //       "Seamlessly apply for visas to compete in international tournaments and championships worldwide.",
-  //   },
-  //   {
-  //     icon: "🔄",
-  //     title: "Real-Time Updates",
-  //     description:
-  //       "Instant notifications and status updates so you never miss important application milestones.",
-  //   },
-  //   {
-  //     icon: "📱",
-  //     title: "Mobile-First Design",
-  //     description:
-  //       "Manage your applications on the go with our responsive platform that works perfectly on any device.",
-  //   },
-  //   {
-  //     icon: "🔒",
-  //     title: "Secure & Confidential",
-  //     description:
-  //       "Military-grade encryption ensures your personal and professional data remains completely secure.",
-  //   },
-  //   {
-  //     icon: "👥",
-  //     title: "Team Management",
-  //     description:
-  //       "Corporate accounts can manage multiple athletes and team members under one organization.",
-  //   },
-  // ];
-
   const stats = [
     { number: "500+", label: "Athletes Served" },
     { number: "95%", label: "Approval Rate" },
@@ -146,32 +107,6 @@ const HomePage: React.FC = () => {
               requirements.
             </S.SectionSubtitle>
           </S.SectionHeader>
-
-          {/* Desktop Features Grid - All 6 features */}
-          {/* <S.DesktopFeaturesGrid>
-            {features.map((feature, index) => (
-              <S.FeatureCard key={index}>
-                <S.FeatureIcon>{feature.icon}</S.FeatureIcon>
-                <S.FeatureTitle>{feature.title}</S.FeatureTitle>
-                <S.FeatureDescription>
-                  {feature.description}
-                </S.FeatureDescription>
-              </S.FeatureCard>
-            ))}
-          </S.DesktopFeaturesGrid> */}
-
-          {/* Mobile Features Grid - Only 3 features */}
-          {/* <S.MobileFeaturesGrid>
-            {features.slice(0, 3).map((feature, index) => (
-              <S.FeatureCard key={index}>
-                <S.FeatureIcon>{feature.icon}</S.FeatureIcon>
-                <S.FeatureTitle>{feature.title}</S.FeatureTitle>
-                <S.FeatureDescription>
-                  {feature.description}
-                </S.FeatureDescription>
-              </S.FeatureCard>
-            ))}
-          </S.MobileFeaturesGrid> */}
         </S.SectionContainer>
       </S.FeaturesSection>
 

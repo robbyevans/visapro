@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as S from "./styles";
-import Logo from "../../assets/VisaLinkLogo.png";
+import Logo from "../../assets/NewVisaLinkLogo.png";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
