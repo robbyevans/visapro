@@ -58,7 +58,6 @@ export const Logo = styled.div`
 
 export const LogoImage = styled.img`
   width: 300px;
-  height: 300px;
   @media (max-width: 768px) {
     width: 100px;
     height: 100px;
