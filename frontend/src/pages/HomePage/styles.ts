@@ -128,7 +128,7 @@ export const HeroContent = styled.div`
 
   @media (min-width: 1024px) {
     padding: 0 32px;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px) !important;
   }
 `;
 
