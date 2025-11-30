@@ -13,7 +13,7 @@ Rails.application.configure do
 
   # URL helpers
   Rails.application.routes.default_url_options = {
-    host: ENV['SERVER_API_URL'] || 'visapro-production.up.railway.app',
+    host: ENV['SERVER_API_URL'] || 'server-production-755b.up.railway.app',
     protocol: 'https'
   }
 

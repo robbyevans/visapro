@@ -3,50 +3,17 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../redux/hooks/useAuth";
 import Button from "../../components/Button/Button";
 import Footer from "../../components/Footer/Footer";
+import Logo001 from "../../assets/logo001.png";
+import Logo002 from "../../assets/logo002.png";
+import Logo003 from "../../assets/logo003.png";
+import Logo004 from "../../assets/logo004.png";
+import Logo005 from "../../assets/logo005.png";
+import CompaniesSection from "../../components/CompaniesSection/CompaniesSection";
 import * as S from "./styles";
 import { STATIC_COLORS } from "../../styles";
 
 const HomePage: React.FC = () => {
   const { isAuthenticated } = useAuth();
-
-  // const features = [
-  //   {
-  //     icon: "⚡",
-  //     title: "Lightning-Fast Processing",
-  //     description:
-  //       "Accelerated visa processing designed for athletes and sports professionals with urgent travel needs.",
-  //   },
-  //   {
-  //     icon: "🌍",
-  //     title: "Global Competition Ready",
-  //     description:
-  //       "Seamlessly apply for visas to compete in international tournaments and championships worldwide.",
-  //   },
-  //   {
-  //     icon: "🔄",
-  //     title: "Real-Time Updates",
-  //     description:
-  //       "Instant notifications and status updates so you never miss important application milestones.",
-  //   },
-  //   {
-  //     icon: "📱",
-  //     title: "Mobile-First Design",
-  //     description:
-  //       "Manage your applications on the go with our responsive platform that works perfectly on any device.",
-  //   },
-  //   {
-  //     icon: "🔒",
-  //     title: "Secure & Confidential",
-  //     description:
-  //       "Military-grade encryption ensures your personal and professional data remains completely secure.",
-  //   },
-  //   {
-  //     icon: "👥",
-  //     title: "Team Management",
-  //     description:
-  //       "Corporate accounts can manage multiple athletes and team members under one organization.",
-  //   },
-  // ];
 
   const stats = [
     { number: "500+", label: "Athletes Served" },
@@ -82,6 +49,39 @@ const HomePage: React.FC = () => {
     },
   ];
 
+  const customCompanies = [
+    {
+      id: "1",
+      name: "Peez management sports",
+      logo: Logo001,
+      website: "https://www.peezsports.com",
+    },
+    {
+      id: "2",
+      name: "Todorovic Sports",
+      logo: Logo002,
+      website: "https://www.todorovic.co.rs/",
+    },
+    {
+      id: "3",
+      name: "Li-Ning",
+      logo: Logo003,
+      website: "https://www.li-ning.com/",
+    },
+    {
+      id: "4",
+      name: "Posso Sports",
+      logo: Logo004,
+      website: "https://possosports.com/",
+    },
+    {
+      id: "5",
+      name: "Xtep",
+      logo: Logo005,
+      website: "https://www.globalxtep.com/",
+    },
+  ];
+
   return (
     <S.HomePageContainer>
       <S.HeroSection>
@@ -89,8 +89,8 @@ const HomePage: React.FC = () => {
           <S.HeroOverlay />
           <S.HeroContent>
             <S.HeroTitle>
-              Fueling <S.HeroHighlight>Athletes</S.HeroHighlight> Across the
-              Globe
+              <S.HeroHighlight>Athlinks Visa Center</S.HeroHighlight> Fueling
+              Athletes Across the Globe
             </S.HeroTitle>
 
             <S.HeroSubtitle>
@@ -146,32 +146,6 @@ const HomePage: React.FC = () => {
               requirements.
             </S.SectionSubtitle>
           </S.SectionHeader>
-
-          {/* Desktop Features Grid - All 6 features */}
-          {/* <S.DesktopFeaturesGrid>
-            {features.map((feature, index) => (
-              <S.FeatureCard key={index}>
-                <S.FeatureIcon>{feature.icon}</S.FeatureIcon>
-                <S.FeatureTitle>{feature.title}</S.FeatureTitle>
-                <S.FeatureDescription>
-                  {feature.description}
-                </S.FeatureDescription>
-              </S.FeatureCard>
-            ))}
-          </S.DesktopFeaturesGrid> */}
-
-          {/* Mobile Features Grid - Only 3 features */}
-          {/* <S.MobileFeaturesGrid>
-            {features.slice(0, 3).map((feature, index) => (
-              <S.FeatureCard key={index}>
-                <S.FeatureIcon>{feature.icon}</S.FeatureIcon>
-                <S.FeatureTitle>{feature.title}</S.FeatureTitle>
-                <S.FeatureDescription>
-                  {feature.description}
-                </S.FeatureDescription>
-              </S.FeatureCard>
-            ))}
-          </S.MobileFeaturesGrid> */}
         </S.SectionContainer>
       </S.FeaturesSection>
 
@@ -228,6 +202,8 @@ const HomePage: React.FC = () => {
           </S.CTAContent>
         </S.SectionContainer>
       </S.CTASection>
+
+      <CompaniesSection companies={customCompanies} />
 
       {/* Footer */}
       <Footer />

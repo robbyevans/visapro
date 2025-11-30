@@ -1,6 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
 # Debug: Show environment
 echo "PORT environment variable: $PORT"
-echo "RAILS_ENV: $RAILS_ENV"
+echo "RAILS_ENV: ${RAILS_ENV:-production}"
 
 # Enable jemalloc if present
 if [ -z "${LD_PRELOAD+x}" ] && ls /usr/lib/*/libjemalloc.so.2 >/dev/null 2>&1; then
@@ -8,9 +11,10 @@ if [ -z "${LD_PRELOAD+x}" ] && ls /usr/lib/*/libjemalloc.so.2 >/dev/null 2>&1; t
 fi
 
 # If running the rails server then prepare DB
-if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
-  echo "Running rails db:prepare (creates + migrates) in $RAILS_ENV"
-  bundle exec rails db:prepare
+if [ "$1" = "./bin/rails" ] && [ "$2" = "server" ]; then
+  echo "Running rails db:prepare (creates + migrates) in ${RAILS_ENV:-production}"
+  ./bin/rails db:prepare
 fi
 
+# Finally exec the command passed in (Puma/Rails/etc.)
 exec "$@"

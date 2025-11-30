@@ -65,7 +65,7 @@ WORKDIR /rails
 COPY --chown=rails:rails --chmod=755 bin/docker-entrypoint /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
-EXPOSE 3000
+EXPOSE 8080
 
 # Force port 3000 regardless of PORT environment variable
-CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

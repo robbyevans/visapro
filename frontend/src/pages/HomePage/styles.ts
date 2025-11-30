@@ -199,6 +199,12 @@ export const HeroSubtitle = styled.p`
   margin-right: auto;
   padding: 0 1rem;
 
+  @media (min-width: 1024px) {
+    backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+  }
+
   @media (min-width: 768px) {
     font-size: 1.25rem; /* 20px */
     padding: 0;

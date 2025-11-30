@@ -53,7 +53,7 @@ const Settings: React.FC = () => {
   const handleDeleteAccount = async () => {
     try {
       // Implement account deletion logic here
-      console.log("Account deletion requested for user:", currentUser?.id);
+      console.info("Account deletion requested for user:", currentUser?.id);
       // await deleteUserAccount(currentUser.id);
       setShowDeleteModal(false);
       handleLogOut();

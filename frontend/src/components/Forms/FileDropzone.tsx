@@ -181,7 +181,7 @@ const FileDropzone: React.FC<FileDropzoneProps> = ({
                 }
               );
 
-              console.log("Captured photo:", file.name, file.size, file.type);
+              console.info("Captured photo:", file.name, file.size, file.type);
               handleFile(file);
               stopCamera();
             } else {
