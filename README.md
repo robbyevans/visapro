@@ -9,7 +9,7 @@ VisaLink is an application for managing athlete visa applications.
 
 ### Repository Structure
 
-```bash
+```
 .
 ├── frontend/   # React + TypeScript (Redux, Styled Components)
 └── server/     # Ruby on Rails API
@@ -149,3 +149,4 @@ rm -rf node_modules
 npm install
 License
 
+```
