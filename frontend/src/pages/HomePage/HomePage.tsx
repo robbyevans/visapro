@@ -194,6 +194,8 @@ const HomePage: React.FC = () => {
                 <Button
                   variant={isAuthenticated ? "primary" : "secondary"}
                   size="lg"
+                  textColor={STATIC_COLORS.base.white}
+                  pulsating
                 >
                   {isAuthenticated ? "Go to Dashboard" : "Sign In"}
                 </Button>
