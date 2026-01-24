@@ -23,7 +23,7 @@ export const HeroSection = styled.section`
 
   @media (min-width: 768px) {
     padding: 0;
-    min-height: 110vh;
+    min-height: 150vh;
   }
   @media (max-width: 500px) {
     padding: 0;
