@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import heroDesktop from "../../assets/visapro-desktop-background.webp";
-import heroTablet from "../../assets/visapro-tablet-background.webp";
-import heroMobile from "../../assets/visapro-mobile-background.webp";
+import heroDesktop from "../../assets/vis-desktop.webp";
+import heroTablet from "../../assets/vis-tablet.webp";
+import heroMobile from "../../assets/vis-mobile.webp";
 import { STATIC_COLORS } from "../../styles";
 
 export const HomePageContainer = styled.div`
