@@ -209,12 +209,14 @@ const ApplicationDetailsPage: React.FC = () => {
                 {currentApplication.athlete?.last_name}
               </S.DetailValue>
             </S.DetailItem>
-            <S.DetailItem>
+
+            {/*<S.DetailItem>
               <S.DetailLabel>Passport Number</S.DetailLabel>
               <S.DetailValue>
                 {currentApplication.athlete?.passport_number || "N/A"}
               </S.DetailValue>
-            </S.DetailItem>
+            </S.DetailItem>*/}
+            
             <S.DetailItem>
               <S.DetailLabel>Phone Number</S.DetailLabel>
               <S.DetailValue>
@@ -222,12 +224,12 @@ const ApplicationDetailsPage: React.FC = () => {
               </S.DetailValue>
             </S.DetailItem>
 
-            <S.DetailItem>
+            {/*<S.DetailItem>
               <S.DetailLabel>Email</S.DetailLabel>
               <S.DetailValue>
                 {currentApplication.athlete?.email || "N/A"}
               </S.DetailValue>
-            </S.DetailItem>
+            </S.DetailItem>*/}
 
             <S.DetailItem>
               <S.DetailLabel>Destination Country</S.DetailLabel>
