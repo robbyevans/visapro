@@ -32,7 +32,7 @@ const ApplicationFormPage: React.FC = () => {
     passport_number: "",
     date_of_birth: "",
     phone_number: "",
-    // email: "",
+    email: "",
     country: "",
     proposed_travel_date: "",
     remarks: "",
@@ -219,29 +219,29 @@ const ApplicationFormPage: React.FC = () => {
             />
           </S.FormRow>
           <S.FormRow>
-            {/*{isIndividualUser && (
-              // <>
-              //   <Input
-              //     type="text"
-              //     label="Passport Number"
-              //     value={formData.passport_number}
-              //     onChange={(value) =>
-              //       handleInputChange("passport_number", value)
-              //     }
-              //     placeholder="Enter passport number"
-              //     error={formErrors.passport_number}
-              //   />
-              //   <Input
-              //     type="date"
-              //     label="Date of Birth"
-              //     value={formData.date_of_birth}
-              //     onChange={(value) =>
-              //       handleInputChange("date_of_birth", value)
-              //     }
-              //     placeholder="Select date of birth"
-              //   />
-              // </>
-            )}*/}
+            {isIndividualUser && (
+              <>
+                <Input
+                  type="text"
+                  label="Passport Number"
+                  value={formData.passport_number}
+                  onChange={(value) =>
+                    handleInputChange("passport_number", value)
+                  }
+                  placeholder="Enter passport number"
+                  error={formErrors.passport_number}
+                />
+                <Input
+                  type="date"
+                  label="Date of Birth"
+                  value={formData.date_of_birth}
+                  onChange={(value) =>
+                    handleInputChange("date_of_birth", value)
+                  }
+                  placeholder="Select date of birth"
+                />
+              </>
+            )}
             <Input
               type="text"
               label="Phone Number"
@@ -250,13 +250,13 @@ const ApplicationFormPage: React.FC = () => {
               placeholder="Enter phone number (optional)"
             />
 
-            {/*<Input
+            <Input
               type="email"
               label="Email Address"
               value={formData.email}
               onChange={(value) => handleInputChange("email", value)}
               placeholder="Enter email (optional)"
-            />*/}
+            />
           </S.FormRow>
         </S.FormSection>
 

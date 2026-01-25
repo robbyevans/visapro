@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
                 <>
                   <Link to="/signup">
                     <Button variant="primary" size="lg" pulsating>
-                      Get Started
+                      Start Your Journey
                     </Button>
                   </Link>
                 </>
