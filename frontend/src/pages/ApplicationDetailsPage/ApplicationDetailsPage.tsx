@@ -363,7 +363,10 @@ const ApplicationDetailsPage: React.FC = () => {
                           {displayFileName}
                         </S.DocumentName>
                       </S.DocumentInfo>
-                      {canEdit && doc.doc_type === "invitation_letter" ? (
+
+                      {canEdit &&
+                      (doc.doc_type === "invitation_letter" ||
+                        doc.doc_type === "supporting_doc") ? (
                         <EditDocument
                           fileName={fileName}
                           fileUrl={doc.file_url}
@@ -373,7 +376,7 @@ const ApplicationDetailsPage: React.FC = () => {
                           onDownload={() =>
                             handleDownloadDocument(doc, fileName)
                           }
-                          type="invitation_letter"
+                          type={doc.doc_type}
                         />
                       ) : (
                         <S.DocumentActions>
@@ -396,6 +399,8 @@ const ApplicationDetailsPage: React.FC = () => {
                         </S.DocumentActions>
                       )}
                     </S.DocumentItem>
+
+
                   );
                 })}
               </S.DocumentList>

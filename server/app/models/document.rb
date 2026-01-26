@@ -2,7 +2,7 @@ class Document < ApplicationRecord
   belongs_to :application
   has_one_attached :file
 
-  enum :doc_type, { passport: 0, invitation_letter: 1, visa: 2 }
+  enum :doc_type, { passport: 0, invitation_letter: 1, visa: 2, supporting_doc: 3 }
 
   def file_url
     return unless file.attached?

@@ -7,7 +7,7 @@ interface EditDocumentProps {
   fileUrl: string;
   onReplace: (file: File) => void;
   onDownload: () => void;
-  type: "passport" | "invitation_letter" | "visa";
+  type: "passport" | "invitation_letter" | "visa" | "supporting_doc";
 }
 
 const EditDocument: React.FC<EditDocumentProps> = ({

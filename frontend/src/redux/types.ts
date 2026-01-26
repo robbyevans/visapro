@@ -2,7 +2,7 @@
 export interface IDocument {
   id: number;
   application_id: number;
-  doc_type: "passport" | "invitation_letter" | "visa";
+  doc_type: "passport" | "invitation_letter" | "visa" | "supporting_doc";
   file_url: string;
   download_url?: string; // ADDED: For forced downloads
   file_full_url?: string;
