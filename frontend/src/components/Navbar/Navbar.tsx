@@ -7,6 +7,7 @@ import Button from "../Button/Button";
 import * as S from "./styles";
 import logo from "../../assets/logo.png";
 
+
 const Navbar: React.FC = () => {
   const { isAuthenticated, handleLogOut } = useAuth();
   const { currentUser } = useUser();
@@ -77,14 +78,14 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link to="/About">
-                <S.NavLink $isActive={isActiveRoute("/about")}>
+                <S.NavLink $isActive={isActiveRoute("/About")}>
                   About
                 </S.NavLink>
               </Link>
 
-              <Link to="/Services">
-                <S.NavLink $isActive={isActiveRoute("/services")}>
-                  Services
+              <Link to="/Service">
+                <S.NavLink $isActive={isActiveRoute("/Service")}>
+                  Service
                 </S.NavLink>
               </Link>
 
@@ -157,19 +158,19 @@ const Navbar: React.FC = () => {
           {/*Desktop navigation - Unauthenticated*/}
           <S.NavLinks>
             <Link to="/">
-              <S.NavLink isActive={isActiveRoute("/")}>
+              <S.NavLink $isActive={isActiveRoute("/")}>
                 Home
               </S.NavLink>
             </Link>
 
             <Link to="/About">
-              <S.NavLink $isActive={isActiveRoute("/about")}>
+              <S.NavLink $isActive={isActiveRoute("/About")}>
                About
               </S.NavLink>
             </Link>
 
-            <Link to="/Services">
-              <S.NavLink $isActive={isActiveRoute("/services")}>
+            <Link to="/Service">
+              <S.NavLink $isActive={isActiveRoute("/Service")}>
                Services
               </S.NavLink>
             </Link>
@@ -227,16 +228,16 @@ const Navbar: React.FC = () => {
 
               <Link to="/About">
                <S.MobileNavLink
-                $isActive={isActiveRoute("/about")}
+                $isActive={isActiveRoute("/About")}
                 onClick={() => setIsMenuOpen(false)}
                >
                 ℹ️ About Us
                </S.MobileNavLink>
               </Link>
 
-              <Link to="/Services">
+              <Link to="/Service">
                <S.MobileNavLink
-                $isActive={isActiveRoute("/Services")}
+                $isActive={isActiveRoute("/Service")}
                 onClick={() => setIsMenuOpen(false)}
                >
                 💼 Services
@@ -303,17 +304,17 @@ const Navbar: React.FC = () => {
                   🏠 Home
                 </S.MobileNavLink>
               </Link>
-              <Link to="/about">
+              <Link to="/About">
                 <S.MobileNavLink
-                  $isActive={isActiveRoute("/about")}
+                  $isActive={isActiveRoute("/About")}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   ℹ️ About Us
                 </S.MobileNavLink>
               </Link>
-              <Link to="/services">
+              <Link to="/Service">
                 <S.MobileNavLink
-                  $isActive={isActiveRoute("/services")}
+                  $isActive={isActiveRoute("/Service")}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   💼 Services
