@@ -161,10 +161,10 @@ const Footer: React.FC = () => {
       <S.FooterContent>
         <S.FooterMain>
           <S.FooterBrand>
-            <S.Logo>
+            {/*<S.Logo>
               <S.LogoImage src={Logo} />
               VisaLink
-            </S.Logo>
+            </S.Logo>*/}
             <S.BrandDescription>
               Empowering Kenyan athletes to compete globally with streamlined
               visa solutions and dedicated support.
@@ -200,6 +200,12 @@ const Footer: React.FC = () => {
             <S.BottomLink href="#">Sitemap</S.BottomLink>
           </S.BottomLinks>
         </S.FooterBottom>
+
+        <S.Subnote>
+          Visalink.io is a product of Athlinks Agency Limited, a registered travel 
+          and consultancy service provider with operations across multiple regions.
+        </S.Subnote>
+        
       </S.FooterContent>
     </S.FooterContainer>
   );

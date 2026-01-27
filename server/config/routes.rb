@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resources :sessions, only: [:create]
   resources :athletes, only: [:index, :create]
   resources :applications, only: [:index, :show, :create, :update]
+  resources :services, only: [:index, :show, :create]
 
   resources :invoices, only: [:index, :show, :create] do
   patch :update_status, on: :member
