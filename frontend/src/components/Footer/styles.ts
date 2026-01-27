@@ -245,3 +245,19 @@ export const BottomLink = styled.a`
     opacity: 0.8;
   }
 `;
+export const Subnote = styled.p`
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: center;
+  max-width: 800px;
+  margin: 1.5rem auto 0;
+  padding: 1.5rem 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  line-height: 1.6;
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+    padding: 1rem 1rem 0;
+  }
+`;

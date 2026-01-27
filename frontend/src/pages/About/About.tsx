@@ -4,11 +4,18 @@ import {
   HeroOverlay,
   HeroContent,
   HeroTitle,
-  MainContent,
-  ContentGrid,
-  Section,
-  SectionTitle,
-  SectionText,
+  WhoWeAreSection,
+  WhoWeAreImage,
+  WhoWeAreContent,
+  WhoWeAreTitle,
+  WhoWeAreText,
+  ServiceList,
+  ServiceItem,
+  MissionSection,
+  MissionContent,
+  MissionImage,
+  MissionTitle,
+  MissionText,
   CTASection,
   CTAContent,
   CTATitle,
@@ -17,13 +24,15 @@ import {
 } from './styles';
 import Footer from '../../components/Footer/Footer';
 import { useNavigate } from 'react-router-dom';
+import whoWeAreImage from '../../assets/aboutus.png'; 
+import missionImage from '../../assets/aboutus.png'; 
 
 const About: React.FC = () => {
   const navigate = useNavigate();
 
   return (
     <>
-      {/* Hero Section with Background Image */}
+      {/* Hero Section */}
       <HeroSection>
         <HeroOverlay />
         <HeroContent>
@@ -31,55 +40,63 @@ const About: React.FC = () => {
         </HeroContent>
       </HeroSection>
 
-      {/* Middle Section - Main Content */}
-      <MainContent>
-        <ContentGrid>
-          <Section>
-            <SectionTitle>What We Do</SectionTitle>
-            <SectionText>
-              We specialize in comprehensive visa application management for international athletes, 
-              offering end-to-end support from initial consultation and document preparation 
-              to application submission and status tracking. Our platform streamlines the 
-              complex visa process, allowing athletes to focus on their performance.
-            </SectionText>
-          </Section>
+      {/* Who We Are Section - Image on Left */}
+      <WhoWeAreSection>
+        <WhoWeAreImage>
+          <img src={whoWeAreImage} alt="VisaLink Team" />
+        </WhoWeAreImage>
+        
+        <WhoWeAreContent>
+          <WhoWeAreTitle>WHO WE ARE</WhoWeAreTitle>
+          
+          <WhoWeAreText>
+            <a href="https://visalink.io" target="_blank" rel="noopener noreferrer" style={{color: '#10b981', textDecoration: 'none'}}> Visalink.io </a> is a premier visa consultancy service under Athlinks Agency Limited. 
+            We specialize in transforming the complex visa application process into a seamless, 
+            stress-free experience for travelers worldwide. Our dedicated tech driven digital 
+            platform is tailored to meet diverse corporates and individuals needs.
+          </WhoWeAreText>
+        </WhoWeAreContent>
+      </WhoWeAreSection>
 
-          <Section>
-            <SectionTitle>Our Mission</SectionTitle>
-            <SectionText>
-              VisaLink is dedicated to simplifying the visa application process for athletes 
-              and sports professionals worldwide. We bridge the gap between athletic talent 
-              and international opportunities by providing seamless visa management services.
-            </SectionText>
-          </Section>
+      {/* Our Mission Section - Image on Right */}
+      <MissionSection>
+        <MissionContent>
+          <MissionTitle>OUR MISSION</MissionTitle>
+          
+          <MissionText>
+            Our mission is to remove barriers between you and your global destinations through 
+            reliable, efficient, and personalized visa solutions. And as such, our end-to-end 
+            visa package addresses every aspect of your travel documentation ranging from:
+          </MissionText>
 
-          <Section>
-            <SectionTitle>Why Choose VisaLink?</SectionTitle>
-            <SectionText>
-              With years of experience in athlete visa management, we understand the unique 
-              challenges faced by sports professionals. Our dedicated team provides personalized 
-              support, ensuring each application meets the highest standards. We've successfully 
-              processed thousands of visa applications, helping athletes compete and train globally.
-            </SectionText>
-          </Section>
-        </ContentGrid>
-      </MainContent>
+          <ServiceList>
+            <ServiceItem>● Visa application guidance and processing</ServiceItem>
+            <ServiceItem>● Document verification and preparation</ServiceItem>
+            <ServiceItem>● Country-specific requirement assistance</ServiceItem>
+            <ServiceItem>● Timeline management and updates</ServiceItem>
+            <ServiceItem>● Post-approval support</ServiceItem>
+          </ServiceList>
+        </MissionContent>
+
+        <MissionImage>
+          <img src={missionImage} alt="Our Mission" />
+        </MissionImage>
+      </MissionSection>
 
       {/* CTA Section */}
       <CTASection>
         <CTAContent>
           <CTATitle>Ready to Start Your Visa Journey?</CTATitle>
           <CTAText>
-            Join hundreds of Kenyan athletes who trust us with their international visa applications. 
-            Focus on your training while we handle the paperwork.
+            Every day, we help athletes, students, and adventurers cross boundaries with 
+            confidence and ease. Ready to begin your journey? Contact us today.
           </CTAText>
-          <CTAButton onClick={() => navigate('/login')}>
-            Get Started Today
+          <CTAButton onClick={() => navigate('/quote')}>
+            Book Appointment
           </CTAButton>
         </CTAContent>
       </CTASection>
 
-      {/* Footer */}
       <Footer />
     </>
   );

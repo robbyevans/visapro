@@ -200,6 +200,12 @@ const Footer: React.FC = () => {
             <S.BottomLink href="#">Sitemap</S.BottomLink>
           </S.BottomLinks>
         </S.FooterBottom>
+
+        <S.Subnote>
+          Visalink.io is a product of Athlinks Agency Limited, a registered travel 
+          and consultancy service provider with operations across multiple regions.
+        </S.Subnote>
+        
       </S.FooterContent>
     </S.FooterContainer>
   );

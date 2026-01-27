@@ -1,21 +1,14 @@
 import styled from 'styled-components';
-import heroImage from '../../assets/aboutus.png';
 
-// Hero Section with Background Image
+// Hero Section
 export const HeroSection = styled.section`
   position: relative;
-  height: 200px;
-  background-image: url(${heroImage});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  height: 30vh;
+  background: linear-gradient(135deg, #10b981, #059669);
   display: flex;
   align-items: center;
   justify-content: left;
-
-  @media (max-width: 768px) {
-    height: 200px;
-  }
+  padding-left: 2rem;
 `;
 
 export const HeroOverlay = styled.div`
@@ -24,111 +17,152 @@ export const HeroOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(16, 185, 129, 0.8),
-    rgba(5, 150, 105, 0.9)
-  );
+  background: rgba(0, 0, 0, 0.3);
 `;
 
 export const HeroContent = styled.div`
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 0 2rem;
 `;
 
 export const HeroTitle = styled.h1`
-  color: #ffffff;
+  color: white;
   font-size: 3rem;
-  font-weight: 700;
+  font-weight: bold;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+`;
 
+// Who We Are Section
+export const WhoWeAreSection = styled.section`
+  display: flex;
+  align-items: center;
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 4rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 3rem 1rem;
+    gap: 2rem;
+  }
+`;
+
+export const WhoWeAreImage = styled.div`
+  flex: 1;
+  
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const WhoWeAreContent = styled.div`
+  flex: 1;
+`;
+
+export const WhoWeAreTitle = styled.h2`
+  color: #10b981;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  
   @media (max-width: 768px) {
     font-size: 2rem;
   }
 `;
 
-// Main Content Section
-export const MainContent = styled.div`
-  padding: 5rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+export const WhoWeAreText = styled.p`
+  color: #64748b;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+`;
 
-  @media (max-width: 768px) {
-    padding: 3rem 1.5rem;
+export const ServiceList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+`;
+
+export const ServiceItem = styled.li`
+  color: #64748b;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  padding-left: 1rem;
+`;
+
+export const BookButton = styled.button`
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #059669;
+    transform: translateY(-2px);
   }
 `;
 
-export const ContentGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 3rem;
-
+// Mission Section
+export const MissionSection = styled.section`
+  display: flex;
+  align-items: center;
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 4rem;
+  // background: #f8fafc;
+  
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    flex-direction: column-reverse;
+    padding: 3rem 1rem;
     gap: 2rem;
   }
 `;
 
-export const Section = styled.section`
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 2.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-  }
-
-  h2 {
-    color: #10b981;
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-  }
-
-  p {
-    color: #64748b;
-    line-height: 1.8;
-    font-size: 1.05rem;
-  }
-
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-
-    h2 {
-      font-size: 1.5rem;
-    }
-
-    p {
-      font-size: 1rem;
-    }
-  }
+export const MissionContent = styled.div`
+  flex: 1;
 `;
 
-export const SectionTitle = styled.h2`
+export const MissionTitle = styled.h2`
   color: #10b981;
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 `;
 
-export const SectionText = styled.p`
+export const MissionText = styled.p`
   color: #64748b;
-  line-height: 1.8;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+`;
 
-  @media (max-width: 768px) {
-    font-size: 1rem;
+export const MissionImage = styled.div`
+  flex: 1;
+  
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -137,10 +171,6 @@ export const CTASection = styled.section`
   background: linear-gradient(135deg, #10b981, #059669);
   padding: 5rem 2rem;
   text-align: center;
-
-  @media (max-width: 768px) {
-    padding: 3rem 1.5rem;
-  }
 `;
 
 export const CTAContent = styled.div`
@@ -149,71 +179,37 @@ export const CTAContent = styled.div`
 `;
 
 export const CTATitle = styled.h2`
-  color: #ffffff;
+  color: white;
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: bold;
   margin-bottom: 1.5rem;
-
+  
   @media (max-width: 768px) {
     font-size: 2rem;
   }
 `;
 
 export const CTAText = styled.p`
-  color: #ffffff;
+  color: white;
   font-size: 1.2rem;
-  line-height: 1.8;
+  line-height: 1.6;
   margin-bottom: 2.5rem;
-  opacity: 0.95;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
+  opacity: 0.9;
 `;
 
 export const CTAButton = styled.button`
-  background: #ffffff;
+  background: white;
   color: #10b981;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 1rem 2.5rem;
   border: none;
+  padding: 1.2rem 2.5rem;
   border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
+  
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    background: #f0fdf4;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-    max-width: 300px;
-  }
-`;
-
-// Legacy styles (kept for backward compatibility)
-export const Container = styled.div`
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-export const Title = styled.h1`
-  color: #10b981;
-  margin-bottom: 2rem;
-  text-align: center;
-`;
-
-export const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 `;
