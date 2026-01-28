@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { axiosInstance } from "../api";
+import api from "../api";
 import type { IInvoice } from "../types";
 
 export interface IInvoiceState {
@@ -17,7 +17,7 @@ const initialState: IInvoiceState = {
   error: null,
 };
 
-const api = (token?: string | null) => axiosInstance(token);
+//const api = (token?: string | null) => axiosInstance(token);
 
 /* -------------------------
    Thunks
@@ -28,7 +28,7 @@ export const fetchInvoices = createAsyncThunk(
   "invoices/fetchInvoices",
   async (_, thunkAPI) => {
     try {
-      const res = await api().get("/invoices");
+      const res = await api.get("/invoices");
       return res.data as IInvoice[];
     } catch (err: any) {
       const message =
@@ -45,7 +45,7 @@ export const fetchInvoice = createAsyncThunk(
   "invoices/fetchInvoice",
   async (id: number, thunkAPI) => {
     try {
-      const res = await api().get(`/invoices/${id}`);
+      const res = await api.get(`/invoices/${id}`);
       return res.data as IInvoice;
     } catch (err: any) {
       const message =
@@ -58,7 +58,6 @@ export const fetchInvoice = createAsyncThunk(
 );
 
 // POST /invoices
-// payload: { applications: [{ id, unit_price }], notes?: string }
 export const createInvoice = createAsyncThunk(
   "invoices/createInvoice",
   async (
@@ -69,7 +68,7 @@ export const createInvoice = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const res = await api().post("/invoices", { invoice: payload });
+      const res = await api.post("/invoices", { invoice: payload });
       return res.data as IInvoice;
     } catch (err: any) {
       const message =
@@ -86,7 +85,7 @@ export const updateInvoiceStatus = createAsyncThunk(
   "invoices/updateInvoiceStatus",
   async ({ id, status }: { id: number; status: string }, thunkAPI) => {
     try {
-      const res = await api().patch(`/invoices/${id}/update_status`, {
+      const res = await api.patch(`/invoices/${id}/update_status`, {
         status,
       });
       return res.data as IInvoice;
@@ -99,6 +98,7 @@ export const updateInvoiceStatus = createAsyncThunk(
     }
   }
 );
+
 
 const invoiceSlice = createSlice({
   name: "invoices",
@@ -147,7 +147,6 @@ const invoiceSlice = createSlice({
       .addCase(
         createInvoice.fulfilled,
         (state, action: PayloadAction<IInvoice>) => {
-          // Prepend new invoice
           state.invoices.unshift(action.payload);
           state.currentInvoice = action.payload;
         }
@@ -163,7 +162,6 @@ const invoiceSlice = createSlice({
           const index = state.invoices.findIndex(
             (i) => i.id === action.payload.id
           );
-
           if (index !== -1) state.invoices[index] = action.payload;
           if (state.currentInvoice?.id === action.payload.id) {
             state.currentInvoice = action.payload;

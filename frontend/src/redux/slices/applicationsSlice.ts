@@ -8,24 +8,21 @@ import type {
   TUpdateApplicationPayload,
   IUserWithApplications,
 } from "../types";
-import { axiosInstance } from "../api";
+import api from "../api";
 import { getErrorMessage } from "../../utils/error";
+import type { RootState } from "../store";
 
 // Async thunks
 const fetchApplications = createAsyncThunk(
   "applications/fetchAll",
   async (_, { rejectWithValue, getState }) => {
-    // Remove filters parameter
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
-
-      // Remove all filter parameter building - just fetch all applications
+      //const api = axiosInstance(token);
       const res = await api.get<IApplication[]>("/applications");
-      return { applications: res.data }; // Return as object to match expected structure
+      return { applications: res.data };
     } catch (err: unknown) {
       return rejectWithValue(getErrorMessage(err));
     }
@@ -36,11 +33,10 @@ const fetchApplication = createAsyncThunk(
   "applications/fetchOne",
   async (id: number, { rejectWithValue, getState }) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.get<IApplication>(`/applications/${id}`);
       return res.data;
     } catch (err: unknown) {
@@ -53,11 +49,10 @@ const fetchGroupedApplications = createAsyncThunk(
   "applications/fetchGrouped",
   async (_, { rejectWithValue, getState }) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.get<IUserWithApplications[]>(
         "/applications?group_by_client=true"
       );
@@ -72,11 +67,10 @@ const createApplication = createAsyncThunk(
   "applications/create",
   async (payload: ICreateApplicationPayload, { rejectWithValue, getState }) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.post<IApplication>("/applications", payload);
       return res.data;
     } catch (err: unknown) {
@@ -92,11 +86,10 @@ const updateApplication = createAsyncThunk(
     { rejectWithValue, getState }
   ) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.patch<IApplication>(`/applications/${id}`, updates);
       return res.data;
     } catch (err: unknown) {
@@ -120,11 +113,10 @@ const uploadDocument = createAsyncThunk(
     { rejectWithValue, getState }
   ) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.post<IDocument>("/documents", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -144,6 +136,7 @@ const uploadDocument = createAsyncThunk(
     }
   }
 );
+
 
 const initialState: IApplicationsState = {
   applications: [],
@@ -180,11 +173,9 @@ const applicationsSlice = createSlice({
       })
       .addCase(fetchApplications.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Handle both array and object responses
         const applicationsArray = Array.isArray(action.payload)
           ? action.payload
           : action.payload.applications;
-
         state.applications = applicationsArray.map((app) => ({
           ...app,
           documents: app.documents || [],
@@ -210,7 +201,6 @@ const applicationsSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-
       .addCase(fetchGroupedApplications.pending, (state) => {
         state.isLoading = true;
         state.error = null;
