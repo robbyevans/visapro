@@ -19,7 +19,6 @@ interface DocumentUpload {
   error?: string;
 }
 
-// This type represents a full application for one athlete
 type AthleteApplication = {
   first_name: string;
   last_name: string;
@@ -56,6 +55,7 @@ const ApplicationFormPage: React.FC = () => {
   const { currentUser } = useUser();
 
   const isCorporateUser = currentUser?.role === "corporate";
+  const isIndividual = currentUser?.role === "individual"
 
   // State for the list of applications ready to be submitted
   const [applications, setApplications] = useState<AthleteApplication[]>([]);
@@ -90,8 +90,11 @@ const ApplicationFormPage: React.FC = () => {
     if (!data.last_name.trim()) errors.last_name = "Last name is required";
     if (!data.country) errors.country = "Destination country is required";
 
-    const passportDoc = data.documents.find((doc) => doc.type === "passport");
-    if (!passportDoc?.file) errors.passport = "Passport copy is required";
+
+    if(isIndividual){
+      const passportDoc = data.documents.find((doc) => doc.type === "passport");
+      if (!passportDoc?.file) errors.passport = "Passport copy is required";
+    }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -270,7 +273,9 @@ const ApplicationFormPage: React.FC = () => {
           <S.DocumentUploadSection>
             <S.DocumentUploadHeader>
               <S.DocumentTitle>Passport Copy</S.DocumentTitle>
-              <S.DocumentRequired>Required</S.DocumentRequired>
+              { isIndividual &&
+                <S.DocumentRequired>Required</S.DocumentRequired>
+              }
             </S.DocumentUploadHeader>
             {!passportDoc?.file ? (
               <>
