@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
                 <>
                   <Link to="/signup">
                     <Button variant="primary" size="lg" pulsating>
-                      Start Your Journey
+                      Get Started
                     </Button>
                   </Link>
                 </>
@@ -194,6 +194,8 @@ const HomePage: React.FC = () => {
                 <Button
                   variant={isAuthenticated ? "primary" : "secondary"}
                   size="lg"
+                  textColor={STATIC_COLORS.base.white}
+                  pulsating
                 >
                   {isAuthenticated ? "Go to Dashboard" : "Sign In"}
                 </Button>
