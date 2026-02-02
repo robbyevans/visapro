@@ -22,5 +22,24 @@ User.create!(
 
 puts "✅ Admin user created (email: user.admin@gmail.com, password: @admin001) 🍀"
 
+# Create sample services
+Service.find_or_create_by(name: "Tourist Visa Processing") do |service|
+  service.description = "Complete processing of tourist visa applications for athletes and sports personnel."
+end
+
+Service.find_or_create_by(name: "Work Visa Consultation") do |service|
+  service.description = "Expert consultation for work visa requirements and documentation."
+end
+
+Service.find_or_create_by(name: "Document Verification") do |service|
+  service.description = "Professional verification and authentication of travel documents."
+end
+
+Service.find_or_create_by(name: "Express Processing") do |service|
+  service.description = "Fast-track visa processing for urgent travel requirements."
+end
+
+puts "✅ Sample services created"
+
 # in Production, run this command in console
 # fly ssh console --command "bin/rails db:seed"
