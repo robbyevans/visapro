@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import heroDesktop from "../../assets/visapro-desktop-background.webp";
-import heroTablet from "../../assets/visapro-tablet-background.webp";
-import heroMobile from "../../assets/visapro-mobile-background.webp";
+import heroDesktop from "../../assets/vis-desktop.webp";
+import heroTablet from "../../assets/vis-tablet.webp";
+import heroMobile from "../../assets/vis-mobile.webp";
 import { STATIC_COLORS } from "../../styles";
 
 export const HomePageContainer = styled.div`
@@ -23,7 +23,7 @@ export const HeroSection = styled.section`
 
   @media (min-width: 768px) {
     padding: 0;
-    min-height: 100vh;
+    min-height: 150vh;
   }
   @media (max-width: 500px) {
     padding: 0;
@@ -123,7 +123,7 @@ export const HeroContent = styled.div`
   @media (min-width: 768px) {
     padding: 0 24px;
     max-width: 800px;
-    top: 70px;
+    top: 30px;
   }
 
   @media (min-width: 1024px) {

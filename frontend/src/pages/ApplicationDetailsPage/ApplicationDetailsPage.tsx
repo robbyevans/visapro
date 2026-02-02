@@ -209,12 +209,14 @@ const ApplicationDetailsPage: React.FC = () => {
                 {currentApplication.athlete?.last_name}
               </S.DetailValue>
             </S.DetailItem>
-            <S.DetailItem>
+
+            {/*<S.DetailItem>
               <S.DetailLabel>Passport Number</S.DetailLabel>
               <S.DetailValue>
                 {currentApplication.athlete?.passport_number || "N/A"}
               </S.DetailValue>
-            </S.DetailItem>
+            </S.DetailItem>*/}
+            
             <S.DetailItem>
               <S.DetailLabel>Phone Number</S.DetailLabel>
               <S.DetailValue>
@@ -222,12 +224,12 @@ const ApplicationDetailsPage: React.FC = () => {
               </S.DetailValue>
             </S.DetailItem>
 
-            <S.DetailItem>
+            {/*<S.DetailItem>
               <S.DetailLabel>Email</S.DetailLabel>
               <S.DetailValue>
                 {currentApplication.athlete?.email || "N/A"}
               </S.DetailValue>
-            </S.DetailItem>
+            </S.DetailItem>*/}
 
             <S.DetailItem>
               <S.DetailLabel>Destination Country</S.DetailLabel>
@@ -361,7 +363,10 @@ const ApplicationDetailsPage: React.FC = () => {
                           {displayFileName}
                         </S.DocumentName>
                       </S.DocumentInfo>
-                      {canEdit && doc.doc_type === "invitation_letter" ? (
+
+                      {canEdit &&
+                      (doc.doc_type === "invitation_letter" ||
+                        doc.doc_type === "supporting_doc") ? (
                         <EditDocument
                           fileName={fileName}
                           fileUrl={doc.file_url}
@@ -371,7 +376,7 @@ const ApplicationDetailsPage: React.FC = () => {
                           onDownload={() =>
                             handleDownloadDocument(doc, fileName)
                           }
-                          type="invitation_letter"
+                          type={doc.doc_type}
                         />
                       ) : (
                         <S.DocumentActions>
@@ -394,6 +399,8 @@ const ApplicationDetailsPage: React.FC = () => {
                         </S.DocumentActions>
                       )}
                     </S.DocumentItem>
+
+
                   );
                 })}
               </S.DocumentList>

@@ -25,6 +25,9 @@ import ApplicationFormPage from "./pages/ApplicationFormPage/ApplicationFormPage
 import ApplicationDetailsPage from "./pages/ApplicationDetailsPage/ApplicationDetailsPage";
 import AdminApplicationPage from "./pages/AdminApplicationPage/AdminApplicationPage";
 import InvoiceGenerator from "./components/Invoices/InvoiceGenerator/InvoiceGenerator";
+import Service from "./pages/Service/Service";
+import About from "./pages/About/About";
+import GetQuote from "./pages/Quote/quotes";
 
 // Main App component with routing
 const AppContent: React.FC = () => {
@@ -42,6 +45,9 @@ const AppContent: React.FC = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<AuthPage />} />
                 <Route path="/signup" element={<AuthPage />} />
+                <Route path="/Service" element={<Service/>} />
+                <Route path="/About" element={<About/>} />
+                <Route path="/quote" element={<GetQuote />} />
 
                 {/* Protected routes */}
                 <Route
