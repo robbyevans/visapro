@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { IAuthState, ILoginResponse, ISignUpRequest } from "../types";
-import { axiosInstance } from "../api";
+import api from "../api";
 import { getErrorMessage } from "../../utils/error";
 
 // Async thunks
@@ -12,7 +12,6 @@ const loginUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const api = axiosInstance();
       const res = await api.post<ILoginResponse>("/login", { email, password });
       return res.data;
     } catch (err: unknown) {
@@ -25,7 +24,6 @@ const signUpUser = createAsyncThunk(
   "auth/signup",
   async (userData: ISignUpRequest, { rejectWithValue }) => {
     try {
-      const api = axiosInstance();
       const requestData = {
         user: {
           name: userData.name,

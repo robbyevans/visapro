@@ -318,7 +318,7 @@ const ApplicationFormPage: React.FC = () => {
         <S.FormActions>
           <Button type="button" variant="secondary" onClick={() => navigate("/dashboard")} disabled={isSubmitting}>Cancel</Button>
           {isCorporateUser && (
-             <Button type="button" variant="secondary" onClick={handleAddMore} disabled={isSubmitting}>Add More</Button>
+             <Button type="button" variant="outline" onClick={handleAddMore} disabled={isSubmitting}>Add More</Button>
           )}
           <Button type="submit" variant="primary" loading={isSubmitting} disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : `Submit Application${isCorporateUser ? '(s)' : ''}`}

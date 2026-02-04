@@ -1,37 +1,43 @@
-import axios, { type AxiosInstance } from "axios";
 
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://your-rails-app.fly.dev";
+import axios from 'axios';
+import type { AxiosInstance } from 'axios';
+import { store } from './store'; 
+import { logout } from './slices/authSlice';
 
-/**
- * Create a configured axios instance.
- * - token param overrides stored token
- * - if useCredentials is true, axios will send cookies (for session auth)
- */
-export function axiosInstance(
-  token?: string | null,
-  useCredentials = false
-): AxiosInstance {
-  const instance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    withCredentials: useCredentials,
-  });
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
-  const resolvedToken: string | null =
-    token ??
-    (typeof window !== "undefined" ? localStorage.getItem("token") : null);
+const api: AxiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});
 
-  if (resolvedToken) {
-    instance.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${resolvedToken}`;
+api.interceptors.request.use(
+  (config) => {
+    const token = store.getState().auth.token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  return instance;
-}
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.error("Authentication Error: Token is invalid or expired. Logging out.");
+      store.dispatch(logout());
+      window.location.href = '/login';
+    }
 
-export default axiosInstance;
+    return Promise.reject(error);
+  }
+);
+
+export default api;

@@ -92,19 +92,6 @@ export const WhoWeAreText = styled.p`
   margin-bottom: 1.5rem;
 `;
 
-// export const ServiceList = styled.ul`
-//   list-style: none;
-//   padding: 0;
-//   margin: 2rem 0;
-// `;
-
-// export const ServiceItem = styled.li`
-//   color: #64748b;
-//   font-size: 1.1rem;
-//   margin-bottom: 0.8rem;
-//   padding-left: 1rem;
-// `;
-
 export const BookButton = styled.button`
   background: #10b981;
   color: white;
