@@ -65,16 +65,28 @@ export const Input = styled.input`
   padding: 8px;
   border-radius: 6px;
   border: 1px solid ${({ theme }) => theme.border.light};
+  background: ${({ theme }) => theme.background.primary};
+  color: ${({ theme }) => theme.text.primary};
   min-width: 120px;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.primaryColors["500"]};
+  }
 `;
 
 export const PrimaryButton = styled.button`
-  background: ${({ theme }) => theme.primaryColors[500]};
+  background: ${({ theme }) => theme.primaryColors["500"]};
   color: white;
   border: none;
   padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.primaryColors["600"]};
+  }
 
   &:disabled {
     opacity: 0.6;
@@ -84,10 +96,22 @@ export const PrimaryButton = styled.button`
 
 export const SecondaryButton = styled.button`
   background: ${({ theme }) => theme.background.secondary};
+  color: ${({ theme }) => theme.text.primary};
   border: 1px solid ${({ theme }) => theme.border.light};
   padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.background.primary};
+    border-color: ${({ theme }) => theme.border.medium};
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
 
 export const StepPill = styled.div`
@@ -97,6 +121,7 @@ export const StepPill = styled.div`
   border-radius: 999px;
   font-weight: 600;
   font-size: 13px;
+  border: 1px solid ${({ theme }) => theme.border.light};
 `;
 
 export const TitleSmall = styled.div`

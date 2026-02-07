@@ -13,8 +13,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onClick,
   showActions = false,
 }) => {
-  const athleteFirstName = application.athlete?.first_name || "N/A";
-  const athleteLastName = application.athlete?.last_name || "N/A";
+  const athlete = application.athlete;
+  const { first_name: athleteFirstName, last_name: athleteLastName } =
+    athlete || {};
   const documentsCount = application.documents?.length || 0;
   const formattedDate = application.created_at
     ? new Date(application.created_at).toLocaleDateString()

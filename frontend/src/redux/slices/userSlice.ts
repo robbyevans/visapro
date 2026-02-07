@@ -1,19 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { IUser, IUserState, IAthlete } from "../types";
-import { axiosInstance } from "../api";
+import api from "../api";
 import { getErrorMessage } from "../../utils/error";
+import type { RootState } from "../store";
 
 // Async thunks
 const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (_, { rejectWithValue, getState }) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.get<{ user: IUser }>("/me");
       return res.data.user;
     } catch (err: unknown) {
@@ -24,15 +24,12 @@ const fetchUser = createAsyncThunk(
 
 const updateUserTheme = createAsyncThunk(
   "user/updateTheme",
-  // ✅ Change parameter name to theme_preference
   async (theme_preference: "light" | "dark", { rejectWithValue, getState }) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
-      // ✅ Send theme_preference instead of theme
+      //const api = axiosInstance(token);
       const res = await api.patch<{ user: IUser }>("/users/update_theme", {
         theme_preference,
       });
@@ -48,11 +45,10 @@ const fetchAthletes = createAsyncThunk(
   "user/fetchAthletes",
   async (_, { rejectWithValue, getState }) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.get<IAthlete[]>("/athletes");
       return res.data;
     } catch (err: unknown) {
@@ -73,11 +69,10 @@ const createAthlete = createAsyncThunk(
     { rejectWithValue, getState }
   ) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.post<IAthlete>("/athletes", payload);
       return res.data;
     } catch (err: unknown) {
@@ -90,11 +85,10 @@ const updateUserProfile = createAsyncThunk(
   "user/updateProfile",
   async (updates: Partial<IUser>, { rejectWithValue, getState }) => {
     try {
-      const state = getState() as any;
-      const token = state.auth.token;
+      const { token } = (getState() as RootState).auth;
       if (!token) throw new Error("Not authenticated");
 
-      const api = axiosInstance(token);
+      //const api = axiosInstance(token);
       const res = await api.patch<IUser>("/users/profile", updates);
       return res.data;
     } catch (err: unknown) {
@@ -102,6 +96,7 @@ const updateUserProfile = createAsyncThunk(
     }
   }
 );
+
 
 const initialState: IUserState = {
   currentUser: null,
@@ -125,7 +120,6 @@ const userSlice = createSlice({
     },
     updateThemeLocal(state, action: PayloadAction<"light" | "dark">) {
       if (state.currentUser) {
-        // ✅ Use theme_preference consistently
         state.currentUser.theme_preference = action.payload;
       }
     },

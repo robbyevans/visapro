@@ -156,7 +156,7 @@ const Dashboard: React.FC = () => {
               variant="primary"
               size="lg"
             >
-              + New Application
+              + New Task
             </Button>
           </S.HeaderActions>
         )}

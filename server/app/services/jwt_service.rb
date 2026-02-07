@@ -1,7 +1,7 @@
 class JwtService
   ALGORITHM = 'HS256'
 
-  def self.encode(payload, exp = 24.hours.from_now)
+  def self.encode(payload, exp = 10.minute.from_now)
     payload[:exp] = exp.to_i
     JWT.encode(payload, secret_key, ALGORITHM)
   end
