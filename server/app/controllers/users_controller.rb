@@ -1,8 +1,19 @@
+# app/controllers/users_controller.rb
 class UsersController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:create]
+  # Skip authentication for both standard signup and initial setup
+  skip_before_action :authenticate_user!, only: [:create, :initiate]
 
+  # Standard user signup
   def create
     user = User.new(user_params)
+    
+    #no admin setup for standard users
+    if user.role == "admin"
+      user.role = "individual" 
+    end
+
+    user.status = user.corporate? ? "inactive" : "active"
+    
     if user.save
       # Send welcome email to user
       UserMailer.welcome_email(user).deliver_now
@@ -12,11 +23,33 @@ class UsersController < ApplicationController
         UserMailer.admin_new_user(admin, user).deliver_now
       end
 
-      # Automatically log in the user after signup
-      token = JwtService.encode(user_id: user.id)
       render json: { 
-        user: user.as_json(except: [:password_digest]), 
-        token: token 
+        user: user.as_json(except: [:password_digest]),
+        message: "User created successfully"
+      }, status: :created
+    else
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  # Admin setup
+  def initiate
+    if User.exists?
+      render json: { error: "System is already initialized." }, status: :forbidden
+      return
+    end
+
+    user = User.new(user_params)
+    user.role = "admin" 
+    user.status = "active"
+
+    if user.save
+      # token = JwtService.encode(user_id: user.id)
+      
+      render json: { 
+        user: user.as_json(except: [:password_digest]),
+        message: "Admin initialized successfully.",
+        # token: token 
       }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
@@ -24,7 +57,6 @@ class UsersController < ApplicationController
   end
 
   def update_theme
-    # ✅ Change from params[:theme] to params[:theme_preference]
     if current_user.update(theme_preference: params[:theme_preference])
       render json: { 
         user: current_user.as_json(except: [:password_digest]),

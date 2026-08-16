@@ -1,13 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../../redux/hooks/useUser";
 import { useApplications } from "../../redux/hooks/useApplications";
 import { ApplicationsView } from "../../components/Applications/ApplicationsView/ApplicationsView";
 import Button from "../../components/Button/Button";
 import SuccessModal from "../../components/Modals/SucessModal/SucessModal";
+import Spinner from "../../components/Spinner/Spinner";
+import api from "../../redux/api";
 import * as S from "./styles";
 
 type AdminTab = "current" | "all";
+
+interface CorporateUser {
+  id: number;
+  name: string;
+  email: string;
+  status: 0 | 1;
+}
 
 const Dashboard: React.FC = () => {
   const { currentUser, theme } = useUser();
@@ -18,25 +27,80 @@ const Dashboard: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>("current");
 
+  // Corporate Users State
+  const [corporateUsers, setCorporateUsers] = useState<CorporateUser[]>([]);
+  const [isCorpLoading, setIsCorpLoading] = useState<boolean>(false);
+  const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
+
+  const isAdmin = currentUser?.role === "admin";
+  const isRegularUser =
+    currentUser?.role === "individual" || currentUser?.role === "corporate";
+
   console.info("groupedApplications:", groupedApplications);
 
-  // Check for success message in location state
   useEffect(() => {
     if (location.state?.message) {
       setShowSuccessModal(true);
-      // Clear the location state to prevent showing modal on refresh
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
   useEffect(() => {
     fetchApplications();
-  }, []);
+  }, [fetchApplications]);
 
-  const userApplications =
-    currentUser?.role === "admin"
-      ? applications
-      : applications.filter((app) => app.user_id === currentUser?.id);
+  // Fetch Corporate Users
+  const fetchCorporateUsers = useCallback(async () => {
+    if (!isAdmin) return;
+    try {
+      setIsCorpLoading(true);
+      const response = await api.get("/admin/corporate_users");
+      const data = response.data?.users || response.data || [];
+      const formattedData = (Array.isArray(data) ? data : []).map((u: any) => ({
+        ...u,
+        status: Number(u.status) === 1 ? 1 : 0,
+      }));
+      setCorporateUsers(formattedData);
+    } catch (error) {
+      console.error("Failed to fetch corporate users:", error);
+    } finally {
+      setIsCorpLoading(false);
+    }
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchCorporateUsers();
+    }
+  }, [isAdmin, fetchCorporateUsers]);
+
+  // Update Status handler
+  const handleCorporateStatusChange = async (
+    userId: number,
+    newStatus: 0 | 1
+  ) => {
+    try {
+      setUpdatingUserId(userId);
+      await api.patch(`/admin/users/${userId}/status`, {
+        status: newStatus,
+      });
+
+      setCorporateUsers((prev) =>
+        prev.map((user) =>
+          user.id === userId ? { ...user, status: newStatus } : user
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update corporate user status:", error);
+      alert("Failed to update user status. Please try again.");
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
+
+  const userApplications = isAdmin
+    ? applications
+    : applications.filter((app) => app.user_id === currentUser?.id);
 
   const stats = {
     total: userApplications.length,
@@ -50,10 +114,6 @@ const Dashboard: React.FC = () => {
     completed: userApplications.filter((app) => app.status === "completed")
       .length,
   };
-
-  const isRegularUser =
-    currentUser?.role === "individual" || currentUser?.role === "corporate";
-  const isAdmin = currentUser?.role === "admin";
 
   const handleApplicationClick = (id: number) => {
     if (isAdmin) {
@@ -101,7 +161,6 @@ const Dashboard: React.FC = () => {
     }
 
     if (isAdmin && activeTab === "all") {
-      // All Applications view - show all applications grouped by user without filtering
       return (
         <ApplicationsView
           showFilters={false}
@@ -109,8 +168,8 @@ const Dashboard: React.FC = () => {
           onApplicationClick={handleApplicationClick}
           viewMode="admin"
           defaultFilter={{
-            status: [], // Show all statuses
-            timeRange: "all_time", // Show all time
+            status: [],
+            timeRange: "all_time",
             sortBy: "created_at",
             sortOrder: "desc",
           }}
@@ -162,6 +221,7 @@ const Dashboard: React.FC = () => {
         )}
       </S.DashboardHeader>
 
+      {/* Stats Overview */}
       <S.StatsOverview>
         <S.StatsCard>
           <S.StatsHeader>
@@ -287,6 +347,150 @@ const Dashboard: React.FC = () => {
 
         {renderApplicationsContent()}
       </S.ApplicationsSection>
+
+      {/* Corporate Users List Section (Admin Only) */}
+      {isAdmin && (
+        <S.ApplicationsSection style={{ marginTop: "2rem" }}>
+          <S.SectionHeader>
+            <div>
+              <S.SectionTitle>Corporate Users</S.SectionTitle>
+              <S.SectionSubtitle>
+                Manage corporate accounts and update their status (Active / Inactive)
+              </S.SectionSubtitle>
+            </div>
+          </S.SectionHeader>
+
+          {isCorpLoading ? (
+            <div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
+              <Spinner size="md" />
+            </div>
+          ) : corporateUsers.length === 0 ? (
+            <S.EmptyState>
+              <S.EmptyStateIcon>🏢</S.EmptyStateIcon>
+              <S.EmptyStateTitle>No Corporate Users</S.EmptyStateTitle>
+              <S.EmptyStateDescription>
+                There are currently no corporate users registered in the system.
+              </S.EmptyStateDescription>
+            </S.EmptyState>
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                overflowX: "auto",
+                backgroundColor: "#fff",
+                borderRadius: "8px",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                marginTop: "1rem",
+              }}
+            >
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  textAlign: "left",
+                }}
+              >
+                <thead>
+                  <tr
+                    style={{
+                      backgroundColor: "#f9fafb",
+                      borderBottom: "1px solid #e5e7eb",
+                      color: "#4b5563",
+                      fontSize: "13px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    <th style={{ padding: "12px 16px" }}>Name</th>
+                    <th style={{ padding: "12px 16px" }}>Email</th>
+                    <th style={{ padding: "12px 16px" }}>Status</th>
+                    <th style={{ padding: "12px 16px" }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {corporateUsers.map((user) => (
+                    <tr
+                      key={user.id}
+                      style={{
+                        borderBottom: "1px solid #f3f4f6",
+                        fontSize: "14px",
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: "14px 16px",
+                          fontWeight: 500,
+                          color: "#111827",
+                        }}
+                      >
+                        {user.name || "N/A"}
+                      </td>
+                      <td style={{ padding: "14px 16px", color: "#4b5563" }}>
+                        {user.email}
+                      </td>
+                      <td style={{ padding: "14px 16px" }}>
+                        <span
+                          style={{
+                            display: "inline-block",
+                            padding: "4px 10px",
+                            borderRadius: "9999px",
+                            fontSize: "12px",
+                            fontWeight: 600,
+                            backgroundColor:
+                              user.status === 1 ? "#dcfce7" : "#fee2e2",
+                            color:
+                              user.status === 1 ? "#15803d" : "#b91c1c",
+                          }}
+                        >
+                          {user.status === 1 ? "Active" : "Inactive"}
+                        </span>
+                      </td>
+                      <td style={{ padding: "14px 16px" }}>
+                        <select
+                          value={user.status}
+                          disabled={updatingUserId === user.id}
+                          onChange={(e) =>
+                            handleCorporateStatusChange(
+                              user.id,
+                              Number(e.target.value) as 0 | 1
+                            )
+                          }
+                          style={{
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            border: "1px solid #d1d5db",
+                            backgroundColor: "#ffffff",
+                            color: "#374151",
+                            fontSize: "13px",
+                            cursor:
+                              updatingUserId === user.id
+                                ? "not-allowed"
+                                : "pointer",
+                          }}
+                        >
+                          <option value={1}>Active</option>
+                          <option value={0}>Inactive</option>
+                        </select>
+                        {updatingUserId === user.id && (
+                          <span
+                            style={{
+                              marginLeft: "8px",
+                              fontSize: "12px",
+                              color: "#9ca3af",
+                            }}
+                          >
+                            Saving...
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </S.ApplicationsSection>
+      )}
     </S.DashboardContainer>
   );
 };

@@ -34,12 +34,16 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get "dashboard", to: "dashboard#index"
+    get "corporate_users", to: "dashboard#corporate_index"
+    patch "users/:id/status", to: "dashboard#update_status"
     resources :applications, only: [:index, :update]
   end
 
   post "/signup", to: "users#create"
   post "/login", to: "sessions#create"
   get "/me", to: "sessions#show"
+  post "/initiate", to: "users#initiate"
+  get "/setup_status", to: "system#setup_status"
 
   # Health check endpoint for Fly.io
   get '/up', to: 'health#index'

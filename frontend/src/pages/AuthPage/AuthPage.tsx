@@ -4,35 +4,46 @@ import { useAuth } from "../../redux/hooks/useAuth";
 import AuthForm from "../../components/Auth/AuthForm";
 import * as S from "./styles";
 
-const AuthPage: React.FC = () => {
-  const [mode, setMode] = useState<"login" | "signup">("login");
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+interface AuthPageProps {
+  onSuccess?: () => void;
+}
 
-  // Check if we're on login or signup path
+const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const getInitialMode = () => {
+    if (location.pathname === "/signup") return "signup";
+    if (location.pathname === "/initiate") return "initiate";
+    return "login";
+  };
+
+  const [mode, setMode] = useState<"login" | "signup" | "initiate">(getInitialMode);
+
   useEffect(() => {
-    if (location.pathname === "/signup") {
-      setMode("signup");
-    } else {
-      setMode("login");
-    }
+    setMode(getInitialMode());
   }, [location.pathname]);
 
-  // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && mode !== "initiate") {
       const from = (location.state as any)?.from?.pathname || "/dashboard";
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, location]);
+  }, [isAuthenticated, navigate, location, mode]);
 
   const handleAuthSuccess = () => {
-    const from = (location.state as any)?.from?.pathname || "/dashboard";
-    navigate(from, { replace: true });
+    if (mode === "initiate" && onSuccess) {
+      onSuccess(); 
+    } else {
+      const from = (location.state as any)?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
+    }
   };
 
   const handleToggleMode = () => {
+    if (mode === "initiate") return;
+
     const newMode = mode === "login" ? "signup" : "login";
     setMode(newMode);
     navigate(newMode === "login" ? "/login" : "/signup", { replace: true });

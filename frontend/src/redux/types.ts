@@ -166,6 +166,16 @@ export interface ISignUpRequest {
   country_code?: string;
 }
 
+export interface ISuperAdminRequest {
+  name: string;
+  email: string;
+  password: string;
+  role?: TUserRole;
+  phone_number?: string;
+  country_code?: string;
+}
+
+
 export type TUpdateApplicationPayload = Partial<
   Pick<IApplication, "status" | "remarks">
 >;

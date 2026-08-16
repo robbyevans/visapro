@@ -150,3 +150,7 @@ npm install
 License
 
 ```
+
+**TODO
+- Add input validation for phone numbers
+- Add input validation for emails

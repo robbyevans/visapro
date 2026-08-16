@@ -6,7 +6,7 @@ import { countries } from "../../utils/countries";
 import * as S from "./styles";
 
 interface AuthFormProps {
-  mode: "login" | "signup";
+  mode: "login" | "signup" | "initiate";
   onToggleMode: () => void;
   onSuccess?: () => void;
 }
@@ -16,8 +16,15 @@ const AuthForm: React.FC<AuthFormProps> = ({
   onToggleMode,
   onSuccess,
 }) => {
-  const { handleLogIn, handleSignUp, isLoading, error, clearAuthError } =
-    useAuth();
+  const {
+    handleLogIn,
+    handleSignUp,
+    handleSuperAdmin,
+    isLoading,
+    error,
+    clearAuthError,
+  } = useAuth();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -66,6 +73,31 @@ const AuthForm: React.FC<AuthFormProps> = ({
       if (result.success && onSuccess) {
         onSuccess();
       }
+    } else if (mode === "initiate") {
+      // Client-side validation for initiate superadmin setup
+      if (formData.password !== formData.passwordConfirmation) {
+        setLocalError("Passwords do not match");
+        return;
+      }
+
+      if (formData.password.length < 6) {
+        setLocalError("Password must be at least 6 characters long");
+        return;
+      }
+
+      const superAdminData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone_number: formData.phone_number,
+        country_code: formData.country_code,
+        role: "admin",
+      };
+
+      const result = await handleSuperAdmin(superAdminData);
+      if (result.success && onSuccess) {
+        onSuccess();
+      }
     } else {
       // Login
       const result = await handleLogIn(formData.email, formData.password);
@@ -86,13 +118,17 @@ const AuthForm: React.FC<AuthFormProps> = ({
   return (
     <S.AuthFormContainer>
       <S.AuthTitle>
-        {mode === "login" ? "Login to Your Account" : "Create Your Account"}
+        {mode === "login"
+          ? "Login to Your Account"
+          : mode === "initiate"
+          ? "Initiate Super Admin Setup"
+          : "Create Your Account"}
       </S.AuthTitle>
 
       {displayError && <S.AuthError>{displayError}</S.AuthError>}
 
       <form onSubmit={handleSubmit}>
-        {mode === "signup" && (
+        {(mode === "signup" || mode === "initiate") && (
           <Input
             label="Full Name"
             type="text"
@@ -115,49 +151,49 @@ const AuthForm: React.FC<AuthFormProps> = ({
         />
 
         {mode === "signup" && (
-          <>
-            <S.SelectContainer>
-              <S.InputLabel>Account Type *</S.InputLabel>
-              <S.NativeSelect
-                value={formData.role}
-                onChange={(e) => handleChange("role", e.target.value)}
-                required
+          <S.SelectContainer>
+            <S.InputLabel>Account Type *</S.InputLabel>
+            <S.NativeSelect
+              value={formData.role}
+              onChange={(e) => handleChange("role", e.target.value)}
+              required
+              disabled={isLoading}
+            >
+              <option value="individual">Individual</option>
+              <option value="corporate">Corporate</option>
+            </S.NativeSelect>
+          </S.SelectContainer>
+        )}
+
+        {(mode === "signup" || mode === "initiate") && (
+          <S.PhoneInputContainer>
+            <S.InputLabel>Phone Number *</S.InputLabel>
+            <S.PhoneInputGroup>
+              <S.CountrySelect
+                value={formData.country_code}
+                onChange={(e) => handleChange("country_code", e.target.value)}
                 disabled={isLoading}
               >
-                <option value="individual">Individual</option>
-                <option value="corporate">Corporate</option>
-              </S.NativeSelect>
-            </S.SelectContainer>
-
-            <S.PhoneInputContainer>
-              <S.InputLabel>Phone Number *</S.InputLabel>
-              <S.PhoneInputGroup>
-                <S.CountrySelect
-                  value={formData.country_code}
-                  onChange={(e) => handleChange("country_code", e.target.value)}
-                  disabled={isLoading}
-                >
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.flag} {country.name} ({country.dialCode})
-                    </option>
-                  ))}
-                </S.CountrySelect>
-                <S.PhoneNumberInput
-                  type="tel"
-                  value={formData.phone_number}
-                  onChange={(e) => handleChange("phone_number", e.target.value)}
-                  placeholder="Enter phone number"
-                  required
-                  disabled={isLoading}
-                  $hasDialCode={!!dialCode}
-                />
-              </S.PhoneInputGroup>
-              <S.PhoneHelpText>
-                We'll use this for important updates about your applications
-              </S.PhoneHelpText>
-            </S.PhoneInputContainer>
-          </>
+                {countries.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.flag} {country.name} ({country.dialCode})
+                  </option>
+                ))}
+              </S.CountrySelect>
+              <S.PhoneNumberInput
+                type="tel"
+                value={formData.phone_number}
+                onChange={(e) => handleChange("phone_number", e.target.value)}
+                placeholder="Enter phone number"
+                required
+                disabled={isLoading}
+                $hasDialCode={!!dialCode}
+              />
+            </S.PhoneInputGroup>
+            <S.PhoneHelpText>
+              We'll use this for important updates about your applications
+            </S.PhoneHelpText>
+          </S.PhoneInputContainer>
         )}
 
         <Input
@@ -172,7 +208,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           disabled={isLoading}
         />
 
-        {mode === "signup" && (
+        {(mode === "signup" || mode === "initiate") && (
           <Input
             label="Confirm Password"
             type="password"
@@ -190,7 +226,11 @@ const AuthForm: React.FC<AuthFormProps> = ({
           loading={isLoading}
           disabled={isLoading}
         >
-          {mode === "login" ? "Sign In" : "Create Account"}
+          {mode === "login"
+            ? "Sign In"
+            : mode === "initiate"
+            ? "Initiate Super Admin"
+            : "Create Account"}
         </Button>
       </form>
 

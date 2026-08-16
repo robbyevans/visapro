@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, clearError, loginUser, signUpUser } from "../slices/authSlice";
+import { logout, clearError, loginUser, signUpUser, superAdmin } from "../slices/authSlice";
 import { setUser } from "../slices/userSlice";
 import {
   selectToken,
@@ -47,6 +47,20 @@ export const useAuth = () => {
     [dispatch]
   );
 
+  const handleSuperAdmin = useCallback(
+    async (userData: ISuperAdminRequest) => {
+      try {
+        const result = await dispatch(superAdmin(userData)).unwrap();
+        // Set user data in user slice
+        dispatch(setUser(result.user as IUser));
+        return { success: true };
+      } catch (error) {
+        return { success: false, error: error as string };
+      }
+    },
+    [dispatch]
+  );
+
   const handleLogOut = useCallback(() => {
     dispatch(logout());
     dispatch(setUser(null));
@@ -65,5 +79,6 @@ export const useAuth = () => {
     handleLogIn,
     handleLogOut,
     clearAuthError,
+    handleSuperAdmin,
   };
 };

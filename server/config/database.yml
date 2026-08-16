@@ -8,14 +8,14 @@ development:
   <<: *default
   database: visapro_development
   host: localhost
-  username: postgres
+  username: crap
   password: <%= ENV['DATABASE_PASSWORD'] %>
 
 test:
   <<: *default
   database: visapro_test
   host: localhost
-  username: postgres
+  username: crap
   password: <%= ENV['DATABASE_PASSWORD'] %>
 
 production:

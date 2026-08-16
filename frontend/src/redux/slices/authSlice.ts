@@ -43,6 +43,29 @@ const signUpUser = createAsyncThunk(
   }
 );
 
+const superAdmin = createAsyncThunk(
+  "auth/initiate",
+  async (userData: ISuperAdminRequest, { rejectWithValue }) => {
+    try {
+      const requestData = {
+        user: {
+          name: userData.name,
+          email: userData.email,
+          password: userData.password,
+          password_confirmation: userData.password,
+          role: userData.role,
+          phone_number: userData.phone_number,
+          country_code: userData.country_code,
+        },
+      };
+      const res = await api.post<ILoginResponse>("/initiate", requestData);
+      return res.data;
+    } catch (err: unknown) {
+      return rejectWithValue(getErrorMessage(err));
+    }
+  }
+);
+
 const initialState: IAuthState = {
   token: localStorage.getItem("token"),
   isAuthenticated: !!localStorage.getItem("token"),
@@ -109,11 +132,26 @@ const authSlice = createSlice({
       .addCase(signUpUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      // superadmin
+      .addCase(superAdmin.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(superAdmin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        localStorage.setItem("token", action.payload.token);
+      })
+      .addCase(superAdmin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-export { loginUser, signUpUser };
+export { loginUser, signUpUser, superAdmin };
 
 export const { setLoading, setToken, setError, logout, clearError } =
   authSlice.actions;

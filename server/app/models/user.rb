@@ -40,8 +40,29 @@ class User < ApplicationRecord
   def corporate?
     role == 'corporate'
   end
+
+  def active?
+    status == 'active'
+  end
+
+  def inactive?
+    status == 'inactive'
+  end
+
+  before_validation :set_default_status
+
+  private
+
+  def set_default_status
+    if corporate?
+      self.status = "inactive"
+    else
+      self.status ||= "active"
+    end
+  end
   
   enum :role, { individual: 0, corporate: 1, admin: 2 }
+  enum :status, { inactive: 0, active: 1 }
   
   has_many :athletes, dependent: :destroy
   has_many :applications, dependent: :destroy
